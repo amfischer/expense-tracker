@@ -92,4 +92,3 @@ it('will return a 403 if user attempts to delete tags from other accounts', func
     $this->delete(route('tags.delete', $tagRestricted))
         ->assertForbidden();
 });
-
