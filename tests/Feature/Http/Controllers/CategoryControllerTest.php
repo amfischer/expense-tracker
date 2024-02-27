@@ -21,17 +21,13 @@ it('can show categories', function () {
 it("will not show another user's categories", function () {
     $categoryRestricted = Category::factory()->create();
 
-    login();
-
-    $user = Auth::user();
-
-    $this->get(route('expenses.index'))
+    $this->get(route('categories.index'))
         ->assertOk()
         ->assertDontSee($categoryRestricted->payee)
         ->assertDontSee($categoryRestricted->total);
 
-    $this->assertDatabaseMissing('expenses', [
-        'user_id' => $user->id,
+    $this->assertDatabaseMissing('categories', [
+        'user_id' => $this->user->id,
     ]);
 });
 
