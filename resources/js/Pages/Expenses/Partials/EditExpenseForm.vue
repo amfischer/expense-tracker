@@ -13,31 +13,31 @@ import { ref } from 'vue';
 
 
 const props = defineProps({
+    expense: Object,
     categories: Array,
     tags: Array,
     currencies: Array,
 });
 
 const form = useForm({
-    payee: '',
-    amount: 0,
-    fees: 0,
-    currency: props.currencies[0],
-    transaction_date: '',
-    effective_date: '',
-    category_id: props.categories[0].id,
-    tags: [],
-    notes: '',
+    payee: props.expense.payee,
+    amount: props.expense.amount,
+    fees: props.expense.fees,
+    currency: props.expense.currency,
+    transaction_date: props.expense.transaction_date,
+    effective_date: props.expense.effective_date,
+    category_id: props.expense.category_id,
+    tags: props.expense.tag_ids,
+    notes: props.expense.notes,
 });
 
-const emit = defineEmits(['expenseCreated'])
+const emit = defineEmits(['expenseUpdated'])
 
-const create = () => {
-    form.post(route('expenses.store'), {
+const update = () => {
+    form.put(route('expenses.update', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            form.reset()
-            emit('expenseCreated', resp.props.flash.message)
+            emit('expenseUpdated', resp.props.flash.message)
         },
         onError: () => {
             console.log('errors', form.errors)
@@ -49,7 +49,7 @@ const create = () => {
 
 <template>
 
-    <form @submit.prevent="create" class="max-md:space-y-6 md:flex md:flex-wrap">
+    <form @submit.prevent="update" class="max-md:space-y-6 md:flex md:flex-wrap">
 
         <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col md:justify-between">
 

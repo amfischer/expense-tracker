@@ -29,7 +29,8 @@ class Expense extends Model
         'amount_pretty',
         'fees_pretty',
         'total',
-        'tags_pretty'
+        'tags_pretty',
+        'tag_ids',
     ];
 
     public function user(): BelongsTo

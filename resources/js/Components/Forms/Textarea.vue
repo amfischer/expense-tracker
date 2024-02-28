@@ -1,7 +1,7 @@
 <script setup>
 
 const model = defineModel({
-    type: String,
+    type: [String, null],
     required: true,
 });
 

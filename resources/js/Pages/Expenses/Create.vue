@@ -6,9 +6,9 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const props = defineProps({
-  categories: Array,
-  tags: Array,
-  currencies: Array,
+    categories: Array,
+    tags: Array,
+    currencies: Array,
 });
 
 const successMessage = ref('');
