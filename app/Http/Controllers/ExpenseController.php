@@ -27,7 +27,7 @@ class ExpenseController extends Controller
 
         $categories = $user->categoriesArray;
         $tags = $user->tagsArray;
-        $currencies = Currency::options();
+        $currencies = Currency::values();
 
         return Inertia::render('Expenses/Create', compact('categories', 'tags', 'currencies'));
     }

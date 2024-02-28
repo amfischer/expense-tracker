@@ -65,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: function () {
                 return $this->categories->reduce(function (array $carry, Category $category) {
-                    $carry[$category->id] = $category->name;
+                    $carry[] = ['id' => $category->id, 'name' => $category->name];
 
                     return $carry;
                 }, []);
@@ -85,7 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: function () {
                 return $this->tags->reduce(function (array $carry, Tag $tag) {
-                    $carry[$tag->id] = $tag->name;
+                    $carry[] = ['id' => $tag->id, 'name' => $tag->name];
 
                     return $carry;
                 }, []);
