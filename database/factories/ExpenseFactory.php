@@ -47,7 +47,7 @@ class ExpenseFactory extends Factory
     /**
      * add tags to the expense
      *
-     * think this requires the tags to be created, not sure it will work with ->make()
+     * think this requires ->create(), not sure it will work with ->make()
      */
     public function withTags(int $count = 1): Factory
     {

@@ -47,11 +47,20 @@ test('users can create new expenses', function () {
     $formData['amount'] *= 100;
     $formData['fees'] *= 100;
 
-    // db format is different than faker output
-    $formData['transaction_date'] = date('Y-m-d H:i:s', strtotime($formData['transaction_date']));
-    $formData['effective_date'] = date('Y-m-d H:i:s', strtotime($formData['effective_date']));
+    // Expense::class includes $appends property to show custom attributes in JSON response,
+    // but we don't want those extra attributes when testing database rows
+    $dataWithoutAppendedFields = [
+        'user_id'          => $formData['user_id'],
+        'category_id'      => $formData['category_id'],
+        'payee'            => $formData['payee'],
+        'amount'           => $formData['amount'],
+        'fees'             => $formData['fees'],
+        'transaction_date' => $formData['transaction_date'],
+        'effective_date'   => $formData['effective_date'],
+        'currency'         => $formData['currency'],
+    ];
 
-    $this->assertDatabaseHas('expenses', $formData);
+    $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);
 
 });
 
@@ -72,11 +81,20 @@ test('users can update existing expenses', function () {
     $formData['amount'] *= 100;
     $formData['fees'] *= 100;
 
-    // db format is different than faker output
-    $formData['transaction_date'] = date('Y-m-d H:i:s', strtotime($formData['transaction_date']));
-    $formData['effective_date'] = date('Y-m-d H:i:s', strtotime($formData['effective_date']));
+    // Expense::class includes $appends property to show custom attributes in JSON response,
+    // but we don't want those extra attributes when testing database rows
+    $dataWithoutAppendedFields = [
+        'user_id'          => $formData['user_id'],
+        'category_id'      => $formData['category_id'],
+        'payee'            => $formData['payee'],
+        'amount'           => $formData['amount'],
+        'fees'             => $formData['fees'],
+        'transaction_date' => $formData['transaction_date'],
+        'effective_date'   => $formData['effective_date'],
+        'currency'         => $formData['currency'],
+    ];
 
-    $this->assertDatabaseHas('expenses', $formData);
+    $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);
 });
 
 test('users can delete existing expenses', function () {
