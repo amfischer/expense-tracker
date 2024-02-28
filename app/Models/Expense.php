@@ -20,8 +20,16 @@ class Expense extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'transaction_date' => 'datetime',
-        'effective_date'   => 'datetime',
+        'transaction_date' => 'datetime:Y-m-d',
+        'effective_date'   => 'datetime:Y-m-d',
+    ];
+
+    protected $appends = [
+        'has_fees',
+        'amount_pretty',
+        'fees_pretty',
+        'total',
+        'tags_pretty'
     ];
 
     public function user(): BelongsTo
