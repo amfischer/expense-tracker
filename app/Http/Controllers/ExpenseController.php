@@ -15,10 +15,10 @@ class ExpenseController extends Controller
 {
     public function index(Request $request): Response
     {
-        $expenses = $request->user()->expenses;
+        $expenses = $request->user()->expenses()->paginate(10);
         $expenses->load(['category', 'tags']);
 
-        return Inertia::render('Expenses/Table', compact('expenses'));
+        return Inertia::render('Expenses/Index', compact('expenses'));
     }
 
     public function create(Request $request): Response

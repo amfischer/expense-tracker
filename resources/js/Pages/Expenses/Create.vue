@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AddExpenseForm from './Partials/AddExpenseForm.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
+import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -33,7 +34,7 @@ const toggleAlert = (msg) => successMessage.value = msg;
 
                     <div class="sm:flex sm:items-center sm:justify-end">
                         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                            <Link :href="route('expenses.index')">Back</Link>
+                            <ButtonLink :href="route('expenses.index')">Back</ButtonLink>
                         </div>
                     </div>
 
