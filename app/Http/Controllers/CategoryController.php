@@ -18,7 +18,7 @@ class CategoryController extends Controller
 
         // $categories = [$categories[0]];
 
-        return Inertia::render('Categories', compact('categories'));
+        return Inertia::render('Categories/Index', compact('categories'));
     }
 
     /**
