@@ -1,12 +1,48 @@
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { CheckIcon } from '@heroicons/vue/24/outline';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { useForm } from '@inertiajs/vue3';
+import { watch } from 'vue';
 
-defineProps({
+const props = defineProps({
     open: Boolean,
+    category: Object
 });
 
-defineEmits(['close']);
+const form = useForm({
+    name: '',
+    color: '',
+    abbreviation: '',
+});
+
+watch(() => props.category, (newValue, oldValue) => {
+    form.name = newValue.name
+    form.color = newValue.color
+    form.abbreviation = newValue.abbreviation
+});
+
+watch(() => props.open, (newValue, oldValue) => {
+    if (! newValue) {
+        form.clearErrors();
+    }
+});
+
+const emit = defineEmits(['close', 'updated']);
+
+const update = () => {
+    form.put(route('categories.update', props.category.id), {
+        preserveScroll: true,
+        onSuccess: (resp) => {
+            emit('updated', resp.props.flash.message)
+        },
+        onError: () => {
+            console.log('errors', form.errors)
+        },
+    });
+}
+
 </script>
 
 <template>
@@ -34,27 +70,54 @@ defineEmits(['close']);
                         leave-from="opacity-100 translate-y-0 sm:scale-100"
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                         <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                            <div>
-                                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                                    <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
+
+                            <DialogTitle as="h3" class="text-base text-center font-semibold leading-6 text-gray-900">
+                                {{ 'Edit Category: ' + category.name }}
+                            </DialogTitle>
+
+                            <form @submit.prevent="create" class="space-y-4 py-4">
+                                <div>
+                                    <InputLabel for="name" value="Name" />
+                                    <TextInput
+                                        id="name"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.name"
+                                        required
+                                        autofocus />
+                                    <InputError class="mt-2" :message="form.errors.name" />
                                 </div>
-                                <div class="mt-3 text-center sm:mt-5">
-                                    <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">
-                                        Payment successful
-                                    </DialogTitle>
-                                    <div class="mt-2">
-                                        <p class="text-sm text-gray-500">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet labore.
-                                        </p>
-                                    </div>
+
+                                <div>
+                                    <InputLabel for="abbreviation" value="Abbreviation" />
+                                    <TextInput
+                                        id="abbreviation"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="form.abbreviation"
+                                        required
+                                        autofocus />
+                                    <InputError class="mt-2" :message="form.errors.abbreviation" />
                                 </div>
-                            </div>
-                            <div class="mt-5 sm:mt-6">
+
+                                <div>
+                                    <InputLabel for="color" value="Color" />
+                                    <TextInput
+                                        id="color"
+                                        type="color"
+                                        class="mt-1 block w-14 h-14"
+                                        v-model="form.color"
+                                        required
+                                        autofocus />
+                                    <InputError class="mt-2" :message="form.errors.color" />
+                                </div>
+                            </form>
+                            <div class="mt-6">
                                 <button
                                     type="button"
                                     class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    @click="$emit('close')">
-                                    Go back to dashboard
+                                    @click="update">
+                                    Update
                                 </button>
                             </div>
                         </DialogPanel>

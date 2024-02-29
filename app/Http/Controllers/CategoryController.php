@@ -27,7 +27,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'         => ['required', new AlphaSpace],
+            'name'         => ['required', new AlphaSpace, 'unique:categories,name'],
             'abbreviation' => ['required', 'between:1,3', 'unique:categories,abbreviation'],
             'color'        => ['required', 'hex_color'],
         ]);
@@ -45,7 +45,7 @@ class CategoryController extends Controller
         Gate::authorize('update', $category);
 
         $validated = $request->validate([
-            'name'         => ['required', new AlphaSpace],
+            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->ignore($category->id)],
             'abbreviation' => ['required', 'between:1,3', Rule::unique('categories')->ignore($category->id)],
             'color'        => ['required', 'hex_color'],
         ]);
