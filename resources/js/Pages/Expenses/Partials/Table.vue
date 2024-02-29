@@ -19,16 +19,11 @@ const pageLinks = computed(() => {
 </script>
 
 <template>
-
     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-t-lg">
-
         <table class="min-w-full divide-y divide-gray-300">
-
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6">
-                        Payee
-                    </th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6">Payee</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Category</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Tags</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Total</th>
@@ -41,13 +36,14 @@ const pageLinks = computed(() => {
             </thead>
 
             <tbody class="divide-y divide-gray-200 bg-white">
-
                 <tr v-for="expense in expenses.data" :key="expense.id">
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300" sm:pl-6>{{ expense.payee }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.category.name }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.tags_pretty }}</td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">
-                        <span v-if="expense.has_fees" :title="'Amount: ' + expense.amount_pretty + ' &mdash; Fees: ' + expense.fees_pretty"
+                        <span
+                            v-if="expense.has_fees"
+                            :title="'Amount: ' + expense.amount_pretty + ' &mdash; Fees: ' + expense.fees_pretty"
                             class="underline underline-offset-2 decoration-dotted cursor-pointer">
                             {{ expense.total }}
                         </span>
@@ -55,22 +51,19 @@ const pageLinks = computed(() => {
                         <span v-else>{{ expense.total }}</span>
                     </td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.effective_date }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.notes }}
-                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.notes }}</td>
 
                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <Link :href="route('expenses.edit', expense.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-gray-200">Edit</Link>
+                        <Link :href="route('expenses.edit', expense.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-gray-200">
+                            Edit
+                        </Link>
                     </td>
                 </tr>
-
             </tbody>
-
         </table>
-
     </div>
 
     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-b-lg">
-    
         <div class="flex items-center justify-between bg-white p-4 sm:px-6">
             <div class="flex flex-1 justify-between sm:hidden">
                 <Link 
@@ -109,8 +102,9 @@ const pageLinks = computed(() => {
                             <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
                         </Link>
 
-                        <Link 
-                            v-for="link in pageLinks" 
+                        <Link
+                            v-for="(link, i) in pageLinks" 
+                            :key="i"
                             :href="link.url" 
                             aria-current="page"
                             class="relative inline-flex items-center px-4 py-2 text-sm font-semibold"
@@ -131,7 +125,5 @@ const pageLinks = computed(() => {
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>

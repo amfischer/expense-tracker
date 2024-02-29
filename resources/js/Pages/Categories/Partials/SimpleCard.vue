@@ -6,10 +6,11 @@ defineProps({
     category: Object
 })
 
+defineEmits(['toggle-edit-modal', 'toggle-delete-modal']);
+
 </script>
 
 <template>
-
     <li class="col-span-1 flex rounded-md shadow-sm">
         <div 
             class="flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
@@ -38,28 +39,26 @@ defineProps({
                     leave-to-class="transform opacity-0 scale-95">
                     <MenuItems class="absolute right-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div class="py-1">
-                        <MenuItem v-slot="{ active }">
-                            <button 
-                                type="button"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full text-left px-4 py-2 text-sm']"
-                                @click="$emit('toggle-edit-modal', category)">
-                                Edit
-                            </button>
-                        </MenuItem>
-                        <MenuItem v-slot="{ active }">
-                            <button 
-                                type="button"
-                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full text-left px-4 py-2 text-sm']"
-                                @click="$emit('toggle-delete-modal', category)">
-                                Delete
-                            </button>
-                        </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                                <button 
+                                    type="button"
+                                    :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full text-left px-4 py-2 text-sm']"
+                                    @click="$emit('toggle-edit-modal', category)">
+                                    Edit
+                                </button>
+                            </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                                <button 
+                                    type="button"
+                                    :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'w-full text-left px-4 py-2 text-sm']"
+                                    @click="$emit('toggle-delete-modal', category)">
+                                    Delete
+                                </button>
+                            </MenuItem>
                         </div>
                     </MenuItems>
                 </transition>
             </Menu>
-                
         </div>
     </li>
-
 </template>
