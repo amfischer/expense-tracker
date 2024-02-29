@@ -3,6 +3,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
 
@@ -31,7 +32,7 @@ watch(() => props.open, (newValue, oldValue) => {
 
 const emit = defineEmits(['close', 'updated']);
 
-const update = () => {
+const updateCategory = () => {
     form.put(route('categories.update', props.category.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
@@ -75,7 +76,7 @@ const update = () => {
                                 {{ 'Edit Category: ' + category.name }}
                             </DialogTitle>
 
-                            <form @submit.prevent="create" class="space-y-4 py-4">
+                            <form @submit.prevent="updateCategory" class="space-y-4 py-4">
                                 <div>
                                     <InputLabel for="name" value="Name" />
                                     <TextInput
@@ -100,7 +101,7 @@ const update = () => {
                                     <InputError class="mt-2" :message="form.errors.abbreviation" />
                                 </div>
 
-                                <div>
+                                <div class="mb-5">
                                     <InputLabel for="color" value="Color" />
                                     <TextInput
                                         id="color"
@@ -111,15 +112,14 @@ const update = () => {
                                         autofocus />
                                     <InputError class="mt-2" :message="form.errors.color" />
                                 </div>
-                            </form>
-                            <div class="mt-6">
-                                <button
-                                    type="button"
-                                    class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                    @click="update">
+
+                                <PrimaryButton 
+                                    type="submit"
+                                    class="w-full justify-center rounded-md text-sm font-semibold">
                                     Update
-                                </button>
-                            </div>
+                                </PrimaryButton>
+                            </form>
+
                         </DialogPanel>
                     </TransitionChild>
                 </div>

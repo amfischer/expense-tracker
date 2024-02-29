@@ -4,6 +4,7 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
 import SimpleCard from './Partials/SimpleCard.vue';
 import EditModal from './Partials/EditModal.vue';
+import DeleteModal from './Partials/DeleteModal.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -11,22 +12,30 @@ defineProps({
     categories: Array
 });
 
-const selectedCategory = ref(null);
 const alertMessage = ref('');
-const showEditModal = ref(false);
-
-const openEditModal = (payload) => {
-    showEditModal.value = true;
-    selectedCategory.value = payload
-}
-
 const toggleAlert = (payload) => {
-    showEditModal.value = false
+    closeModals();
     alertMessage.value = payload
 }
 
+const selectedCategory = ref(null);
+
+const showEditModal = ref(false);
+const openEditModal = (payload) => {
+    showEditModal.value = true;
+    selectedCategory.value = payload;
+}
+
+
+const showDeleteModal = ref(false);
 const openDeleteModal = (payload) => {
-    selectedCategory.value = payload
+    showDeleteModal.value = true;
+    selectedCategory.value = payload;
+}
+
+const closeModals = () => {
+    showEditModal.value = false;
+    showDeleteModal.value = false;
 }
 
 </script>
@@ -77,6 +86,7 @@ const openDeleteModal = (payload) => {
 
         </div>
 
-        <EditModal :open="showEditModal" :category="selectedCategory" @updated="toggleAlert" @close="showEditModal = false" />
+        <EditModal :open="showEditModal" :category="selectedCategory" @updated="toggleAlert" @close="closeModals" />
+        <DeleteModal :open="showDeleteModal" :category="selectedCategory" @deleted="toggleAlert" @close="closeModals" />
     </AuthenticatedLayout>
 </template>

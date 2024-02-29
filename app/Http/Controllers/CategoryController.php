@@ -16,8 +16,6 @@ class CategoryController extends Controller
     {
         $categories = Category::withCount('expenses')->where(['user_id' => $request->user()->id])->get();
 
-        // $categories = [$categories[0]];
-
         return Inertia::render('Categories/Index', compact('categories'));
     }
 
@@ -67,10 +65,10 @@ class CategoryController extends Controller
         if ($category->expenses_count !== 0) {
             $count = $category->expenses_count;
 
-            return back()->with('message', 'category is linked to '.$count.' expenses. Remove these relationships before deleting.');
+            return back()->withErrors(['message' => 'category is linked to '.$count.' expenses. Remove these relationships before deleting.']);
         }
         $category->delete();
 
-        return redirect()->route('expenses.index')->with('message', 'Category successfully deleted.');
+        return redirect()->route('categories.index')->with('message', 'Category successfully deleted.');
     }
 }
