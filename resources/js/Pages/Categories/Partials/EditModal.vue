@@ -18,13 +18,13 @@ const form = useForm({
     abbreviation: '',
 });
 
-watch(() => props.category, (newValue, oldValue) => {
+watch(() => props.category, (newValue) => {
     form.name = newValue.name
     form.color = newValue.color
     form.abbreviation = newValue.abbreviation
 });
 
-watch(() => props.open, (newValue, oldValue) => {
+watch(() => props.open, (newValue) => {
     if (! newValue) {
         form.clearErrors();
     }

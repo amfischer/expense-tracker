@@ -2,9 +2,14 @@
     "env": {
       "node": true
     },
+    "globals": {
+        "route": "readonly"
+    },
+    "plugins": [
+        "@stylistic/js"
+    ],
     "extends": [
         "eslint:recommended",
-        "plugin:@stylistic/js",
         "plugin:vue/vue3-recommended"
     ],
     "rules": {

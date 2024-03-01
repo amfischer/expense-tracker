@@ -26,7 +26,6 @@ const openEditModal = (payload) => {
     selectedCategory.value = payload;
 }
 
-
 const showDeleteModal = ref(false);
 const openDeleteModal = (payload) => {
     showDeleteModal.value = true;
@@ -79,14 +78,21 @@ const closeModals = () => {
                             </div>
                         </div>
 
-
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <EditModal :open="showEditModal" :category="selectedCategory" @updated="toggleAlert" @close="closeModals" />
-        <DeleteModal :open="showDeleteModal" :category="selectedCategory" @deleted="toggleAlert" @close="closeModals" />
+        <EditModal
+            :open="showEditModal"
+            :category="selectedCategory"
+            @updated="toggleAlert"
+            @close="closeModals" />
+        <DeleteModal
+            :open="showDeleteModal"
+            :category="selectedCategory"
+            @deleted="toggleAlert"
+            @close="closeModals" />
     </AuthenticatedLayout>
 </template>

@@ -12,7 +12,7 @@ const props = defineProps({
 
 const errorMessage = ref('');
 
-watch(() => props.open, (newValue, oldValue) => {
+watch(() => props.open, (newValue) => {
     if (! newValue) {
         errorMessage.value = ''
     }
@@ -67,9 +67,8 @@ const deleteCategory = () => {
 
                             <DialogDescription as="p" class="my-6 text-xl">
                                 This will permanently delete the category.
-                                <InputError :message="errorMessage" class="mt-2"></InputError>
+                                <InputError :message="errorMessage" class="mt-2" />
                             </DialogDescription>
-
 
                             <DangerButton @click="deleteCategory" class="table w-full">Delete</DangerButton>
 

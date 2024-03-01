@@ -1,9 +1,7 @@
 <script setup>
-import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { Head, Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
 
 const props = defineProps({
     expenses: Object,
