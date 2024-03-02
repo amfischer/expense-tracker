@@ -10,7 +10,6 @@ import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
 
-
 const props = defineProps({
     categories: Array,
     tags: Array,
@@ -100,7 +99,6 @@ const create = () => {
                     required />
                 <InputError class="mt-2" :message="form.errors.transaction_date" />
             </div>
-
 
             <div>
                 <InputLabel for="date" value="Effective Date" />

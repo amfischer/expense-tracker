@@ -6,8 +6,8 @@ import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     expenses: Object,
+    categories: Array,
 });
-
 
 </script>
 
@@ -32,7 +32,7 @@ const props = defineProps({
                     <div class="mt-8 flow-root">
                         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                <ExpensesTable :expenses="expenses" />
+                                <ExpensesTable :expenses="expenses" :categories="categories" />
                             </div>
                         </div>
                     </div>
@@ -40,5 +40,6 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+
     </AuthenticatedLayout>
 </template>

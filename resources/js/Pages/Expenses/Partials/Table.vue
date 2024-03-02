@@ -1,11 +1,33 @@
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { XMarkIcon } from '@heroicons/vue/24/outline'
+import InputLabel from '@/Components/InputLabel.vue';
+import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
+import { Link, router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     expenses: Object,
+    categories: Array,
 });
+
+const filters = ref({
+    category_id: ''
+})
+
+const searchAndFilter = () => {
+    const data = JSON.parse(JSON.stringify(filters.value))
+    if (filters.value.category_id === '') {
+        delete data.category_id
+    }
+    router.get(route('expenses.index'), data, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: (resp) => {
+            console.log('success', resp)
+        },
+    })
+}
 
 const pageLinks = computed(() => {
     const links = props.expenses.links;
@@ -17,6 +39,29 @@ const pageLinks = computed(() => {
 </script>
 
 <template>
+    <div class="shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg mb-3">
+        <div class="bg-gray-50">
+            <div class="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
+
+                <section class="py-6">
+
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <InputLabel for="category" value="Category" class="text-left" />
+                            <SelectMenuBasic
+                                v-model="filters.category_id"
+                                :options="categories"
+                                value-attr="id"
+                                display-attr="name"
+                                @change="searchAndFilter" />
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-t-lg">
         <table class="min-w-full divide-y divide-gray-300">
             <thead class="bg-gray-50">
@@ -66,13 +111,13 @@ const pageLinks = computed(() => {
             <div class="flex flex-1 justify-between sm:hidden">
                 <Link 
                     :as="expenses.prev_page_url ? 'a' : 'span'"
-                    :href="expenses.prev_page_url"
+                    :href="expenses.prev_page_url ?? ''"
                     class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Previous
                 </Link>
                 <Link
                     :as="expenses.next_page_url ? 'a' : 'span'"
-                    :href="expenses.next_page_url" 
+                    :href="expenses.next_page_url ?? ''" 
                     class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Next
                 </Link>
@@ -93,7 +138,7 @@ const pageLinks = computed(() => {
                     <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         <Link 
                             :as="expenses.prev_page_url ? 'a' : 'span'"
-                            :href="expenses.prev_page_url"
+                            :href="expenses.prev_page_url ?? ''"
                             class="relative inline-flex items-center rounded-l-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             :class="expenses.prev_page_url ? 'text-gray-500 ring-gray-300' : 'text-gray-300 ring-gray-200'">
                             <span class="sr-only">Previous</span>
@@ -113,7 +158,7 @@ const pageLinks = computed(() => {
 
                         <Link 
                             :as="expenses.next_page_url ? 'a' : 'span'"
-                            :href="expenses.next_page_url"
+                            :href="expenses.next_page_url ?? ''"
                             class="relative inline-flex items-center rounded-r-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             :class="expenses.next_page_url ? 'text-gray-500 ring-gray-300' : 'text-gray-300 ring-gray-200'">
                             <span class="sr-only">Next</span>

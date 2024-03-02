@@ -15,10 +15,18 @@ class ExpenseController extends Controller
 {
     public function index(Request $request): Response
     {
-        $expenses = $request->user()->expenses()->paginate(10);
-        $expenses->load(['category', 'tags']);
+        $query = Expense::whereUserId($request->user()->id);
 
-        return Inertia::render('Expenses/Index', compact('expenses'));
+        if ($request->query('category_id')) {
+            $query->whereCategoryId($request->query('category_id'));
+        }
+
+        $query->with(['category', 'tags']);
+        $expenses = $query->paginate(10);
+
+        $categories = $request->user()->categories;
+
+        return Inertia::render('Expenses/Index', compact('expenses', 'categories'));
     }
 
     public function create(Request $request): Response
