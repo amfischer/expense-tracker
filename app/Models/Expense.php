@@ -27,7 +27,7 @@ class Expense extends Model
     protected $appends = [
         'has_fees',
         'amount_pretty',
-        'fees_pretty',
+        'foreign_currency_conversion_fee_pretty',
         'total',
         'tags_pretty',
         'tag_ids',
@@ -74,7 +74,7 @@ class Expense extends Model
         );
     }
 
-    protected function fees(): Attribute
+    protected function foreignCurrencyConversionFee(): Attribute
     {
         return Attribute::make(
             get: function (int $value, array $attr) {
@@ -93,11 +93,11 @@ class Expense extends Model
         );
     }
 
-    protected function feesPretty(): Attribute
+    protected function foreignCurrencyConversionFeePretty(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attr) {
-                $money = new Money($attr['fees'], new Currency($attr['currency']));
+                $money = new Money($attr['foreign_currency_conversion_fee'], new Currency($attr['currency']));
 
                 return app(IntlMoneyFormatter::class)->format($money);
             }
@@ -108,7 +108,7 @@ class Expense extends Model
     {
         return Attribute::make(
             get: function (mixed $value, array $attr) {
-                return $attr['fees'] > 0;
+                return $attr['foreign_currency_conversion_fee'] > 0;
             }
         );
     }
@@ -118,7 +118,7 @@ class Expense extends Model
         return Attribute::make(
             get: function (mixed $value, array $attr) {
                 $amount = Money::USD($attr['amount']);
-                $fees = Money::USD($attr['fees']);
+                $fees = Money::USD($attr['foreign_currency_conversion_fee']);
 
                 $total = $amount->add($fees);
 

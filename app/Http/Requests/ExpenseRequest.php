@@ -26,16 +26,16 @@ class ExpenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payee'            => ['required', new AlphaSpace],
-            'amount'           => 'required|decimal:0,2',
-            'fees'             => 'nullable|decimal:0,2',
-            'currency'         => ['required', Rule::in(Currency::names())],
-            'transaction_date' => 'required|date',
-            'effective_date'   => 'required|date',
-            'category_id'      => ['required', 'numeric', Rule::in(Auth::user()->categoryIds)],
-            'tags'             => 'array',
-            'tags.*'           => Rule::in(Auth::user()->tagIds),
-            'notes'            => 'nullable',
+            'payee'                           => ['required', new AlphaSpace],
+            'amount'                          => 'required|decimal:0,2',
+            'foreign_currency_conversion_fee' => 'nullable|decimal:0,2',
+            'currency'                        => ['required', Rule::in(Currency::names())],
+            'transaction_date'                => 'required|date',
+            'effective_date'                  => 'required|date',
+            'category_id'                     => ['required', 'numeric', Rule::in(Auth::user()->categoryIds)],
+            'tags'                            => 'array',
+            'tags.*'                          => Rule::in(Auth::user()->tagIds),
+            'notes'                           => 'nullable',
         ];
     }
 

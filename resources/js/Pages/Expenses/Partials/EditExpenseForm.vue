@@ -22,7 +22,7 @@ const props = defineProps({
 const form = useForm({
     payee: props.expense.payee,
     amount: props.expense.amount,
-    fees: props.expense.fees,
+    foreign_currency_conversion_fee: props.expense.foreign_currency_conversion_fee,
     currency: props.expense.currency,
     transaction_date: props.expense.transaction_date,
     effective_date: props.expense.effective_date,
@@ -66,9 +66,9 @@ const update = () => {
             </div>
 
             <div>
-                <InputLabel for="fees" value="Fees" />
-                <NumberInput id="fees" class="mt-1 block w-full" step=".01" placeholder="0.00" v-model="form.fees" />
-                <InputError class="mt-2" :message="form.errors.fees" />
+                <InputLabel for="foreign_currency_conversion_fee" value="Foreign Currency Conversion Fee" />
+                <NumberInput id="foreign_currency_conversion_fee" class="mt-1 block w-full" step=".01" placeholder="0.00" v-model="form.foreign_currency_conversion_fee" />
+                <InputError class="mt-2" :message="form.errors.foreign_currency_conversion_fee" />
             </div>
 
             <div>

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('payee');
             $table->bigInteger('amount');
-            $table->bigInteger('fees');
+            $table->bigInteger('foreign_currency_conversion_fee');
             $table->string('currency', 3);
+            $table->boolean('is_business_expense')->default(false);
             $table->date('transaction_date');
             $table->date('effective_date');
             $table->string('notes')->nullable();

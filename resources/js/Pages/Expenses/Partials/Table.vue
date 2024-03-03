@@ -1,6 +1,5 @@
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import InputLabel from '@/Components/InputLabel.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { Link, router } from '@inertiajs/vue3';
@@ -86,7 +85,7 @@ const pageLinks = computed(() => {
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">
                         <span
                             v-if="expense.has_fees"
-                            :title="'Amount: ' + expense.amount_pretty + ' &mdash; Fees: ' + expense.fees_pretty"
+                            :title="'Amount: ' + expense.amount_pretty + ' &mdash; Fees: ' + expense.foreign_currency_conversion_fee_pretty"
                             class="underline underline-offset-2 decoration-dotted cursor-pointer">
                             {{ expense.total }}
                         </span>
@@ -109,7 +108,7 @@ const pageLinks = computed(() => {
     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-b-lg">
         <div class="flex items-center justify-between bg-white p-4 sm:px-6">
             <div class="flex flex-1 justify-between sm:hidden">
-                <Link 
+                <Link
                     :as="expenses.prev_page_url ? 'a' : 'span'"
                     :href="expenses.prev_page_url ?? ''"
                     class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -117,7 +116,7 @@ const pageLinks = computed(() => {
                 </Link>
                 <Link
                     :as="expenses.next_page_url ? 'a' : 'span'"
-                    :href="expenses.next_page_url ?? ''" 
+                    :href="expenses.next_page_url ?? ''"
                     class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Next
                 </Link>
@@ -136,7 +135,7 @@ const pageLinks = computed(() => {
                 </div>
                 <div>
                     <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                        <Link 
+                        <Link
                             :as="expenses.prev_page_url ? 'a' : 'span'"
                             :href="expenses.prev_page_url ?? ''"
                             class="relative inline-flex items-center rounded-l-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
@@ -146,9 +145,9 @@ const pageLinks = computed(() => {
                         </Link>
 
                         <Link
-                            v-for="(link, i) in pageLinks" 
+                            v-for="(link, i) in pageLinks"
                             :key="i"
-                            :href="link.url" 
+                            :href="link.url"
                             aria-current="page"
                             class="relative inline-flex items-center px-4 py-2 text-sm font-semibold"
                             :class="link.active ? 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'">
@@ -156,7 +155,7 @@ const pageLinks = computed(() => {
                         </Link>
                         <!-- <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span> -->
 
-                        <Link 
+                        <Link
                             :as="expenses.next_page_url ? 'a' : 'span'"
                             :href="expenses.next_page_url ?? ''"
                             class="relative inline-flex items-center rounded-r-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
