@@ -17,8 +17,8 @@ class ExpenseController extends Controller
     {
         $query = Expense::whereUserId($request->user()->id);
 
-        if ($request->query('category_id')) {
-            $query->whereCategoryId($request->query('category_id'));
+        if ($request->query('category_ids')) {
+            $query->whereIn('category_id', $request->query('category_ids'));
         }
 
         $query->with(['category', 'tags']);

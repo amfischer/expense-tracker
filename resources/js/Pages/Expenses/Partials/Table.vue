@@ -1,32 +1,11 @@
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import InputLabel from '@/Components/InputLabel.vue';
-import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps({
     expenses: Object,
-    categories: Array,
 });
-
-const filters = ref({
-    category_id: ''
-})
-
-const searchAndFilter = () => {
-    const data = JSON.parse(JSON.stringify(filters.value))
-    if (filters.value.category_id === '') {
-        delete data.category_id
-    }
-    router.get(route('expenses.index'), data, {
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: (resp) => {
-            console.log('success', resp)
-        },
-    })
-}
 
 const pageLinks = computed(() => {
     const links = props.expenses.links;
@@ -38,29 +17,6 @@ const pageLinks = computed(() => {
 </script>
 
 <template>
-    <div class="shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg mb-3">
-        <div class="bg-gray-50">
-            <div class="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
-
-                <section class="py-6">
-
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <InputLabel for="category" value="Category" class="text-left" />
-                            <SelectMenuBasic
-                                v-model="filters.category_id"
-                                :options="categories"
-                                value-attr="id"
-                                display-attr="name"
-                                @change="searchAndFilter" />
-                        </div>
-
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
-
     <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-t-lg">
         <table class="min-w-full divide-y divide-gray-300">
             <thead class="bg-gray-50">
