@@ -49,8 +49,9 @@ namespace App\Models{
  * @property int $category_id
  * @property string $payee
  * @property string $amount
- * @property string|null $fees
+ * @property string|null $foreign_currency_conversion_fee
  * @property string $currency
+ * @property int $is_business_expense
  * @property \Illuminate\Support\Carbon $transaction_date
  * @property \Illuminate\Support\Carbon $effective_date
  * @property string|null $notes
@@ -58,7 +59,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $amount_pretty
  * @property-read \App\Models\Category $category
- * @property-read mixed $fees_pretty
+ * @property-read mixed $foreign_currency_conversion_fee_pretty
  * @property-read mixed $has_fees
  * @property-read mixed $tag_ids
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
@@ -75,8 +76,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereEffectiveDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Expense whereFees($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereForeignCurrencyConversionFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereIsBusinessExpense($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense wherePayee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereTransactionDate($value)
