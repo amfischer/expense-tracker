@@ -2,8 +2,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import ExpenseSearchBar from './Partials/SearchBar.vue';
 import ExpensesTable from './Partials/Table.vue';
+import Pagination from './Partials/Pagination.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
     expenses: Object,
@@ -33,8 +34,9 @@ const props = defineProps({
                     <div class="mt-8 flow-root">
                         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                <ExpenseSearchBar :categories="categories" />
+                                <ExpenseSearchBar :expenses="expenses" :categories="categories" />
                                 <ExpensesTable :expenses="expenses" />
+                                <Pagination :expenses="expenses" />
                             </div>
                         </div>
                     </div>
