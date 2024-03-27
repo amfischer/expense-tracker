@@ -10,7 +10,8 @@
     ],
     "extends": [
         "eslint:recommended",
-        "plugin:vue/vue3-recommended"
+        "plugin:vue/vue3-recommended",
+        "prettier"
     ],
     "rules": {
         // override/add rules settings here, such as:
@@ -18,15 +19,8 @@
         "vue/require-default-prop": "off",
         "vue/multi-word-component-names": "off",
         "vue/attributes-order": "off",
-        "vue/max-attributes-per-line": ["error", {
-            "singleline": {
-                "max": 3
-            },      
-            "multiline": {
-                "max": 1
-            }
-        }],
-        "vue/html-closing-bracket-newline": "off",
+        "vue/max-attributes-per-line": "off",
+        // "vue/html-closing-bracket-newline": "off",
         "vue/html-indent": ["error", 4],
         "vue/singleline-html-element-content-newline": ["off"],
         "vue/multiline-html-element-content-newline": ["error", {
