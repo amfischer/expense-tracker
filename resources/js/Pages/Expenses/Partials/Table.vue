@@ -14,7 +14,7 @@ const props = defineProps({
                 <tr>
                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 sm:pl-6">Payee</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Category</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Total</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Amount</th>
                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Date</th>
                     <!-- <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">Notes</th> -->
                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -30,12 +30,12 @@ const props = defineProps({
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">
                         <span
                             v-if="expense.has_fees"
-                            :title="'Amount: ' + expense.amount_pretty + ' &mdash; Fees: ' + expense.foreign_currency_conversion_fee_pretty"
+                            :title="'Foreign Currency Conversion Fee: ' + expense.foreign_currency_conversion_fee_pretty"
                             class="underline underline-offset-2 decoration-dotted cursor-pointer">
-                            {{ expense.total }}
+                            {{ expense.amount_pretty }}
                         </span>
 
-                        <span v-else>{{ expense.total }}</span>
+                        <span v-else>{{ expense.amount_pretty }}</span>
                     </td>
                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.effective_date }}</td>
                     <!-- <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300">{{ expense.notes }}</td> -->
