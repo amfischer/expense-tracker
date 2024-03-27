@@ -15,7 +15,6 @@ defineEmits(['toggle-edit-modal', 'toggle-delete-modal']);
         <div 
             class="flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
             :style="{'background-color': category.color}">
-            {{ category.abbreviation.toUpperCase() }}
         </div>
         <div class="flex flex-1 items-center justify-between rounded-r-md border-b border-r border-t border-gray-200 bg-white">
             <div class="flex-1 px-4 py-2 text-sm">

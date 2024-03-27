@@ -27,9 +27,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
-            'name'         => ['required', new AlphaSpace, 'unique:categories,name'],
-            'abbreviation' => ['required', 'between:1,3', 'unique:categories,abbreviation'],
+            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
             'color'        => ['required', 'hex_color'],
         ]);
 
@@ -48,8 +49,7 @@ class CategoryController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
-            'abbreviation' => ['required', 'between:1,3', Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
+            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))->ignore($category->id)],
             'color'        => ['required', 'hex_color'],
         ]);
 

@@ -15,13 +15,11 @@ const props = defineProps({
 const form = useForm({
     name: '',
     color: '',
-    abbreviation: '',
 });
 
 watch(() => props.category, (newValue) => {
     form.name = newValue.name
     form.color = newValue.color
-    form.abbreviation = newValue.abbreviation
 });
 
 watch(() => props.open, (newValue) => {
@@ -87,18 +85,6 @@ const updateCategory = () => {
                                         required
                                         autofocus />
                                     <InputError class="mt-2" :message="form.errors.name" />
-                                </div>
-
-                                <div>
-                                    <InputLabel for="abbreviation" value="Abbreviation" />
-                                    <TextInput
-                                        id="abbreviation"
-                                        type="text"
-                                        class="mt-1 block w-full"
-                                        v-model="form.abbreviation"
-                                        required
-                                        autofocus />
-                                    <InputError class="mt-2" :message="form.errors.abbreviation" />
                                 </div>
 
                                 <div class="mb-5">

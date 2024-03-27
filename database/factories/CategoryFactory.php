@@ -37,7 +37,6 @@ class CategoryFactory extends Factory
         return [
             'user_id'      => User::factory(),
             'name'         => $this->faker->name,
-            'abbreviation' => $this->faker->bothify('??'),
             'color'        => $this->faker->hexColor(),
         ];
     }
