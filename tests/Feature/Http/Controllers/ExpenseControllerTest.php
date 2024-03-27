@@ -25,10 +25,9 @@ it("will not show another user's expenses", function () {
     $user = Auth::user();
 
     $this->get(route('expenses.index'))
-        ->assertOk();
-    // TODO - add these to dusk tests
-    // ->assertDontSee($expenseRestricted->payee)
-    // ->assertDontSee($expenseRestricted->total);
+        ->assertOk()
+        ->assertDontSee($expenseRestricted->payee)
+        ->assertDontSee($expenseRestricted->total);
 
     $this->assertDatabaseMissing('expenses', [
         'user_id' => $user->id,

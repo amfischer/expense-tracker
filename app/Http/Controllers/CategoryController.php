@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Rules\AlphaSpace;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -43,9 +45,11 @@ class CategoryController extends Controller
     {
         Gate::authorize('update', $category);
 
+        $user = Auth::user();
+
         $validated = $request->validate([
-            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->ignore($category->id)],
-            'abbreviation' => ['required', 'between:1,3', Rule::unique('categories')->ignore($category->id)],
+            'name'         => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
+            'abbreviation' => ['required', 'between:1,3', Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
             'color'        => ['required', 'hex_color'],
         ]);
 

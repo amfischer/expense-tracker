@@ -30,6 +30,7 @@ class ExpenseController extends Controller
         $validated = $validator->valid();
 
         $query = Expense::search($validated['query'])
+            ->where('user_id', $request->user()->id)
             ->query(fn (Builder $query) => $query->with(['category']));
 
         if ($validated['category_ids']) {

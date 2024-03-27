@@ -46,5 +46,34 @@ class DatabaseSeeder extends Seeder
                 'category_id' => Arr::random($categoryIds),
             ]);
         }
+
+        $this->createNewUserData();
+    }
+
+    public function createNewUserData()
+    {
+        $user = User::factory()->create([
+            'name'     => 'Luke',
+            'email'    => 'luke@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $categoryIds = [];
+
+        foreach (CategoryFactory::$categories as $category) {
+            $data = [
+                'user_id' => $user->id,
+                'name'    => $category,
+            ];
+
+            $categoryIds[] = Category::factory()->create($data)->id;
+        }
+
+        for ($i = 0; $i < 10; $i++) {
+            Expense::factory()->create([
+                'user_id'     => $user->id,
+                'category_id' => Arr::random($categoryIds),
+            ]);
+        }
     }
 }
