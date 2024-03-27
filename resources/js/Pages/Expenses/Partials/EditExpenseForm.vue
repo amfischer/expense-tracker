@@ -4,18 +4,15 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import NumberInput from '@/Components/Forms/NumberInput.vue';
-import Checkbox from '@/Components/Forms/Checkbox.vue';
 import Textarea from '@/Components/Forms/Textarea.vue';
 import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 
 
 const props = defineProps({
     expense: Object,
     categories: Array,
-    tags: Array,
     currencies: Array,
 });
 
@@ -27,7 +24,6 @@ const form = useForm({
     transaction_date: props.expense.transaction_date,
     effective_date: props.expense.effective_date,
     category_id: props.expense.category_id,
-    tags: props.expense.tag_ids,
     notes: props.expense.notes,
 });
 
@@ -96,23 +92,6 @@ const update = () => {
                 <InputLabel for="category" value="Category" />
                 <SelectMenu :options="categories" v-model="form.category_id" />
                 <InputError class="mt-2" :message="form.errors.category_id" />
-            </div>
-
-            <div>
-                <p class="mb-5 font-medium text-sm text-gray-700 dark:text-gray-300">Tags</p>
-
-                <div class="md:flex md:items-center md:flex-wrap md:px-3">
-
-                    <div class="flex items-center mb-2 md:w-1/2" v-for="(tag, i) in tags" :key="i">
-                        <div class="flex h-6 items-center">
-                            <Checkbox :id="tag.name" :value="tag.id" v-model="form.tags" />
-                        </div>
-                        <div class="ml-3">
-                            <InputLabel :for="tag.name" :value="tag.name" class="cursor-pointer" />
-                        </div>
-                    </div>
-
-                </div>
             </div>
 
             <div>

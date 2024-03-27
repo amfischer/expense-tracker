@@ -68,6 +68,7 @@ class CategoryController extends Controller
 
             return back()->withErrors(['message' => 'category is linked to '.$count.' expenses. Remove these relationships before deleting.']);
         }
+
         $category->delete();
 
         return redirect()->route('categories.index')->with('message', 'Category successfully deleted.');

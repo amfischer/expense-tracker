@@ -30,7 +30,7 @@ class ExpenseController extends Controller
         $validated = $validator->valid();
 
         $query = Expense::search($validated['query'])
-            ->query(fn (Builder $query) => $query->with(['category', 'tags']));
+            ->query(fn (Builder $query) => $query->with(['category']));
 
         if ($validated['category_ids']) {
             $query->whereIn('category_id', $validated['category_ids']);
@@ -48,31 +48,17 @@ class ExpenseController extends Controller
         $user = $request->user();
 
         $categories = $user->categoriesArray;
-        $tags = $user->tagsArray;
         $currencies = Currency::values();
 
-        return Inertia::render('Expenses/Create', compact('categories', 'tags', 'currencies'));
+        return Inertia::render('Expenses/Create', compact('categories', 'currencies'));
     }
 
     public function store(ExpenseRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        // get tags & separate from Expense payload
-        $tags = [];
-
-        if (isset($validated['tags'])) {
-            $tags = $validated['tags'];
-            unset($validated['tags']);
-        }
-
         // create expense
         $expense = $request->user()->expenses()->create($validated);
-
-        // create tag relationships
-        foreach ($tags as $tagId) {
-            $expense->tags()->attach($tagId);
-        }
 
         return back()->with('message', 'Expense successfully created.');
     }
@@ -82,10 +68,9 @@ class ExpenseController extends Controller
         Gate::authorize('view', $expense);
 
         $categories = $expense->user->categoriesArray;
-        $tags = $expense->user->tagsArray;
         $currencies = Currency::values();
 
-        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'tags', 'currencies'));
+        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies'));
     }
 
     public function update(ExpenseRequest $request, Expense $expense): RedirectResponse
@@ -94,19 +79,7 @@ class ExpenseController extends Controller
 
         $validated = $request->validated();
 
-        // get tags & separate from Expense payload
-        $tagIds = [];
-
-        if (isset($validated['tags'])) {
-            $tagIds = $validated['tags'];
-            unset($validated['tags']);
-        }
-
         $expense->update($validated);
-
-        $expense->tags()->detach();
-
-        $expense->tags()->attach($tagIds);
 
         return back()->with('message', 'Expense successfully updated.');
     }
@@ -114,9 +87,6 @@ class ExpenseController extends Controller
     public function delete(Expense $expense): RedirectResponse
     {
         Gate::authorize('delete', $expense);
-
-        // remove tags & delete
-        $expense->tags()->detach();
 
         $expense->delete();
 

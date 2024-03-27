@@ -61,10 +61,6 @@ namespace App\Models{
  * @property-read \App\Models\Category $category
  * @property-read mixed $foreign_currency_conversion_fee_pretty
  * @property-read mixed $has_fees
- * @property-read mixed $tag_ids
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
- * @property-read int|null $tags_count
- * @property-read mixed $tags_pretty
  * @property-read mixed $total
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ExpenseFactory factory($count = null, $state = [])
@@ -90,31 +86,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Tag
- *
- * @property int $id
- * @property int $user_id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Expense> $expenses
- * @property-read int|null $expenses_count
- * @property-read \App\Models\User $user
- * @method static \Database\Factories\TagFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserId($value)
- */
-	class Tag extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\User
  *
  * @property int $id
@@ -133,10 +104,6 @@ namespace App\Models{
  * @property-read int|null $expenses_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read mixed $tag_ids
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
- * @property-read int|null $tags_count
- * @property-read mixed $tags_array
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])

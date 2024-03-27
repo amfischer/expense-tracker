@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Scout\Searchable;
 use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -30,8 +29,6 @@ class Expense extends Model
         'amount_pretty',
         'foreign_currency_conversion_fee_pretty',
         'total',
-        'tags_pretty',
-        'tag_ids',
     ];
 
     public function toSearchableArray()
@@ -54,11 +51,6 @@ class Expense extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(Tag::class, 'expense_tag', 'expense_id', 'tag_id');
     }
 
     protected function amount(): Attribute
@@ -137,28 +129,6 @@ class Expense extends Model
 
                 return app(IntlMoneyFormatter::class)->format($total);
             }
-        );
-    }
-
-    protected function tagsPretty(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $tagsArray = $this->tags->reduce(function (array $carry, Tag $tag) {
-                    $carry[] = $tag->name;
-
-                    return $carry;
-                }, []);
-
-                return implode(', ', $tagsArray);
-            }
-        );
-    }
-
-    protected function tagIds(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->tags->map(fn (Tag $tag) => $tag->id)->all()
         );
     }
 }

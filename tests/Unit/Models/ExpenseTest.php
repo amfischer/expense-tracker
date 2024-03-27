@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Expense;
-use App\Models\Tag;
 
 test('amount & fees return a formatted string with two decimal places', function () {
     $amount = 10.2;
@@ -50,21 +49,4 @@ test('total returns the sum of amount & fees as a formatted string', function ()
     expect($expense->total)
         ->toBeString()
         ->toBe('$1,078.67');
-});
-
-test('tagIds returns an array of ids representing tags attached to the expense', function () {
-    $tags = Tag::factory(3)->create();
-
-    $tagIds = [];
-    foreach ($tags as $tag) {
-        $tagIds[] = $tag->id;
-    }
-
-    $expense = Expense::factory()->create();
-
-    $expense->tags()->attach($tagIds);
-
-    expect($expense->tagIds)
-        ->toBeArray()
-        ->toEqual($tagIds);
 });

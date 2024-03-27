@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Enums\Currency;
 use App\Models\Category;
-use App\Models\Expense;
-use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -46,19 +44,5 @@ class ExpenseFactory extends Factory
                 return $attr['transaction_date'];
             },
         ];
-    }
-
-    /**
-     * add tags to the expense
-     *
-     * think this requires ->create(), not sure it will work with ->make()
-     */
-    public function withTags(int $count = 1): Factory
-    {
-        return $this->afterCreating(function (Expense $expense) use ($count) {
-            $tags = Tag::factory($count)->create(['user_id' => $expense->user_id]);
-
-            $expense->tags()->attach($tags);
-        });
     }
 }

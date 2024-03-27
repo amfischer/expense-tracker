@@ -33,8 +33,6 @@ class ExpenseRequest extends FormRequest
             'transaction_date'                => 'required|date',
             'effective_date'                  => 'required|date',
             'category_id'                     => ['required', 'numeric', Rule::in(Auth::user()->categoryIds)],
-            'tags'                            => 'array',
-            'tags.*'                          => Rule::in(Auth::user()->tagIds),
             'notes'                           => 'nullable',
         ];
     }
@@ -43,7 +41,6 @@ class ExpenseRequest extends FormRequest
     {
         return [
             'category_id.in' => 'Invalid category selection.',
-            'tags.*.in'      => 'Invalid tag selection.',
         ];
     }
 }

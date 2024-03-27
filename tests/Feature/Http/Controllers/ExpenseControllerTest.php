@@ -103,17 +103,14 @@ test('users can delete existing expenses', function () {
 
     $user = Auth::user();
 
-    $expense = Expense::factory()->withTags(5)->create(['user_id' => $user->id]);
+    $expense = Expense::factory()->create(['user_id' => $user->id]);
 
     $this->assertModelExists($expense);
-    $this->assertDatabaseCount('expense_tag', 5);
 
     $this->delete(route('expenses.delete', $expense));
 
     $this->assertModelMissing($expense);
     $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
-    $this->assertDatabaseCount('expense_tag', 0);
-
 });
 
 /**
