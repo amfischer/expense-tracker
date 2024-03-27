@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Enums\Currency;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,14 +18,25 @@ class ExpenseController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = Expense::whereUserId($request->user()->id);
+        $validator = Validator::make($request->all(['query', 'category_ids']), [
+            'query'        => 'nullable',
+            'category_ids' => 'nullable|array',
+        ]);
 
-        if ($request->query('category_ids')) {
-            $query->whereIn('category_id', $request->query('category_ids'));
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors()->messages());
         }
 
-        $query->with(['category', 'tags']);
-        $expenses = $query->paginate(10);
+        $validated = $validator->valid();
+
+        $query = Expense::search($validated['query'])
+            ->query(fn (Builder $query) => $query->with(['category', 'tags']));
+
+        if ($validated['category_ids']) {
+            $query->whereIn('category_id', $validated['category_ids']);
+        }
+
+        $expenses = $query->paginate(10)->appends(Arr::whereNotNull($validated));
 
         $categories = $request->user()->categories;
 

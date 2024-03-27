@@ -37,11 +37,12 @@ class Expense extends Model
     public function toSearchableArray()
     {
         return [
-            'id'               => $this->id,
-            'payee'            => $this->payee,
-            'amount'           => $this->amount,
-            'transaction_date' => $this->transaction_date,
-            'effective_date'   => $this->effective_date,
+            'id'                              => $this->id,
+            'payee'                           => $this->payee,
+            'amount'                          => $this->amount,
+            'foreign_currency_conversion_fee' => $this->foreign_currency_conversion_fee,
+            'transaction_date'                => $this->transaction_date,
+            'effective_date'                  => $this->effective_date,
         ];
     }
 

@@ -6,7 +6,7 @@ import Pagination from './Partials/Pagination.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import { Head } from '@inertiajs/vue3';
 
-const props = defineProps({
+defineProps({
     expenses: Object,
     categories: Array,
 });
