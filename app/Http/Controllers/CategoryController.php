@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Rules\AlphaSpace;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -56,7 +57,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Category $category)
+    public function delete(Category $category): RedirectResponse
     {
         Gate::authorize('delete', $category);
 

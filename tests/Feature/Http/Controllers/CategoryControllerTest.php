@@ -71,7 +71,7 @@ it('will block category deletion if the category is linked to any expenses', fun
 
     $this->delete(route('categories.delete', $category))
         ->assertRedirect()
-        ->assertSessionHas('message', 'category is linked to '.count($expenses).' expenses. Remove these relationships before deleting.');
+        ->assertSessionHasErrors('message', 'category is linked to '.count($expenses).' expenses. Remove these relationships before deleting.');
 
 });
 
