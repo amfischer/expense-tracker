@@ -1,15 +1,15 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import EditExpenseForm from './Partials/EditExpenseForm.vue';
+import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-const props = defineProps({
+defineProps({
     expense: Object,
     categories: Array,
-    tags: Array,
     currencies: Array,
 });
 
@@ -23,7 +23,7 @@ const toggleAlert = (msg) => successMessage.value = msg;
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Edit Expense</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Expense</h2>
         </template>
 
         <div class="relative">
@@ -40,7 +40,11 @@ const toggleAlert = (msg) => successMessage.value = msg;
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <EditExpenseForm :expense="expense" :categories="categories" :tags="tags" :currencies="currencies" @expense-updated="toggleAlert" />
+                        <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" @expense-updated="toggleAlert" />
+                    </div>
+
+                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <DeleteExpenseForm :expense="expense" />
                     </div>
 
                 </div>

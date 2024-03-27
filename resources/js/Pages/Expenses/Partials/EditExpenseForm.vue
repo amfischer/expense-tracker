@@ -9,7 +9,6 @@ import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
 
-
 const props = defineProps({
     expense: Object,
     categories: Array,
@@ -27,28 +26,31 @@ const form = useForm({
     notes: props.expense.notes,
 });
 
-const emit = defineEmits(['expenseUpdated'])
+const emit = defineEmits(['expenseUpdated']);
 
 const update = () => {
     form.put(route('expenses.update', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            emit('expenseUpdated', resp.props.flash.message)
+            emit('expenseUpdated', resp.props.flash.message);
         },
         onError: () => {
-            console.log('errors', form.errors)
+            console.log('errors', form.errors);
         },
     });
 };
-
 </script>
 
 <template>
+    <header class="mb-6">
+        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Edit Expense</h2>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+    </header>
 
     <form @submit.prevent="update" class="max-md:space-y-6 md:flex md:flex-wrap">
-
         <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col md:justify-between">
-
             <div>
                 <InputLabel for="payee" value="Payee" />
                 <TextInput id="payee" type="text" class="mt-1 block w-full" v-model="form.payee" required autofocus />
@@ -57,13 +59,24 @@ const update = () => {
 
             <div>
                 <InputLabel for="amount" value="Amount" />
-                <NumberInput id="amount" class="mt-1 block w-full" step=".01" placeholder="0.00" v-model="form.amount" required />
+                <NumberInput
+                    id="amount"
+                    class="mt-1 block w-full"
+                    step=".01"
+                    placeholder="0.00"
+                    v-model="form.amount"
+                    required />
                 <InputError class="mt-2" :message="form.errors.amount" />
             </div>
 
             <div>
                 <InputLabel for="foreign_currency_conversion_fee" value="Foreign Currency Conversion Fee" />
-                <NumberInput id="foreign_currency_conversion_fee" class="mt-1 block w-full" step=".01" placeholder="0.00" v-model="form.foreign_currency_conversion_fee" />
+                <NumberInput
+                    id="foreign_currency_conversion_fee"
+                    class="mt-1 block w-full"
+                    step=".01"
+                    placeholder="0.00"
+                    v-model="form.foreign_currency_conversion_fee" />
                 <InputError class="mt-2" :message="form.errors.foreign_currency_conversion_fee" />
             </div>
 
@@ -78,7 +91,6 @@ const update = () => {
                 <TextInput id="date" type="date" class="mt-1 block w-full" v-model="form.transaction_date" required />
                 <InputError class="mt-2" :message="form.errors.transaction_date" />
             </div>
-
 
             <div>
                 <InputLabel for="date" value="Effective Date" />
@@ -105,5 +117,4 @@ const update = () => {
             <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
         </div>
     </form>
-
 </template>

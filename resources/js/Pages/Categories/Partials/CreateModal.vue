@@ -29,6 +29,7 @@ const create = () => {
         preserveScroll: true,
         onSuccess: (resp) => {
             emit('created', resp.props.flash.message)
+            form.reset()
         },
         onError: () => {
             console.log('errors', form.errors)
