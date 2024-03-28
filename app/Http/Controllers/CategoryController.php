@@ -53,6 +53,10 @@ class CategoryController extends Controller
             'color' => ['required', 'hex_color'],
         ]);
 
+        if ($category->name === Category::DEFAULT && $validated['name'] !== Category::DEFAULT) {
+            return back()->withErrors(['message' => 'The default category cannot be renamed.']);
+        }
+
         $category->update($validated);
 
         return back()->with('message', 'Category successfully updated.');

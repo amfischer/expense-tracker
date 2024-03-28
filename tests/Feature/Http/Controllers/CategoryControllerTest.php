@@ -23,11 +23,11 @@ it("will not show another user's categories", function () {
 
     $this->get(route('categories.index'))
         ->assertOk()
-        ->assertDontSee($categoryRestricted->payee)
-        ->assertDontSee($categoryRestricted->total);
+        ->assertDontSee($categoryRestricted->name);
 
     $this->assertDatabaseMissing('categories', [
         'user_id' => $this->user->id,
+        'id'      => $categoryRestricted->id,
     ]);
 });
 
@@ -53,6 +53,17 @@ test('users can update existing categories', function () {
     $this->assertDatabaseHas('categories', $formData);
 });
 
+test('users cannot rename the default category', function () {
+    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT])->first();
+
+    $formData = $category->toArray();
+    $formData['name'] = 'updated name';
+
+    $this->put(route('categories.update', $category), $formData)
+        ->assertRedirect()
+        ->assertSessionHasErrors(['message' => 'The default category cannot be renamed.']);
+});
+
 test('users can delete existing categories', function () {
     $category = Category::factory()->create(['user_id' => $this->user->id]);
 
@@ -71,7 +82,7 @@ it('will block category deletion if the category is linked to any expenses', fun
 
     $this->delete(route('categories.delete', $category))
         ->assertRedirect()
-        ->assertSessionHasErrors('message', 'category is linked to '.count($expenses).' expenses. Remove these relationships before deleting.');
+        ->assertSessionHasErrors(['message' => 'category is linked to '.count($expenses).' expenses. Remove these relationships before deleting.']);
 
 });
 
@@ -80,7 +91,7 @@ test('default category cannot be deleted', function () {
 
     $this->delete(route('categories.delete', $category))
         ->assertRedirect()
-        ->assertSessionHasErrors('message', 'Default category cannot be deleted.');
+        ->assertSessionHasErrors(['message' => 'Default category cannot be deleted.']);
 });
 
 /**
