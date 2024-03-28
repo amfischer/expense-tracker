@@ -18,7 +18,6 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property string $name
- * @property string $abbreviation
  * @property string $color
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -29,7 +28,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static \Illuminate\Database\Eloquent\Builder|Category whereAbbreviation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)

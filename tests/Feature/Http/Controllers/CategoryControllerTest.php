@@ -75,6 +75,14 @@ it('will block category deletion if the category is linked to any expenses', fun
 
 });
 
+test('default category cannot be deleted', function () {
+    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT])->first();
+
+    $this->delete(route('categories.delete', $category))
+        ->assertRedirect()
+        ->assertSessionHasErrors('message', 'Default category cannot be deleted.');
+});
+
 /**
  * AUTHORIZATION TESTS
  */

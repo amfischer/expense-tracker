@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use App\Providers\RouteServiceProvider;
 
 test('registration screen can be rendered', function () {
@@ -18,4 +19,15 @@ test('new users can register', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(RouteServiceProvider::HOME);
+});
+
+test('newely registered users have the default category created', function () {
+    $this->post('/register', [
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $this->assertDatabaseHas('categories', ['name' => Category::DEFAULT]);
 });

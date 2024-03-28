@@ -11,6 +11,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    const DEFAULT = 'Uncategorized';
+
     protected $guarded = [];
 
     protected $hidden = [
@@ -26,5 +28,17 @@ class Category extends Model
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public static function createDefault(User $user)
+    {
+        $default = [
+            'user_id' => $user->id,
+            'name'    => self::DEFAULT,
+            'color'   => '#e5e7eb',
+
+        ];
+
+        self::create($default);
     }
 }
