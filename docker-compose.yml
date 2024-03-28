@@ -19,13 +19,13 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
         volumes:
             - '.:/var/www/html'
-            # - './docker/8.3/xdebug.ini:/etc/php/8.3/cli/conf.d/20-xdebug.ini'
             - './docker/8.3/php.ini:/etc/php/8.3/cli/conf.d/99-sail.ini'
             - './docker/tmp:/tmp/xdebug'
         networks:
             - sail
         depends_on:
             - mysql
+            - mailpit
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -50,6 +50,13 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+    mailpit:
+        image: 'axllent/mailpit:latest'
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
