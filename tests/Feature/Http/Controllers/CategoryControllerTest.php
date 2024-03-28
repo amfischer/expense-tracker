@@ -61,7 +61,7 @@ test('users cannot rename the default category', function () {
 
     $this->put(route('categories.update', $category), $formData)
         ->assertRedirect()
-        ->assertSessionHasErrors(['message' => 'The default category cannot be renamed.']);
+        ->assertSessionHasErrors(['name' => 'The default category cannot be renamed.']);
 });
 
 test('users can delete existing categories', function () {

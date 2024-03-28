@@ -54,7 +54,7 @@ class CategoryController extends Controller
         ]);
 
         if ($category->name === Category::DEFAULT && $validated['name'] !== Category::DEFAULT) {
-            return back()->withErrors(['message' => 'The default category cannot be renamed.']);
+            return back()->withErrors(['name' => 'The default category cannot be renamed.']);
         }
 
         $category->update($validated);
