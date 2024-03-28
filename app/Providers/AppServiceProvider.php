@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -48,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->resolving(IntlMoneyFormatter::class, function (IntlMoneyFormatter $c, Application $app) {
             // Called when container resolves objects of type "Transistor"...
             // ray('resolving ISOCurrencies', $c);
+        });
+
+        Gate::define('access-application', function (User $user) {
+            return in_array($user->email, explode(',', config('auth.application_access')));
         });
     }
 }
