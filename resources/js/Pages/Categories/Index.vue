@@ -7,7 +7,6 @@ import CreateModal from './Partials/CreateModal.vue';
 import EditModal from './Partials/EditModal.vue';
 import DeleteModal from './Partials/DeleteModal.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import { useCategoryStore } from '@/Stores/category.js';
 
 defineProps({
@@ -15,12 +14,6 @@ defineProps({
 });
 
 const categoryStore = useCategoryStore();
-
-const alertMessage = ref('');
-const toggleAlert = (payload) => {
-    alertMessage.value = payload;
-};
-
 </script>
 
 <template>
@@ -32,10 +25,7 @@ const toggleAlert = (payload) => {
         </template>
 
         <div class="relative">
-            <AlertSuccess
-                :message="alertMessage"
-                @close="alertMessage = ''"
-                class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
+            <AlertSuccess class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
 
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -68,6 +58,5 @@ const toggleAlert = (payload) => {
         <CreateModal />
         <EditModal />
         <DeleteModal />
-
     </AuthenticatedLayout>
 </template>

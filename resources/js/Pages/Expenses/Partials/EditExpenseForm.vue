@@ -8,6 +8,7 @@ import Textarea from '@/Components/Forms/Textarea.vue';
 import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
+import { useAlertStore } from '@/Stores/alert';
 
 const props = defineProps({
     expense: Object,
@@ -26,13 +27,13 @@ const form = useForm({
     notes: props.expense.notes,
 });
 
-const emit = defineEmits(['expenseUpdated']);
+const alert = useAlertStore();
 
 const update = () => {
     form.put(route('expenses.update', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            emit('expenseUpdated', resp.props.flash.message);
+            alert.setMessage(resp.props.flash.message);
         },
         onError: () => {
             console.log('errors', form.errors);

@@ -5,8 +5,10 @@ import InputError from '@/Components/InputError.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { useCategoryStore } from '@/Stores/category.js';
+import { useAlertStore } from '@/Stores/alert';
 
 const categoryStore = useCategoryStore();
+const alert = useAlertStore();
 
 const errorMessage = ref('');
 
@@ -15,13 +17,11 @@ const closeModal = () => {
     errorMessage.value = '';
 };
 
-// const emit = defineEmits(['deleted']);
-
 const deleteCategory = () => {
     router.delete(route('categories.delete', categoryStore.selectedCategory.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            // emit('deleted', resp.props.flash.message);
+            alert.setMessage(resp.props.flash.message);
             closeModal();
         },
         onError: (err) => {

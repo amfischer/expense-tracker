@@ -5,16 +5,12 @@ import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 defineProps({
     expense: Object,
     categories: Array,
     currencies: Array,
 });
-
-const successMessage = ref('');
-const toggleAlert = (msg) => successMessage.value = msg;
 
 </script>
 
@@ -28,7 +24,7 @@ const toggleAlert = (msg) => successMessage.value = msg;
 
         <div class="relative">
 
-            <AlertSuccess :message="successMessage" @close="successMessage = ''" class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
+            <AlertSuccess class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
 
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
@@ -40,7 +36,7 @@ const toggleAlert = (msg) => successMessage.value = msg;
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" @expense-updated="toggleAlert" />
+                        <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" />
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

@@ -7,8 +7,10 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/Stores/category.js';
 import { watch } from 'vue';
+import { useAlertStore } from '@/Stores/alert';
 
 const categoryStore = useCategoryStore();
+const alert = useAlertStore();
 
 const form = useForm({
     name: '',
@@ -28,13 +30,11 @@ const closeModal = () => {
     // form.reset();
 };
 
-// const emit = defineEmits(['updated']);
-
 const updateCategory = () => {
     form.put(route('categories.update', categoryStore.selectedCategory.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            // emit('updated', resp.props.flash.message);
+            alert.setMessage(resp.props.flash.message);
             closeModal();
         },
         onError: () => {

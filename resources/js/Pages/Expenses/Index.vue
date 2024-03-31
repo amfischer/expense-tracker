@@ -10,7 +10,6 @@ defineProps({
     expenses: Object,
     categories: Array,
 });
-
 </script>
 
 <template>
@@ -24,7 +23,6 @@ defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="px-4 sm:px-6 lg:px-8">
-
                     <div class="sm:flex sm:items-center sm:justify-end">
                         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                             <ButtonLink :href="route('expenses.create')">Add expense</ButtonLink>
@@ -40,10 +38,8 @@ defineProps({
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
     </AuthenticatedLayout>
 </template>

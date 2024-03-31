@@ -6,12 +6,14 @@ import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/Stores/category.js';
+import { useAlertStore } from '@/Stores/alert';
 
 const categoryStore = useCategoryStore();
+const alert = useAlertStore();
 
 const form = useForm({
     name: '',
-    color: '',
+    color: '#000000',
 });
 
 const closeModal = () => {
@@ -20,13 +22,11 @@ const closeModal = () => {
     form.reset();
 };
 
-// const emit = defineEmits(['created']);
-
 const create = () => {
     form.post(route('categories.store'), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            // emit('created', resp.props.flash.message);
+            alert.setMessage(resp.props.flash.message);
             closeModal();
         },
         onError: () => {

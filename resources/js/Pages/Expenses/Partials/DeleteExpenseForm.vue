@@ -1,7 +1,6 @@
 <script setup>
 import DangerButton from '@/Components/DangerButton.vue';
 import Modal from '@/Components/Modal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -37,27 +36,21 @@ const closeModal = () => {
 
         <DangerButton @click="showConfirmModal = true">Delete Expense</DangerButton>
 
-        <Modal :show="showConfirmModal" @close="closeModal">
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    Are you sure you want to delete this expense?
-                </h2>
+        <Modal :show="showConfirmModal" max-width="md" @close="closeModal">
+            <template #header> Are you sure you want to delete this expense? </template>
 
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ expense.payee }}
-                </p>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ expense.amount_pretty }}
-                </p>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    {{ expense.transaction_date }}
-                </p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ expense.payee }}
+            </p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ expense.amount_pretty }}
+            </p>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ expense.transaction_date }}
+            </p>
 
-                <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
-
-                    <DangerButton class="ms-3" @click="deleteExpense"> Delete Expense </DangerButton>
-                </div>
+            <div class="mt-6 flex justify-end">
+                <DangerButton class="ms-3" @click="deleteExpense"> Delete Expense </DangerButton>
             </div>
         </Modal>
     </section>

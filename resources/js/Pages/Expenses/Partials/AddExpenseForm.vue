@@ -8,6 +8,7 @@ import Textarea from '@/Components/Forms/Textarea.vue';
 import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
+import { useAlertStore } from '@/Stores/alert';
 
 const props = defineProps({
     categories: Array,
@@ -25,14 +26,14 @@ const form = useForm({
     notes: '',
 });
 
-const emit = defineEmits(['expenseCreated'])
+const alert = useAlertStore();
 
 const create = () => {
     form.post(route('expenses.store'), {
         preserveScroll: true,
         onSuccess: (resp) => {
             form.reset()
-            emit('expenseCreated', resp.props.flash.message)
+            alert.setMessage(resp.props.flash.message)
         },
         onError: () => {
             console.log('errors', form.errors)
