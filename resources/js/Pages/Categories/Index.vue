@@ -8,38 +8,19 @@ import EditModal from './Partials/EditModal.vue';
 import DeleteModal from './Partials/DeleteModal.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useCategoryStore } from '@/Stores/category.js';
 
 defineProps({
     categories: Array,
 });
 
+const categoryStore = useCategoryStore();
+
 const alertMessage = ref('');
 const toggleAlert = (payload) => {
-    closeModals();
     alertMessage.value = payload;
 };
 
-const selectedCategory = ref(null);
-
-const showCreateModal = ref(false);
-
-const showEditModal = ref(false);
-const openEditModal = (payload) => {
-    showEditModal.value = true;
-    selectedCategory.value = payload;
-};
-
-const showDeleteModal = ref(false);
-const openDeleteModal = (payload) => {
-    showDeleteModal.value = true;
-    selectedCategory.value = payload;
-};
-
-const closeModals = () => {
-    showCreateModal.value = false;
-    showEditModal.value = false;
-    showDeleteModal.value = false;
-};
 </script>
 
 <template>
@@ -61,7 +42,7 @@ const closeModals = () => {
                     <div class="px-4 sm:px-6 lg:px-8">
                         <div class="sm:flex sm:items-center sm:justify-end">
                             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                                <PrimaryButton @click="showCreateModal = true">Add category</PrimaryButton>
+                                <PrimaryButton @click="categoryStore.openCreateModal()">Add category</PrimaryButton>
                             </div>
                         </div>
 
@@ -74,9 +55,7 @@ const closeModals = () => {
                                         <SimpleCard
                                             v-for="category in categories"
                                             :key="category.id"
-                                            :category="category"
-                                            @toggle-edit-modal="openEditModal"
-                                            @toggle-delete-modal="openDeleteModal" />
+                                            :category="category" />
                                     </ul>
                                 </div>
                             </div>
@@ -86,8 +65,9 @@ const closeModals = () => {
             </div>
         </div>
 
-        <CreateModal :open="showCreateModal" @created="toggleAlert" @close="closeModals" />
-        <EditModal :open="showEditModal" :category="selectedCategory" @updated="toggleAlert" @close="closeModals" />
-        <DeleteModal :open="showDeleteModal" :category="selectedCategory" @deleted="toggleAlert" @close="closeModals" />
+        <CreateModal />
+        <EditModal />
+        <DeleteModal />
+
     </AuthenticatedLayout>
 </template>
