@@ -20,8 +20,9 @@ class Expense extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'transaction_date' => 'datetime:Y-m-d',
-        'effective_date'   => 'datetime:Y-m-d',
+        'transaction_date'    => 'datetime:Y-m-d',
+        'effective_date'      => 'datetime:Y-m-d',
+        'is_business_expense' => 'boolean',
     ];
 
     protected $appends = [

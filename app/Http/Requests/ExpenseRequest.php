@@ -29,6 +29,7 @@ class ExpenseRequest extends FormRequest
             'payee'                           => ['required', new AlphaSpace],
             'amount'                          => 'required|decimal:0,2',
             'foreign_currency_conversion_fee' => 'nullable|decimal:0,2',
+            'is_business_expense'             => 'required|boolean',
             'currency'                        => ['required', Rule::in(Currency::names())],
             'transaction_date'                => 'required|date',
             'effective_date'                  => 'required|date',

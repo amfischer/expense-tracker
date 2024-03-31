@@ -9,6 +9,7 @@ import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
+import Checkbox from '@/Components/Checkbox.vue';
 
 const props = defineProps({
     categories: Array,
@@ -20,6 +21,7 @@ const form = useForm({
     amount: 0,
     foreign_currency_conversion_fee: 0,
     currency: props.currencies[0],
+    is_business_expense: false,
     transaction_date: '',
     effective_date: '',
     category_id: props.categories[0].id,
@@ -116,6 +118,16 @@ const create = () => {
                 <SelectMenu :options="categories" v-model="form.category_id" />
                 <InputError class="mt-2" :message="form.errors.category_id" />
             </div>
+
+            <div class="flex items-center mb-2 md:w-1/2">
+                <div class="flex h-6 items-center">
+                    <Checkbox id="business_expense" v-model:checked="form.is_business_expense" />
+                </div>
+                <div class="ml-3">
+                    <InputLabel for="business_expense" value="Business Expense" class="cursor-pointer" />
+                </div>
+            </div>
+            <InputError class="mt-2" :message="form.errors.is_business_expense" />
 
             <div>
                 <InputLabel for="notes" value="Notes" />
