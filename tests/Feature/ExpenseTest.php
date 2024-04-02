@@ -2,15 +2,17 @@
 
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 it('can show expenses', function () {
-    $expense = Expense::factory()->create();
+    $user = User::factory()->hasAppAcess()->create();
+    $expense = Expense::factory()->create(['user_id' => $user->id]);
 
     $this->get('/expenses')
-        ->assertRedirect(route('login'));
+    ->assertRedirect(route('login'));
 
-    login($expense->user);
+    login($user);
 
     $this->get(route('expenses.index'))
         ->assertSee($expense->payee)
