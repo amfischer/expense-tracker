@@ -2,22 +2,22 @@
 
 return [
 
-    'backup' => [
+    'backup'          => [
 
         /*
          * The name of this application. You can use this name to monitor
          * the backups.
          */
-        'name' => 'et-backup',
+        'name'                                => 'et-backup',
 
-        'source' => [
+        'source'                              => [
 
-            'files' => [
+            'files'     => [
 
                 /*
                  * The list of directories and files that will be included in the backup.
                  */
-                'include' => [
+                'include'                       => [
                     base_path(),
                 ],
 
@@ -26,7 +26,7 @@ return [
                  *
                  * Directories used by the backup process will automatically be excluded.
                  */
-                'exclude' => [
+                'exclude'                       => [
                     base_path('vendor'),
                     base_path('node_modules'),
                 ],
@@ -34,7 +34,7 @@ return [
                 /*
                  * Determines if symlinks should be followed.
                  */
-                'follow_links' => false,
+                'follow_links'                  => false,
 
                 /*
                  * Determines if it should avoid unreadable folders.
@@ -46,7 +46,7 @@ return [
                  * Set to `null` to include complete absolute path
                  * Example: base_path()
                  */
-                'relative_path' => null,
+                'relative_path'                 => null,
             ],
 
             /*
@@ -95,7 +95,7 @@ return [
          *
          * If you do not want any compressor at all, set it to null.
          */
-        'database_dump_compressor' => null,
+        'database_dump_compressor'            => null,
 
         /*
          * If specified, the database dumped file name will contain a timestamp (e.g.: 'Y-m-d-H-i-s').
@@ -108,9 +108,9 @@ return [
          * If not specified, the file extension will be .archive for MongoDB and .sql for all other databases
          * The file extension should be specified without a leading .
          */
-        'database_dump_file_extension' => '',
+        'database_dump_file_extension'        => '',
 
-        'destination' => [
+        'destination'                         => [
             /*
              * The compression algorithm to be used for creating the zip archive.
              *
@@ -135,31 +135,29 @@ return [
              *
              * Setting of 0 for some algorithms may switch to the strongest compression.
              */
-            'compression_level' => 9,
+            'compression_level'  => 9,
 
             /*
              * The filename prefix used for the backup zip file.
              */
-            'filename_prefix' => '',
+            'filename_prefix'    => '',
 
             /*
              * The disk names on which the backups will be stored.
              */
-            'disks' => [
-                'local',
-            ],
+            'disks'              => ['s3'],
         ],
 
         /*
          * The directory where the temporary files will be stored.
          */
-        'temporary_directory' => storage_path('app/backup-temp'),
+        'temporary_directory'                 => storage_path('app/backup-temp'),
 
         /*
          * The password to be used for archive encryption.
          * Set to `null` to disable encryption.
          */
-        'password' => env('BACKUP_ARCHIVE_PASSWORD'),
+        'password'                            => env('BACKUP_ARCHIVE_PASSWORD'),
 
         /*
          * The encryption algorithm to be used for archive encryption.
@@ -168,18 +166,18 @@ return [
          * When set to 'default', we'll use ZipArchive::EM_AES_256 if it is
          * available on your system.
          */
-        'encryption' => 'default',
+        'encryption'                          => 'default',
 
         /**
          * The number of attempts, in case the backup command encounters an exception
          */
-        'tries' => 1,
+        'tries'                               => 1,
 
         /**
          * The number of seconds to wait before attempting a new backup if the previous try failed
          * Set to `0` for none
          */
-        'retry_delay' => 0,
+        'retry_delay'                         => 0,
     ],
 
     /*
@@ -189,58 +187,58 @@ return [
      * You can also use your own notification classes, just make sure the class is named after one of
      * the `Spatie\Backup\Notifications\Notifications` classes.
      */
-    'notifications' => [
+    'notifications'   => [
 
         'notifications' => [
-            \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class         => ['mail'],
             \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class        => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class     => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class   => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class    => ['mail'],
         ],
 
         /*
          * Here you can specify the notifiable to which the notifications should be sent. The default
          * notifiable will use the variables specified in this config file.
          */
-        'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
+        'notifiable'    => \Spatie\Backup\Notifications\Notifiable::class,
 
-        'mail' => [
-            'to' => 'amfischer21@gmail.com',
+        'mail'          => [
+            'to'   => 'amfischer21@gmail.com',
 
             'from' => [
                 'address' => 'backup@expense-tracker.org',
-                'name' => 'Jay Money',
+                'name'    => 'Jay Money',
             ],
         ],
 
-        'slack' => [
+        'slack'         => [
             'webhook_url' => '',
 
             /*
              * If this is set to null the default channel of the webhook will be used.
              */
-            'channel' => null,
+            'channel'     => null,
 
-            'username' => null,
+            'username'    => null,
 
-            'icon' => null,
+            'icon'        => null,
 
         ],
 
-        'discord' => [
+        'discord'       => [
             'webhook_url' => '',
 
             /*
              * If this is an empty string, the name field on the webhook will be used.
              */
-            'username' => '',
+            'username'    => '',
 
             /*
              * If this is an empty string, the avatar on the webhook will be used.
              */
-            'avatar_url' => '',
+            'avatar_url'  => '',
         ],
     ],
 
@@ -251,10 +249,10 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'name'          => 'et-backup',
+            'disks'         => ['s3'],
             'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class          => 1,
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
             ],
         ],
@@ -271,7 +269,7 @@ return [
         */
     ],
 
-    'cleanup' => [
+    'cleanup'         => [
         /*
          * The strategy that will be used to cleanup old backups. The default strategy
          * will keep all backups for a certain amount of days. After that period only
@@ -281,40 +279,40 @@ return [
          * No matter how you configure it the default strategy will never
          * delete the newest backup.
          */
-        'strategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
+        'strategy'         => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
 
         'default_strategy' => [
 
             /*
              * The number of days for which backups must be kept.
              */
-            'keep_all_backups_for_days' => 7,
+            'keep_all_backups_for_days'                            => 7,
 
             /*
              * After the "keep_all_backups_for_days" period is over, the most recent backup
              * of that day will be kept. Older backups within the same day will be removed.
              * If you create backups only once a day, no backups will be removed yet.
              */
-            'keep_daily_backups_for_days' => 16,
+            'keep_daily_backups_for_days'                          => 16,
 
             /*
              * After the "keep_daily_backups_for_days" period is over, the most recent backup
              * of that week will be kept. Older backups within the same week will be removed.
              * If you create backups only once a week, no backups will be removed yet.
              */
-            'keep_weekly_backups_for_weeks' => 8,
+            'keep_weekly_backups_for_weeks'                        => 8,
 
             /*
              * After the "keep_weekly_backups_for_weeks" period is over, the most recent backup
              * of that month will be kept. Older backups within the same month will be removed.
              */
-            'keep_monthly_backups_for_months' => 4,
+            'keep_monthly_backups_for_months'                      => 4,
 
             /*
              * After the "keep_monthly_backups_for_months" period is over, the most recent backup
              * of that year will be kept. Older backups within the same year will be removed.
              */
-            'keep_yearly_backups_for_years' => 2,
+            'keep_yearly_backups_for_years'                        => 2,
 
             /*
              * After cleaning up the backups remove the oldest backup until
@@ -326,13 +324,13 @@ return [
         /**
          * The number of attempts, in case the cleanup command encounters an exception
          */
-        'tries' => 1,
+        'tries'            => 1,
 
         /**
          * The number of seconds to wait before attempting a new cleanup if the previous try failed
          * Set to `0` for none
          */
-        'retry_delay' => 0,
+        'retry_delay'      => 0,
     ],
 
 ];
