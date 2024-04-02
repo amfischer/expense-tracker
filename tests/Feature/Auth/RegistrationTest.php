@@ -29,5 +29,5 @@ test('newely registered users have the default category created', function () {
         'password_confirmation' => 'password',
     ]);
 
-    $this->assertDatabaseHas('categories', ['name' => Category::DEFAULT]);
+    $this->assertDatabaseHas('categories', ['name' => Category::DEFAULT_NAME]);
 });

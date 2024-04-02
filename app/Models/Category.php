@@ -11,7 +11,9 @@ class Category extends Model
 {
     use HasFactory;
 
-    const DEFAULT = 'Uncategorized';
+    const DEFAULT_NAME = 'Uncategorized';
+
+    const DEFAULT_COLOR = '#e5e7eb';
 
     protected $guarded = [];
 
@@ -34,8 +36,8 @@ class Category extends Model
     {
         $default = [
             'user_id' => $user->id,
-            'name'    => self::DEFAULT,
-            'color'   => '#e5e7eb',
+            'name'    => self::DEFAULT_NAME,
+            'color'   => self::DEFAULT_COLOR,
 
         ];
 

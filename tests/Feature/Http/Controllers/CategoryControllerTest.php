@@ -54,7 +54,7 @@ test('users can update existing categories', function () {
 });
 
 test('users cannot rename the default category', function () {
-    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT])->first();
+    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
 
     $formData = $category->toArray();
     $formData['name'] = 'updated name';
@@ -87,7 +87,7 @@ it('will block category deletion if the category is linked to any expenses', fun
 });
 
 test('default category cannot be deleted', function () {
-    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT])->first();
+    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
 
     $this->delete(route('categories.delete', $category))
         ->assertRedirect()

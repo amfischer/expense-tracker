@@ -53,7 +53,7 @@ class CategoryController extends Controller
             'color' => ['required', 'hex_color'],
         ]);
 
-        if ($category->name === Category::DEFAULT && $validated['name'] !== Category::DEFAULT) {
+        if ($category->name === Category::DEFAULT_NAME && $validated['name'] !== Category::DEFAULT_NAME) {
             return back()->withErrors(['name' => 'The default category cannot be renamed.']);
         }
 
@@ -69,7 +69,7 @@ class CategoryController extends Controller
     {
         Gate::authorize('delete', $category);
 
-        if ($category->name === Category::DEFAULT) {
+        if ($category->name === Category::DEFAULT_NAME) {
             return back()->withErrors(['message' => 'Default category cannot be deleted.']);
         }
 

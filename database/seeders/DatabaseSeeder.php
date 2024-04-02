@@ -23,34 +23,23 @@ class DatabaseSeeder extends Seeder
         //     UserSeeder::class
         // ]);
 
+        $this->aaron();
+
+        // $this->luke();
+    }
+
+    public function aaron(): void
+    {
         $user = User::factory()->create([
             'name'     => 'Aaron',
             'email'    => 'aaron@example.com',
             'password' => Hash::make('password'),
         ]);
 
-        $categoryIds = [];
-
-        foreach (CategoryFactory::$categories as $category) {
-            $data = [
-                'user_id' => $user->id,
-                'name'    => $category,
-            ];
-
-            $categoryIds[] = Category::factory()->create($data)->id;
-        }
-
-        for ($i = 0; $i < 10; $i++) {
-            Expense::factory()->create([
-                'user_id'     => $user->id,
-                'category_id' => Arr::random($categoryIds),
-            ]);
-        }
-
-        $this->createNewUserData();
+        // $this->createTestData($user);
     }
 
-    public function createNewUserData()
+    public function luke()
     {
         $user = User::factory()->create([
             'name'     => 'Luke',
@@ -58,6 +47,11 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        $this->createTestData($user);
+    }
+
+    protected function createTestData(User $user): void
+    {
         $categoryIds = [];
 
         foreach (CategoryFactory::$categories as $category) {
@@ -75,5 +69,6 @@ class DatabaseSeeder extends Seeder
                 'category_id' => Arr::random($categoryIds),
             ]);
         }
+
     }
 }

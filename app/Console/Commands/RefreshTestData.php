@@ -32,7 +32,7 @@ class RefreshTestData extends Command
         $jeremy->expenses()->delete();
         $jeremy->categories()->delete();
 
-        foreach ($this->createCategoriesAndExpenses() as $data) {
+        foreach ($this->getCategoriesAndExpenses() as $data) {
             $category = Category::create([
                 'user_id' => $jeremy->id,
                 'name'    => $data['category']['name'],
@@ -56,10 +56,14 @@ class RefreshTestData extends Command
 
     }
 
-    public function createCategoriesAndExpenses()
+    public function getCategoriesAndExpenses()
     {
 
         return [
+            [
+                'category' => ['name' => Category::DEFAULT_NAME, 'color' => Category::DEFAULT_COLOR],
+                'expenses' => [],
+            ],
             [
                 'category' => ['name' => 'Investments', 'color' => '#FF5733'],
                 'expenses' => [
