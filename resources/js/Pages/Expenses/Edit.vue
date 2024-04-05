@@ -1,21 +1,25 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import EditExpenseForm from './Partials/EditExpenseForm.vue';
-import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
+import EditExpenseForm from './Partials/EditExpenseForm.vue';
+import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
+import AddReceiptForm from './Partials/AddReceiptForm.vue';
+import DeleteReceiptForm from './Partials/DeleteReceiptForm.vue';
 import { Head } from '@inertiajs/vue3';
-import { provide } from 'vue';
-import ReceiptForm from './Partials/ReceiptForm.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     expense: Object,
     categories: Array,
     currencies: Array,
-    receiptBase64Img: String,
+    receipt: Object,
 });
 
-provide('receipt', props.receiptBase64Img);
+const hasReceipt = computed(() => {
+    return props.receipt !== null;
+});
+
 </script>
 
 <template>
@@ -38,14 +42,18 @@ provide('receipt', props.receiptBase64Img);
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <EditExpenseForm
-                            :expense="expense"
-                            :categories="categories"
-                            :currencies="currencies" />
+                        <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" />
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <ReceiptForm :expense="expense" :image="receiptBase64Img" />
+                        <header class="mb-6">
+                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manage Receipt(s)</h2>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            </p>
+                        </header>
+                        <AddReceiptForm v-if="!hasReceipt" :expense="expense" />
+                        <DeleteReceiptForm v-else :expense="expense" :receipt="receipt" />
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">

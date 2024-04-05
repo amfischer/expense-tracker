@@ -62,8 +62,7 @@ class ExpenseController extends Controller
     {
         $validated = $request->validated();
 
-        // create expense
-        $expense = $request->user()->expenses()->create($validated);
+        $request->user()->expenses()->create($validated);
 
         return back()->with('message', 'Expense successfully created.');
     }
@@ -76,9 +75,8 @@ class ExpenseController extends Controller
         $currencies = Currency::values();
 
         $receipt = $expense->receipts()->first();
-        $receiptBase64Img = is_null($receipt) ? '' : base64_encode(Storage::disk('receipts')->get($receipt->file));
 
-        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receiptBase64Img'));
+        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receipt'));
     }
 
     public function update(ExpenseRequest $request, Expense $expense): RedirectResponse
@@ -127,5 +125,16 @@ class ExpenseController extends Controller
         ]);
 
         return back()->with('message', 'Receipt successfully uploaded.');
+    }
+
+    public function deleteReceipt(Expense $expense, Receipt $receipt): RedirectResponse
+    {
+        Gate::authorize('delete', $expense);
+
+        Storage::disk('receipts')->delete($receipt->path.'/'.$receipt->filename);
+
+        $receipt->delete();
+
+        return back()->with('message', 'Receipt successfully deleted');
     }
 }
