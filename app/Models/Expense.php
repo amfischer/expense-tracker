@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Money\Currency;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -52,6 +53,11 @@ class Expense extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function receipts(): HasMany
+    {
+        return $this->hasMany(Receipt::class);
     }
 
     protected function amount(): Attribute
@@ -131,5 +137,10 @@ class Expense extends Model
                 return app(IntlMoneyFormatter::class)->format($total);
             }
         );
+    }
+
+    public function getReceiptStoragePath(): string
+    {
+        return 'user_'.$this->user->id.'/'.date('Y/m', strtotime($this->transaction_date));
     }
 }

@@ -5,13 +5,17 @@ import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import { Head } from '@inertiajs/vue3';
+import { provide } from 'vue';
+import ReceiptForm from './Partials/ReceiptForm.vue';
 
-defineProps({
+const props = defineProps({
     expense: Object,
     categories: Array,
     currencies: Array,
+    receiptBase64Img: String,
 });
 
+provide('receipt', props.receiptBase64Img);
 </script>
 
 <template>
@@ -23,12 +27,10 @@ defineProps({
         </template>
 
         <div class="relative">
-
             <AlertSuccess class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
 
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
                     <div class="sm:flex sm:items-center sm:justify-end">
                         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                             <ButtonLink :href="route('expenses.index')">Back</ButtonLink>
@@ -36,16 +38,21 @@ defineProps({
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                        <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" />
+                        <EditExpenseForm
+                            :expense="expense"
+                            :categories="categories"
+                            :currencies="currencies" />
+                    </div>
+
+                    <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <ReceiptForm :expense="expense" :image="receiptBase64Img" />
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <DeleteExpenseForm :expense="expense" />
                     </div>
-
                 </div>
             </div>
-
         </div>
     </AuthenticatedLayout>
 </template>
