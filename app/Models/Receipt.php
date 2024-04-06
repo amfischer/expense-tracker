@@ -30,11 +30,10 @@ class Receipt extends Model
 
     protected function imageContents(): Attribute
     {
-        $storagePath = $this->expense->getReceiptStoragePath();
-
         return Attribute::make(
-            get: function (mixed $value, array $attr) use ($storagePath) {
-                $file = $storagePath . '/' . $attr['filename'];
+            get: function (mixed $value, array $attr) {
+                $expense = Expense::find($attr['expense_id']);
+                $file = $expense->getReceiptStoragePath() . '/' . $attr['filename'];
 
                 return base64_encode(Storage::disk('receipts')->get($file));
             }

@@ -45,11 +45,13 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function login(?User $user = null)
+function login(?User $user = null): User
 {
     if ($user === null) {
         $user = User::factory()->hasAppAcess()->create(); // needs to use an email in APP_ACCESS
     }
 
     actingAs($user);
+
+    return $user;
 }

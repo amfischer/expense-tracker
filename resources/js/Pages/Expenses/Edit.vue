@@ -5,11 +5,11 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import EditExpenseForm from './Partials/EditExpenseForm.vue';
 import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AddReceiptForm from './Partials/AddReceiptForm.vue';
-import { Head } from '@inertiajs/vue3';
-import { computed, onMounted } from 'vue';
 import ShowReceipt from './Partials/ShowReceipt.vue';
 import DeleteReceiptModal from './Partials/DeleteReceiptModal.vue';
 import { useReceiptStore } from '@/Stores/receipt';
+import { Head } from '@inertiajs/vue3';
+import { computed, onMounted } from 'vue';
 
 const props = defineProps({
     expense: Object,
