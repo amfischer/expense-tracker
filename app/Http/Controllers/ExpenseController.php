@@ -119,7 +119,6 @@ class ExpenseController extends Controller
             'user_id'    => Auth::user()->id,
             'expense_id' => $expense->id,
             'filename'   => $filename,
-            'path'       => $storagePath,
             'mimetype'   => $receipt->getMimeType(),
             'size'       => $receipt->getSize(),
         ]);
@@ -131,7 +130,7 @@ class ExpenseController extends Controller
     {
         Gate::authorize('delete', $expense);
 
-        Storage::disk('receipts')->delete($receipt->path.'/'.$receipt->filename);
+        Storage::disk('receipts')->delete($expense->getReceiptStoragePath() . '/' . $receipt->filename);
 
         $receipt->delete();
 

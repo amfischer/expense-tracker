@@ -6,6 +6,9 @@
             "operators": {
                 "=>": "align_single_space_minimal_by_scope"
             }
+        },
+        "concat_space": {
+            "spacing": "one"
         }
     }
 }

@@ -141,6 +141,6 @@ class Expense extends Model
 
     public function getReceiptStoragePath(): string
     {
-        return 'user_'.$this->user->id.'/'.date('Y/m', strtotime($this->transaction_date));
+        return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
     }
 }

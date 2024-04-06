@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('expense_id');
             $table->string('filename');
-            $table->string('path');
             $table->string('mimetype');
             $table->string('size');
             $table->timestamps();
