@@ -5,19 +5,23 @@ import FileInput from '@/Components/Forms/FileInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
-
-const props = defineProps({
-    expense: Object,
-});
+import { useReceiptStore } from '@/Stores/receipt';
+import { watch } from 'vue';
 
 const form = useForm({
     receipt_upload: '',
 });
 
+watch(
+    () => form.receipt_upload,
+    () => form.clearErrors(),
+);
+
+const receiptStore = useReceiptStore();
 const alert = useAlertStore();
 
 const upload = () => {
-    form.post(route('expenses.receipts.store', props.expense.id), {
+    form.post(route('expenses.receipts.store', receiptStore.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
             form.reset();
@@ -35,7 +39,7 @@ const upload = () => {
         <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col md:justify-between">
             <div>
                 <InputLabel for="receipt_upload" value="File Upload" />
-                <FileInput class="mt-1 block w-full" v-model="form.receipt_upload" :image="image" />
+                <FileInput class="mt-1 block w-full" v-model="form.receipt_upload" />
                 <InputError class="mt-2" :message="form.errors.receipt_upload" />
             </div>
         </div>

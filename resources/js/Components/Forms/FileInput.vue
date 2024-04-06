@@ -22,7 +22,7 @@ const fileUploaded = computed(() => {
                     for="file-upload"
                     class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
                     <span>Upload a file</span>
-                    <input id="file-upload" type="file" class="sr-only" @input="model = $event.target.files[0]" />
+                    <input id="file-upload" type="file" class="sr-only" @input="model = $event.target.files[0] || ''" />
                 </label>
                 <p class="pl-1">or drag and drop</p>
             </div>

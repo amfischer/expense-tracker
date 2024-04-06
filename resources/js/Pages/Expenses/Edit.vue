@@ -5,9 +5,11 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import EditExpenseForm from './Partials/EditExpenseForm.vue';
 import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AddReceiptForm from './Partials/AddReceiptForm.vue';
-import DeleteReceiptForm from './Partials/DeleteReceiptForm.vue';
 import { Head } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import ShowReceipt from './Partials/ShowReceipt.vue';
+import DeleteReceiptModal from './Partials/DeleteReceiptModal.vue';
+import { useReceiptStore } from '@/Stores/receipt';
 
 const props = defineProps({
     expense: Object,
@@ -20,6 +22,11 @@ const hasReceipt = computed(() => {
     return props.receipt !== null;
 });
 
+const receiptStore = useReceiptStore();
+
+onMounted(() => {
+    receiptStore.setExpense(props.expense)
+});
 </script>
 
 <template>
@@ -52,8 +59,8 @@ const hasReceipt = computed(() => {
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                             </p>
                         </header>
-                        <AddReceiptForm v-if="!hasReceipt" :expense="expense" />
-                        <DeleteReceiptForm v-else :expense="expense" :receipt="receipt" />
+                        <ShowReceipt v-if="hasReceipt" :receipt="receipt" />
+                        <AddReceiptForm v-else />
                     </div>
 
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
@@ -62,5 +69,7 @@ const hasReceipt = computed(() => {
                 </div>
             </div>
         </div>
+
+        <DeleteReceiptModal />
     </AuthenticatedLayout>
 </template>
