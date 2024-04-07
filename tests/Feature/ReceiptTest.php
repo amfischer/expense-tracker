@@ -27,7 +27,7 @@ test('users can upload a receipt', function () {
 
     $receipt = $this->expense->receipts()->first();
 
-    Storage::disk('receipts')->assertExists($this->expense->getReceiptStoragePath() . '/' . $receipt->filename);
+    Storage::disk('receipts')->assertExists($receipt->filenameWithPath());
 
 });
 
@@ -59,7 +59,7 @@ test('users can delete a receipt', function () {
 
     $receipt = $this->expense->receipts()->first();
 
-    Storage::disk('receipts')->assertExists($this->expense->getReceiptStoragePath() . '/' . $receipt->filename);
+    Storage::disk('receipts')->assertExists($receipt->filenameWithPath());
 
     delete(route('expenses.receipts.delete', [$this->expense->id, $receipt->id]))
         ->assertSessionDoesntHaveErrors()
@@ -67,7 +67,7 @@ test('users can delete a receipt', function () {
 
     assertDatabaseCount('receipts', 0);
 
-    Storage::disk('receipts')->assertMissing($this->expense->getReceiptStoragePath() . '/' . $receipt->filename);
+    Storage::disk('receipts')->assertMissing($receipt->filenameWithPath());
 });
 
 test('updating the expense transaction date will move the corresponding receipt file', function () {

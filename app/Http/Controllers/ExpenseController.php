@@ -75,6 +75,7 @@ class ExpenseController extends Controller
         $currencies = Currency::values();
 
         $receipt = $expense->receipts()->first();
+        $receipt->append('image_contents');
 
         return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receipt'));
     }
@@ -120,20 +121,20 @@ class ExpenseController extends Controller
             'receipt_upload' => ['required', File::image()->min('1kb')->max('1mb')],
         ]);
 
-        /** @var \Illuminate\Http\UploadedFile $receipt */
-        $receipt = $validated['receipt_upload'];
+        /** @var \Illuminate\Http\UploadedFile $file */
+        $file = $validated['receipt_upload'];
 
         $storagePath = $expense->getReceiptStoragePath();
-        $filename = $receipt->hashName();
+        $filename = $file->hashName();
 
-        Storage::disk('receipts')->putFileAs($storagePath, $receipt, $filename);
+        Storage::disk('receipts')->putFileAs($storagePath, $file, $filename);
 
         Receipt::create([
             'user_id'    => Auth::user()->id,
             'expense_id' => $expense->id,
             'filename'   => $filename,
-            'mimetype'   => $receipt->getMimeType(),
-            'size'       => $receipt->getSize(),
+            'mimetype'   => $file->getMimeType(),
+            'size'       => $file->getSize(),
         ]);
 
         return back()->with('message', 'Receipt successfully uploaded.');
@@ -143,7 +144,7 @@ class ExpenseController extends Controller
     {
         Gate::authorize('delete', $expense);
 
-        Storage::disk('receipts')->delete($expense->getReceiptStoragePath() . '/' . $receipt->filename);
+        Storage::disk('receipts')->delete($receipt->filenameWithPath());
 
         $receipt->delete();
 

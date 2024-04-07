@@ -14,10 +14,6 @@ class Receipt extends Model
 
     protected $guarded = [];
 
-    protected $appends = [
-        'image_contents',
-    ];
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -38,5 +34,10 @@ class Receipt extends Model
                 return base64_encode(Storage::disk('receipts')->get($file));
             }
         );
+    }
+
+    public function filenameWithPath()
+    {
+        return $this->expense->getReceiptStoragePath() . '/' . $this->filename;
     }
 }

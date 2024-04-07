@@ -99,7 +99,6 @@ namespace App\Models{
  * @property-read \App\Models\Expense $expense
  * @property-read mixed $image_contents
  * @property-read \App\Models\User $user
- * @method static \Database\Factories\ReceiptFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Receipt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Receipt newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Receipt query()
