@@ -75,7 +75,7 @@ class ExpenseController extends Controller
         $currencies = Currency::values();
 
         $receipt = $expense->receipts()->first();
-        $receipt->append('image_contents');
+        $receipt?->append('image_contents');
 
         return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receipt'));
     }
