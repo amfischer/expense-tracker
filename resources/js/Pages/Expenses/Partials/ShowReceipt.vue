@@ -13,7 +13,7 @@ const store = useReceiptStore();
     <div>
         <div
             class="flex items-center justify-center rounded-lg border border-dashed border-gray-400 p-10 md:w-1/2 md:p-5">
-            <img :src="'data:image;base64,' + receipt.image_contents" alt="" />
+            <img class="max-h-[500px]" :src="'data:image;base64,' + receipt.image_contents" alt="" />
         </div>
         <div class="flex items-center gap-4 w-full mt-10">
             <DangerButton @click="store.openDeleteModal(props.receipt)">Delete</DangerButton>
