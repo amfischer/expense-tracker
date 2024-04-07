@@ -7,9 +7,9 @@ import NumberInput from '@/Components/Forms/NumberInput.vue';
 import Textarea from '@/Components/Forms/Textarea.vue';
 import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
-import { useForm } from '@inertiajs/vue3';
-import { useAlertStore } from '@/Stores/alert';
 import Checkbox from '@/Components/Checkbox.vue';
+import { useAlertStore } from '@/Stores/alert';
+import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     expense: Object,
@@ -32,7 +32,7 @@ const form = useForm({
 const alert = useAlertStore();
 
 const update = () => {
-    form.put(route('expenses.update', props.expense.id), {
+    form.patch(route('expenses.update', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
             alert.setMessage(resp.props.flash.message);
@@ -53,7 +53,7 @@ const update = () => {
     </header>
 
     <form @submit.prevent="update" class="max-md:space-y-6 md:flex md:flex-wrap">
-        <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col md:justify-between">
+        <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col">
             <div>
                 <InputLabel for="payee" value="Payee" />
                 <TextInput id="payee" type="text" class="mt-1 block w-full" v-model="form.payee" required autofocus />
@@ -89,6 +89,24 @@ const update = () => {
                 <InputError class="mt-2" :message="form.errors.currency" />
             </div>
 
+            <div class="flex items-center mb-2 md:w-1/2">
+                <div class="flex h-6 items-center">
+                    <Checkbox id="business_expense" v-model:checked="form.is_business_expense" />
+                </div>
+                <div class="ml-3">
+                    <InputLabel for="business_expense" value="Business Expense" class="cursor-pointer" />
+                </div>
+            </div>
+            <InputError class="mt-2" :message="form.errors.is_business_expense" />
+        </div>
+
+        <div class="space-y-6 md:w-1/2 md:pl-5 md:flex md:flex-col">
+            <div>
+                <InputLabel for="category" value="Category" />
+                <SelectMenu :options="categories" v-model="form.category_id" />
+                <InputError class="mt-2" :message="form.errors.category_id" />
+            </div>
+
             <div>
                 <InputLabel for="date" value="Transaction Date" />
                 <TextInput id="date" type="date" class="mt-1 block w-full" v-model="form.transaction_date" required />
@@ -100,24 +118,6 @@ const update = () => {
                 <TextInput id="date" type="date" class="mt-1 block w-full" v-model="form.effective_date" required />
                 <InputError class="mt-2" :message="form.errors.effective_date" />
             </div>
-        </div>
-
-        <div class="space-y-6 md:w-1/2 md:pl-5 md:flex md:flex-col md:justify-between">
-            <div>
-                <InputLabel for="category" value="Category" />
-                <SelectMenu :options="categories" v-model="form.category_id" />
-                <InputError class="mt-2" :message="form.errors.category_id" />
-            </div>
-            
-            <div class="flex items-center mb-2 md:w-1/2">
-                <div class="flex h-6 items-center">
-                    <Checkbox id="business_expense" v-model:checked="form.is_business_expense" />
-                </div>
-                <div class="ml-3">
-                    <InputLabel for="business_expense" value="Business Expense" class="cursor-pointer" />
-                </div>
-            </div>
-            <InputError class="mt-2" :message="form.errors.is_business_expense" />
 
             <div>
                 <InputLabel for="notes" value="Notes" />
@@ -126,7 +126,7 @@ const update = () => {
             </div>
         </div>
 
-        <div class="flex items-center justify-end gap-4 w-full mt-10">
+        <div class="flex items-center w-full mt-10">
             <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
         </div>
     </form>

@@ -49,7 +49,7 @@ namespace App\Models{
  * @property string $amount
  * @property string|null $foreign_currency_conversion_fee
  * @property string $currency
- * @property int $is_business_expense
+ * @property bool $is_business_expense
  * @property \Illuminate\Support\Carbon $transaction_date
  * @property \Illuminate\Support\Carbon $effective_date
  * @property string|null $notes
@@ -59,6 +59,8 @@ namespace App\Models{
  * @property-read \App\Models\Category $category
  * @property-read mixed $foreign_currency_conversion_fee_pretty
  * @property-read mixed $has_fees
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts
+ * @property-read int|null $receipts_count
  * @property-read mixed $total
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ExpenseFactory factory($count = null, $state = [])
@@ -84,6 +86,36 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Receipt
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $expense_id
+ * @property string $filename
+ * @property string $mimetype
+ * @property string $size
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Expense $expense
+ * @property-read mixed $image_contents
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereExpenseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereMimetype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Receipt whereUserId($value)
+ */
+	class Receipt extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property int $id
@@ -102,6 +134,8 @@ namespace App\Models{
  * @property-read int|null $expenses_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts
+ * @property-read int|null $receipts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
