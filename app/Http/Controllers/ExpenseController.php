@@ -85,7 +85,20 @@ class ExpenseController extends Controller
 
         $validated = $request->validated();
 
+        $transactionDateIsChanging = $expense->transaction_date->format('Y-m-d') !== $validated['transaction_date'];
+
+        $updateReceiptPaths = $expense->receipts->isNotEmpty() && $transactionDateIsChanging;
+        $oldStoragePath = $expense->getReceiptStoragePath();
+
         $expense->update($validated);
+
+        if ($updateReceiptPaths) {
+            $newStoragePath = $expense->refresh()->getReceiptStoragePath();
+
+            foreach ($expense->receipts as $r) {
+                Storage::disk('receipts')->move($oldStoragePath . '/' . $r->filename, $newStoragePath . '/' . $r->filename);
+            }
+        }
 
         return back()->with('message', 'Expense successfully updated.');
     }

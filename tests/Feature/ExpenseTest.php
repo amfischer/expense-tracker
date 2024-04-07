@@ -10,7 +10,7 @@ it('can show expenses', function () {
     $expense = Expense::factory()->create(['user_id' => $user->id]);
 
     $this->get('/expenses')
-    ->assertRedirect(route('login'));
+        ->assertRedirect(route('login'));
 
     login($user);
 
@@ -67,9 +67,7 @@ test('users can create new expenses', function () {
 });
 
 test('users can update existing expenses', function () {
-    login();
-
-    $user = Auth::user();
+    $user = login();
 
     $expense = Expense::factory()->create(['user_id' => $user->id]);
 
@@ -77,7 +75,7 @@ test('users can update existing expenses', function () {
 
     $formData = Expense::factory()->make(['user_id' => $user->id])->toArray();
 
-    $this->put(route('expenses.update', $expense), $formData);
+    $this->patch(route('expenses.update', $expense), $formData);
 
     // db formats money as integer (in cents)
     $formData['amount'] *= 100;
@@ -100,9 +98,7 @@ test('users can update existing expenses', function () {
 });
 
 test('users can delete existing expenses', function () {
-    login();
-
-    $user = Auth::user();
+    $user = login();
 
     $expense = Expense::factory()->create(['user_id' => $user->id]);
 
@@ -127,25 +123,21 @@ it('will return a 404 if user attempts to access expenses from other accounts', 
 });
 
 it('will return a 403 if user attempts to update expenses from other accounts', function () {
-    login();
-
-    $user = Auth::user();
+    $user = login();
 
     $expenseRestricted = Expense::factory()->create();
 
     $formData = $expenseRestricted->toArray();
 
-    // create user owned category to pass validation. authentication happens right after validation
+    // create user owned category to pass validation. Gate auth check happens right after validation.
     $formData['category_id'] = Category::factory()->create(['user_id' => $user->id])->id;
 
-    $this->put(route('expenses.update', $expenseRestricted), $formData)
+    $this->patch(route('expenses.update', $expenseRestricted), $formData)
         ->assertForbidden();
 });
 
 it('will return a 403 if user attempts to delete expenses from other accounts', function () {
-    login();
-
-    $user = Auth::user();
+    $user = login();
 
     $expenseRestricted = Expense::factory()->create();
 
