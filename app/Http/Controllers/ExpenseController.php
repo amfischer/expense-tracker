@@ -22,9 +22,10 @@ class ExpenseController extends Controller
 {
     public function index(Request $request): Response
     {
-        $validator = Validator::make($request->all(['query', 'category_ids']), [
+        $validator = Validator::make($request->all(['query', 'category_ids', 'sort_by']), [
             'query'        => 'nullable',
             'category_ids' => 'nullable|array',
+            'sort_by'      => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -40,6 +41,8 @@ class ExpenseController extends Controller
         if ($validated['category_ids']) {
             $query->whereIn('category_id', $validated['category_ids']);
         }
+
+        $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
 
         $expenses = $query->paginate(10)->appends(Arr::whereNotNull($validated));
 

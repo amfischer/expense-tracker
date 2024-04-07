@@ -1,12 +1,11 @@
 <script setup>
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import { Link } from '@inertiajs/vue3';
+import TableFilters from './TableFilters.vue';
 import Pagination from './Pagination.vue';
-import SearchBar from './SearchBar.vue';
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
     expenses: Object,
-    categories: Array,
 });
 </script>
 
@@ -21,7 +20,7 @@ defineProps({
         </div>
     </div>
 
-    <SearchBar :expenses="expenses" :categories="categories" />
+    <TableFilters />
 
     <table class="min-w-full divide-y divide-gray-300 bg-white">
         <thead>
