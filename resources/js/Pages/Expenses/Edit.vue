@@ -1,7 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AlertSuccess from '@/Components/Alerts/Success.vue';
-import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import EditExpenseForm from './Partials/EditExpenseForm.vue';
 import DeleteExpenseForm from './Partials/DeleteExpenseForm.vue';
 import AddReceiptForm from './Partials/AddReceiptForm.vue';
@@ -10,6 +9,7 @@ import DeleteReceiptModal from './Partials/DeleteReceiptModal.vue';
 import { useReceiptStore } from '@/Stores/receipt';
 import { Head } from '@inertiajs/vue3';
 import { computed, onMounted } from 'vue';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 
 const props = defineProps({
     expense: Object,
@@ -25,8 +25,10 @@ const hasReceipt = computed(() => {
 const receiptStore = useReceiptStore();
 
 onMounted(() => {
-    receiptStore.setExpense(props.expense)
+    receiptStore.setExpense(props.expense);
 });
+
+const breadcrumbs = [{ name: 'Expenses', href: route('expenses.index'), current: false }];
 </script>
 
 <template>
@@ -35,6 +37,7 @@ onMounted(() => {
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Expense</h2>
+            <Breadcrumbs class="pt-8 pb-0" :pages="breadcrumbs" />
         </template>
 
         <div class="relative">
@@ -42,12 +45,6 @@ onMounted(() => {
 
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div class="sm:flex sm:items-center sm:justify-end">
-                        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                            <ButtonLink :href="route('expenses.index')">Back</ButtonLink>
-                        </div>
-                    </div>
-
                     <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                         <EditExpenseForm :expense="expense" :categories="categories" :currencies="currencies" />
                     </div>

@@ -17,7 +17,7 @@ provide('categories', props.categories);
 
     <AuthenticatedLayout>
         <div class="w-full sm:max-w-2xl lg:max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-            <div class="rounded-lg p-10 bg-white">
+            <div class="rounded-lg shadow bg-white px-2 mx-2 py-10 sm:mx-0 sm:p-10">
                 <ExpensesTable :expenses="expenses" />
             </div>
         </div>
