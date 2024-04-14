@@ -10,7 +10,7 @@ const categoryIds = defineModel({
 });
 </script>
 <template>
-    <PopoverGroup class="hidden sm:flex sm:items-baseline sm:space-x-8">
+    <PopoverGroup class="flex items-baseline space-x-8">
         <Popover as="div" id="desktop-menu-category" class="relative inline-block text-left">
             <div>
                 <PopoverButton

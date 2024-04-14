@@ -31,6 +31,7 @@ class Expense extends Model
         'amount_pretty',
         'foreign_currency_conversion_fee_pretty',
         'total',
+        'effective_date_pretty',
     ];
 
     public function toSearchableArray()
@@ -142,5 +143,14 @@ class Expense extends Model
     public function getReceiptStoragePath(): string
     {
         return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
+    }
+
+    protected function effectiveDatePretty(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attr) {
+                return date('M d, Y', strtotime($attr['effective_date']));
+            }
+        );
     }
 }

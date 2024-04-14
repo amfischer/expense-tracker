@@ -41,7 +41,7 @@ const applyFilters = () => {
 </script>
 
 <template>
-    <div class="flex items-center justify-between mb-10">
+    <div class="flex flex-col items-end gap-8 md:flex-row md:items-center md:justify-between mb-10">
         <SearchBox v-model="form.query" />
         <div class="flex items-center gap-8">
             <CategoryMenu v-model="form.category_ids" />
