@@ -7,6 +7,15 @@ import { Link, router } from '@inertiajs/vue3';
 defineProps({
     expenses: Object,
 });
+
+const goToExpense = (expenseId) => {
+    // only for mobile view, i.e. views without the edit button
+    if (window.innerWidth >= 768) {
+        return;
+    }
+
+    router.get(route('expenses.edit', expenseId))
+}
 </script>
 
 <template>
@@ -39,7 +48,7 @@ defineProps({
                 v-for="expense in expenses.data"
                 :key="expense.id"
                 class="hover:bg-gray-100 md:hover:bg-white"
-                @touchend="router.get(route('expenses.edit', expense.id))">
+                @click="goToExpense(expense.id)">
                 <td class="whitespace-nowrap py-3 text-md text-gray-500">
                     {{ expense.payee }}
                     <div class="flex items-center gap-1 text-sm">

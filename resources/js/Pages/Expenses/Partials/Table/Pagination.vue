@@ -19,17 +19,23 @@ const pageLinks = computed(() => {
     <div class="flex items-center justify-between mt-10">
         <div class="flex flex-1 justify-between sm:hidden">
             <Link
-                :as="expenses.prev_page_url ? 'a' : 'span'"
-                :href="expenses.prev_page_url ?? ''"
-                class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                v-if="expenses.prev_page_url"
+                :href="expenses.prev_page_url"
+                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                 Previous
             </Link>
+            <span v-else class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400">
+                Previous
+            </span>
             <Link
-                :as="expenses.next_page_url ? 'a' : 'span'"
-                :href="expenses.next_page_url ?? ''"
-                class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                v-if="expenses.next_page_url"
+                :href="expenses.next_page_url"
+                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                 Next
             </Link>
+            <span v-else class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400">
+                Next
+            </span>
         </div>
         <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
@@ -46,13 +52,18 @@ const pageLinks = computed(() => {
             <div>
                 <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                     <Link
-                        :as="expenses.prev_page_url ? 'a' : 'span'"
-                        :href="expenses.prev_page_url ?? ''"
-                        class="relative inline-flex items-center rounded-l-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                        :class="expenses.prev_page_url ? 'text-gray-500 ring-gray-300' : 'text-gray-300 ring-gray-200'">
+                        v-if="expenses.prev_page_url"
+                        :href="expenses.prev_page_url"
+                        class="relative inline-flex items-center rounded-l-md p-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 text-gray-500 ring-gray-300">
                         <span class="sr-only">Previous</span>
                         <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
                     </Link>
+                    <span
+                        v-else
+                        class="relative inline-flex items-center rounded-l-md p-2 ring-1 ring-inset text-gray-300 ring-gray-200">
+                        <span class="sr-only">Previous</span>
+                        <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+                    </span>
 
                     <Link
                         v-for="(link, i) in pageLinks"
@@ -70,13 +81,18 @@ const pageLinks = computed(() => {
                     <!-- <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span> -->
 
                     <Link
-                        :as="expenses.next_page_url ? 'a' : 'span'"
-                        :href="expenses.next_page_url ?? ''"
-                        class="relative inline-flex items-center rounded-r-md px-2 py-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                        :class="expenses.next_page_url ? 'text-gray-500 ring-gray-300' : 'text-gray-300 ring-gray-200'">
+                        v-if="expenses.next_page_url"
+                        :href="expenses.next_page_url"
+                        class="relative inline-flex items-center rounded-r-md p-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 text-gray-500 ring-gray-300">
                         <span class="sr-only">Next</span>
                         <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
                     </Link>
+                    <span
+                        v-else
+                        class="relative inline-flex items-center rounded-r-md p-2 ring-1 ring-inset text-gray-300 ring-gray-200">
+                        <span class="sr-only">Next</span>
+                        <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+                    </span>
                 </nav>
             </div>
         </div>
