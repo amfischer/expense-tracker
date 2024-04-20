@@ -39,18 +39,20 @@ class RefreshTestData extends Command
                 'color'   => $data['category']['color'],
             ]);
 
-            foreach ($data['expenses'] as $e) {
-                $date = Carbon::now()->subDays(random_int(1, 60));
+            foreach ([[1, 30], [31, 60], [61, 90]] as $range) {
+                foreach ($data['expenses'] as $e) {
+                    $date = Carbon::now()->subDays(random_int($range[0], $range[1]));
 
-                Expense::create([
-                    'user_id'          => $jeremy->id,
-                    'category_id'      => $category->id,
-                    'currency'         => Currency::USD,
-                    'payee'            => $e['payee'],
-                    'amount'           => $e['amount'],
-                    'transaction_date' => $date,
-                    'effective_date'   => $date,
-                ]);
+                    Expense::create([
+                        'user_id'          => $jeremy->id,
+                        'category_id'      => $category->id,
+                        'currency'         => Currency::USD,
+                        'payee'            => $e['payee'],
+                        'amount'           => $e['amount'],
+                        'transaction_date' => $date,
+                        'effective_date'   => $date,
+                    ]);
+                }
             }
         }
 
