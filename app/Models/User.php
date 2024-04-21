@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\UserCreated;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Money\Formatter\IntlMoneyFormatter;
+use Money\Money;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -84,5 +87,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: fn () => $this->categories->map(fn (Category $category) => $category->id)->all()
         );
+    }
+
+    public function getExpenseSummary(Carbon $from, Carbon $to): array
+    {
+        $dateRange = [$from->format('Y-m-d'), $to->format('Y-m-d')];
+
+        $expenses = $this->expenses()->whereBetween('effective_date', $dateRange)->get();
+
+        $total = $expenses->reduce(function ($carry, $item) {
+            return $carry->add(Money::USD($item->amount));
+        }, Money::USD(0));
+
+        return [
+            'total' => app(IntlMoneyFormatter::class)->format($total),
+            'count' => $expenses->count(),
+        ];
     }
 }

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Money\Currency;
-use Money\Formatter\DecimalMoneyFormatter;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
 use Money\Parser\DecimalMoneyParser;
