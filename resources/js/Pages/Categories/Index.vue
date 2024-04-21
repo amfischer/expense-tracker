@@ -1,6 +1,5 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import AlertSuccess from '@/Components/Alerts/Success.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SimpleCard from './Partials/SimpleCard.vue';
 import CreateModal from './Partials/CreateModal.vue';
@@ -27,15 +26,11 @@ const categoryStore = useCategoryStore();
             </div>
         </template>
 
-        <div class="relative">
-            <AlertSuccess class="max-w-5xl w-1/3 absolute top-7 left-0 right-0 mx-auto" />
-
-            <div class="py-12">
-                <div class="max-w-7xl mx-auto px-6 lg:px-8 space-y-6">
-                    <ul role="list" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        <SimpleCard v-for="category in categories" :key="category.id" :category="category" />
-                    </ul>
-                </div>
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 space-y-6">
+                <ul role="list" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    <SimpleCard v-for="category in categories" :key="category.id" :category="category" />
+                </ul>
             </div>
         </div>
 
