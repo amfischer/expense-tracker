@@ -11,23 +11,13 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        $year = ['label' => '2024'];
-        $year = array_merge($year, $user->getExpenseSummary(now()->startOfYear(), now()->endOfYear()));
+        $reports = [
+            array_merge(['label' => '2024'], $user->getExpenseSummary(now()->startOfYear(), now()->endOfYear())),
+            array_merge(['label' => now()->format('F')], $user->getExpenseSummary(now()->startOfMonth(), now()->endOfMonth())),
+            array_merge(['label' => now()->subMonth()->format('F')], $user->getExpenseSummary(now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth())),
+            array_merge(['label' => now()->subMonths(2)->format('F')], $user->getExpenseSummary(now()->subMonths(2)->startOfMonth(), now()->subMonths(2)->endOfMonth())),
+        ];
 
-        $month = ['label' => now()->format('F')];
-        $month = array_merge($month, $user->getExpenseSummary(now()->startOfMonth(), now()->endOfMonth()));
-
-        $lastMonth = ['label' => now()->subMonth()->format('F')];
-        $lastMonth = array_merge($lastMonth, $user->getExpenseSummary(now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()));
-
-        $twoMonthsAgo = ['label' => now()->subMonths(2)->format('F')];
-        $twoMonthsAgo = array_merge($twoMonthsAgo, $user->getExpenseSummary(now()->subMonths(2)->startOfMonth(), now()->subMonths(2)->endOfMonth()));
-
-        return Inertia::render('Dashboard', [
-            'year'         => $year,
-            'month'        => $month,
-            'lastMonth'    => $lastMonth,
-            'twoMonthsAgo' => $twoMonthsAgo,
-        ]);
+        return Inertia::render('Dashboard', compact('reports'));
     }
 }
