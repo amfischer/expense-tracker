@@ -39,7 +39,7 @@ class ExpenseFactory extends Factory
             'foreign_currency_conversion_fee' => $this->faker->randomFloat(2, 1, 5),
             'currency'                        => Currency::USD(),
             'is_business_expense'             => $this->faker->boolean(30),
-            'transaction_date'                => $this->faker->dateTimeBetween('-1 year'),
+            'transaction_date'                => $this->faker->dateTimeBetween('-1 year')->format('Y-m-d'),
             'effective_date'                  => function (array $attr) {
                 return $attr['transaction_date'];
             },
