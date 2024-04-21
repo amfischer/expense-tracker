@@ -2,20 +2,6 @@
 
 use App\Models\Expense;
 
-test('amount & fees return a formatted string with two decimal places', function () {
-    $amount = 10.2;
-    $fees = 1.79;
-    $expense = Expense::factory()->create(['amount' => $amount, 'foreign_currency_conversion_fee' => $fees, 'currency' => 'USD']);
-
-    expect($expense->amount)
-        ->toBeString()
-        ->toBe('10.20');
-
-    expect($expense->foreign_currency_conversion_fee)
-        ->toBeString()
-        ->toBe('1.79');
-});
-
 test('amount & fees store values as an integer representing number of cents', function () {
     $amount = 62.33;
     $fees = 2;

@@ -64,12 +64,6 @@ class Expense extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: function (int $value, array $attr) {
-                $money = new Money($value, new Currency($attr['currency']));
-
-                return app(DecimalMoneyFormatter::class)->format($money);
-
-            },
             set: function (string $value) {
                 return app(DecimalMoneyParser::class)->parse($value, new Currency('USD'))->getAmount();
             }
@@ -90,12 +84,6 @@ class Expense extends Model
     protected function foreignCurrencyConversionFee(): Attribute
     {
         return Attribute::make(
-            get: function (int $value, array $attr) {
-                $money = new Money($value, new Currency($attr['currency']));
-
-                return app(DecimalMoneyFormatter::class)->format($money);
-
-            },
             set: function (?string $value) {
                 if ($value === null) {
                     return 0;
