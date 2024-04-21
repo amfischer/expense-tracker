@@ -19,8 +19,8 @@ const props = defineProps({
 
 const form = useForm({
     payee: props.expense.payee,
-    amount: props.expense.amount,
-    foreign_currency_conversion_fee: props.expense.foreign_currency_conversion_fee,
+    amount: props.expense.amount / 100,
+    foreign_currency_conversion_fee: props.expense.foreign_currency_conversion_fee / 100,
     is_business_expense: props.expense.is_business_expense,
     currency: props.expense.currency,
     transaction_date: props.expense.transaction_date,
