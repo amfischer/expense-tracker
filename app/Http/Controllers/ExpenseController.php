@@ -78,7 +78,9 @@ class ExpenseController extends Controller
         $currencies = Currency::values();
 
         $receipt = $expense->receipts()->first();
-        $receipt?->append('image_contents');
+        if ($receipt !== null) {
+            $receipt->append('base64');
+        }
 
         return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receipt'));
     }
@@ -121,7 +123,7 @@ class ExpenseController extends Controller
         Gate::authorize('update', $expense);
 
         $validated = $request->validate([
-            'receipt_upload' => ['required', File::image()->min('1kb')->max('1mb')],
+            'receipt_upload' => ['required', File::types(['png', 'jpg', 'jpeg', 'webp', 'pdf'])->min('1kb')->max('1mb')],
         ]);
 
         /** @var \Illuminate\Http\UploadedFile $file */

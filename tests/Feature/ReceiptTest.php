@@ -15,11 +15,9 @@ beforeEach(function () {
     $this->expense = Expense::factory()->create(['user_id' => $this->user->id]);
 });
 
-test('users can upload a receipt', function () {
+test('users can upload a receipt', function (UploadedFile $file) {
 
-    post(route('expenses.receipts.store', $this->expense->id), [
-        'receipt_upload' => UploadedFile::fake()->image('photo1.jpg')->size(500),
-    ])
+    post(route('expenses.receipts.store', $this->expense->id), ['receipt_upload' => $file])
         ->assertSessionDoesntHaveErrors()
         ->assertRedirect();
 
@@ -29,25 +27,43 @@ test('users can upload a receipt', function () {
 
     Storage::disk('receipts')->assertExists($receipt->filenameWithPath());
 
-});
+})->with([
+    'png'  => UploadedFile::fake()->create('receipt.png', 500, 'image/png'),
+    'jpeg' => UploadedFile::fake()->create('receipt.jpeg', 500, 'image/jpeg'),
+    'jpg'  => UploadedFile::fake()->create('receipt.jpg', 500, 'image/jpeg'),
+    'webp' => UploadedFile::fake()->create('receipt.webp', 500, 'image/webp'),
+    'pdf'  => UploadedFile::fake()->create('receipt.pdf', 500, 'application/pdf'),
+]);
 
-test('only image files are allowed to be uploaded', function () {
+test('disallowed file types return a validation error', function (UploadedFile $file) {
 
-    post(route('expenses.receipts.store', $this->expense->id), [
-        'receipt_upload' => UploadedFile::fake()->create('document.pdf')->size(500),
-    ])
-        ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be an image.'])
+    post(route('expenses.receipts.store', $this->expense->id), ['receipt_upload' => $file])
+        ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be a file of type: png, jpg, jpeg, webp, pdf.'])
         ->assertRedirect();
-});
 
-test('image files cannot be bigger than 1MB', function () {
+    assertDatabaseCount('receipts', 0);
 
-    post(route('expenses.receipts.store', $this->expense->id), [
-        'receipt_upload' => UploadedFile::fake()->image('photo1.png')->size(1001),
-    ])
+    expect($this->expense->refresh()->receipts()->count())->toBe(0);
+})->with([
+    'png'  => UploadedFile::fake()->create('receipt.mp4', 500, 'application/mp4'),
+    'jpeg' => UploadedFile::fake()->create('receipt.gif', 500, 'image/gif'),
+    'jpg'  => UploadedFile::fake()->create('receipt.csv', 500, 'text/csv'),
+    'webp' => UploadedFile::fake()->create('receipt.json', 500, 'application/json'),
+    'pdf'  => UploadedFile::fake()->create('receipt.xml', 500, 'application/xml'),
+]);
+
+test('files cannot be bigger than 1MB', function (UploadedFile $file) {
+
+    post(route('expenses.receipts.store', $this->expense->id), ['receipt_upload' => $file])
         ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be between 1 and 1000 kilobytes.'])
         ->assertRedirect();
-});
+})->with([
+    'png'  => UploadedFile::fake()->create('receipt.png', 1001, 'image/png'),
+    'jpeg' => UploadedFile::fake()->create('receipt.jpeg', 5000, 'image/jpeg'),
+    'jpg'  => UploadedFile::fake()->create('receipt.jpg', 2000, 'image/jpeg'),
+    'webp' => UploadedFile::fake()->create('receipt.webp', 3000, 'image/webp'),
+    'pdf'  => UploadedFile::fake()->create('receipt.pdf', 4000, 'application/pdf'),
+]);
 
 test('users can delete a receipt', function () {
 

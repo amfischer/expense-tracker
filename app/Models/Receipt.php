@@ -12,7 +12,17 @@ class Receipt extends Model
 {
     use HasFactory;
 
+    const ALLOWED_IMAGE_MIME_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'image/webp',
+    ];
+
     protected $guarded = [];
+
+    protected $appends = [
+        'is_image',
+    ];
 
     public function user(): BelongsTo
     {
@@ -24,7 +34,16 @@ class Receipt extends Model
         return $this->belongsTo(Expense::class);
     }
 
-    protected function imageContents(): Attribute
+    protected function isImage(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attr) {
+                return in_array($attr['mimetype'], self::ALLOWED_IMAGE_MIME_TYPES);
+            }
+        );
+    }
+
+    protected function base64(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attr) {

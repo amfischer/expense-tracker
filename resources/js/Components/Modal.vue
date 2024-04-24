@@ -11,6 +11,10 @@ const props = defineProps({
         type: String,
         default: '2xl',
     },
+    dialogPanelClasses: {
+        type: String,
+        default: '',
+    },
 });
 
 const emit = defineEmits(['close']);
@@ -22,6 +26,7 @@ const maxWidthClass = computed(() => {
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
         '2xl': 'sm:max-w-2xl',
+        '6xl': 'sm:max-w-6xl',
     }[props.maxWidth];
 });
 </script>
@@ -29,7 +34,7 @@ const maxWidthClass = computed(() => {
 <template>
     <Teleport to="body">
         <TransitionRoot as="template" :show="show">
-            <Dialog as="div" class="relative z-10" @close="emit('close')">
+            <Dialog as="div" class="relative z-40" @close="emit('close')">
                 <TransitionChild
                     as="template"
                     enter="ease-out duration-300"
@@ -53,7 +58,7 @@ const maxWidthClass = computed(() => {
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                             <DialogPanel
                                 class="relative transform overflow-hidden rounded-lg bg-white p-6 w-full max-w-sm text-left shadow-xl transition-all"
-                                :class="maxWidthClass">
+                                :class="[maxWidthClass, dialogPanelClasses]">
                                 <DialogTitle
                                     as="h3"
                                     class="text-base text-center font-semibold leading-6 text-gray-900">
