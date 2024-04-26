@@ -45,7 +45,7 @@ const toggleModal = () => {
         :show="showPdfModal"
         @close="showPdfModal = false"
         max-width="6xl"
-        dialog-panel-classes="h-96 sm:h-[600px] lg:h-[800px]">
+        dialog-panel-classes="h-screen my-10">
         <iframe :src="'data:application/pdf;base64,' + receipt.base64" width="100%" height="100%" />
     </Modal>
 </template>

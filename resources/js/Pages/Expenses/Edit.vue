@@ -35,7 +35,7 @@ const breadcrumbs = [{ name: 'Expenses', href: route('expenses.index'), current:
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Expense</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Edit Expense</h2>
             <Breadcrumbs class="pt-8 pb-0" :pages="breadcrumbs" />
         </template>
 
