@@ -14,6 +14,7 @@ import { useAlertStore } from '@/Stores/alert';
 const props = defineProps({
     categories: Array,
     currencies: Array,
+    paymentMethods: Object,
 });
 
 const form = useForm({
@@ -21,6 +22,7 @@ const form = useForm({
     amount: '',
     foreign_currency_conversion_fee: '',
     currency: props.currencies[0],
+    payment_method: '',
     is_business_expense: false,
     transaction_date: '',
     effective_date: '',
@@ -49,7 +51,7 @@ const create = () => {
         <div class="space-y-12">
             <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-lg font-medium text-gray-900">Expense Information</h2>
-                <p class="mt-1 text-sm text-gray-600">All fields in this section are required.</p>
+                <p class="mt-1 text-sm text-gray-600">All fields in the section below are required.</p>
 
                 <div class="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6">
                     <div class="sm:col-span-3">
@@ -109,9 +111,15 @@ const create = () => {
 
             <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-lg font-medium text-gray-900">Additional Options</h2>
-                <p class="mt-1 text-sm text-gray-600">The fields below are optional.</p>
+                <p class="mt-1 text-sm text-gray-600">All fields in the section below are optional.</p>
 
                 <div class="mt-10 space-y-10 md:w-1/2 md:pr-5">
+                    <div class="sm:col-span-3">
+                        <InputLabel for="payment_method" value="Payment Method" />
+                        <SelectMenuBasic :options="paymentMethods" :has-keys="true" v-model="form.payment_method" />
+                        <InputError class="mt-2" :message="form.errors.payment_method" />
+                    </div>
+
                     <div>
                         <InputLabel for="foreign_currency_conversion_fee" value="Foreign Currency Conversion Fee" />
                         <NumberInput

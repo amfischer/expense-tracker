@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Currency;
+use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
@@ -57,8 +58,9 @@ class ExpenseController extends Controller
 
         $categories = $user->categoriesArray;
         $currencies = Currency::values();
+        $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
-        return Inertia::render('Expenses/Create', compact('categories', 'currencies'));
+        return Inertia::render('Expenses/Create', compact('categories', 'currencies', 'paymentMethods'));
     }
 
     public function store(ExpenseRequest $request): RedirectResponse
@@ -76,13 +78,14 @@ class ExpenseController extends Controller
 
         $categories = $expense->user->categoriesArray;
         $currencies = Currency::values();
+        $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         $receipt = $expense->receipts()->first();
         if ($receipt !== null) {
             $receipt->append('base64');
         }
 
-        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'receipt'));
+        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'paymentMethods', 'receipt'));
     }
 
     public function update(ExpenseRequest $request, Expense $expense): RedirectResponse
