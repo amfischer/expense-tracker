@@ -24,7 +24,7 @@ const form = useForm({
     foreign_currency_conversion_fee: props.expense.foreign_currency_conversion_fee / 100,
     is_business_expense: props.expense.is_business_expense,
     currency: props.expense.currency,
-    payment_method: props.expense.payment_method,
+    payment_method: props.expense.payment_method ?? '',
     transaction_date: props.expense.transaction_date,
     effective_date: props.expense.effective_date,
     category_id: props.expense.category_id,

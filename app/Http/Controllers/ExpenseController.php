@@ -8,6 +8,7 @@ use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -81,9 +82,6 @@ class ExpenseController extends Controller
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         $receipt = $expense->receipts()->first();
-        if ($receipt !== null) {
-            $receipt->append('base64');
-        }
 
         return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'paymentMethods', 'receipt'));
     }
@@ -121,6 +119,9 @@ class ExpenseController extends Controller
         return redirect()->route('expenses.index')->with('message', 'Expense successfully deleted.');
     }
 
+    /**
+     * Receipt Endpoints
+     */
     public function storeReceipt(Request $request, Expense $expense): RedirectResponse
     {
         Gate::authorize('update', $expense);
@@ -146,6 +147,13 @@ class ExpenseController extends Controller
         ]);
 
         return back()->with('message', 'Receipt successfully uploaded.');
+    }
+
+    public function receiptBase64(Expense $expense, Receipt $receipt): JsonResponse
+    {
+        Gate::authorize('view', $expense);
+
+        return response()->json(['base64' => $receipt->base64()]);
     }
 
     public function deleteReceipt(Expense $expense, Receipt $receipt): RedirectResponse

@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified', 'can:access-application'])->group(functio
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'delete'])->name('expenses.delete');
 
     Route::post('/expenses/{expense}/receipts', [ExpenseController::class, 'storeReceipt'])->name('expenses.receipts.store');
+    Route::get('/expenses/{expense}/receipts/{receipt}/base64', [ExpenseController::class, 'receiptBase64'])->name('expenses.receipts.base64');
     Route::delete('/expenses/{expense}/receipts/{receipt}', [ExpenseController::class, 'deleteReceipt'])->name('expenses.receipts.delete');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -57,4 +58,4 @@ Route::middleware(['auth', 'verified', 'can:access-application'])->group(functio
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -1,51 +1,69 @@
 <script setup>
-import DangerButton from '@/Components/DangerButton.vue';
+import { DocumentTextIcon, MinusCircleIcon } from '@heroicons/vue/24/solid';
 import Modal from '@/Components/Modal.vue';
 import { useReceiptStore } from '@/Stores/receipt';
-import { ref } from 'vue';
-
-const props = defineProps({
-    receipt: Object,
-});
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import InputError from '@/Components/InputError.vue';
 
 const store = useReceiptStore();
+const { receipt, expense } = storeToRefs(store);
 
-const showImageModal = ref(false);
-const showPdfModal = ref(false);
+const showModal = ref(false);
+const base64Raw = ref('');
+const base64String = computed(() => {
+    if (receipt.is_image) {
+        return 'data:image;base64,' + base64Raw.value;
+    }
 
-const toggleModal = () => {
-    if (props.receipt.is_image) {
-        showImageModal.value = true;
+    return 'data:application/pdf;base64,' + base64Raw.value;
+});
+
+const errorMessage = ref('');
+
+const toggleModal = async () => {
+    if (base64Raw.value !== '') {
+        showModal.value = true;
         return;
     }
 
-    showPdfModal.value = true;
+    try {
+        const response = await fetch(
+            route('expenses.receipts.base64', { expense: expense.value.id, receipt: receipt.value.id }),
+        );
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        base64Raw.value = data.base64;
+        showModal.value = true;
+        errorMessage.value = '';
+    } catch (error) {
+        errorMessage.value = error.message;
+    }
 };
 </script>
 
 <template>
-    <div>
-        <div
-            class="flex items-center justify-center rounded-lg border border-dashed border-gray-400 p-10 md:w-1/2 md:p-5 cursor-pointer relative">
-            <div class="z-20 bg-black opacity-0 hover:opacity-10 h-full w-full absolute" @click="toggleModal"></div>
-
-            <img v-if="receipt.is_image" :src="'data:image;base64,' + receipt.base64" class="max-h-[500px]" />
-            <iframe v-else :src="'data:application/pdf;base64,' + receipt.base64" width="100%" height="100%" />
+    <div class="flex items-center gap-4 rounded-lg border border-gray-300 px-3 py-2 md:w-1/2">
+        <DocumentTextIcon class="h-7 w-7" />
+        <div class="grow flex flex-col cursor-pointer hover:underline underline-offset-2" @click="toggleModal">
+            <span class="text-md text-gray-900">{{ receipt.mimetype }}</span>
+            <span class="text-sm text-gray-600">{{ receipt.size_formatted }}</span>
         </div>
-        <div class="flex items-center gap-4 w-full mt-10">
-            <DangerButton @click="store.openDeleteModal(props.receipt)">Delete</DangerButton>
-        </div>
+        <MinusCircleIcon class="h-5 w-5 text-red-500 cursor-pointer" @click="store.openDeleteModal()" />
     </div>
 
-    <Modal :show="showImageModal" @close="showImageModal = false">
-        <img :src="'data:image;base64,' + receipt.base64" />
-    </Modal>
+    <InputError class="mt-2" :message="errorMessage" />
 
     <Modal
-        :show="showPdfModal"
-        @close="showPdfModal = false"
-        max-width="6xl"
-        dialog-panel-classes="h-screen my-10">
-        <iframe :src="'data:application/pdf;base64,' + receipt.base64" width="100%" height="100%" />
+        :show="showModal"
+        @close="showModal = false"
+        :max-width="receipt.is_image ? '2xl' : '6xl'"
+        :dialog-panel-classes="receipt.is_image ? '' : 'h-screen my-10'">
+        <img v-if="receipt.is_image" :src="base64String" />
+        <iframe v-else :src="base64String" width="100%" height="100%" />
     </Modal>
 </template>

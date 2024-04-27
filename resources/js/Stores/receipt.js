@@ -9,22 +9,25 @@ export const useReceiptStore = defineStore('ReceiptStore', () => {
         expense.value = payload;
     }
 
+    const setReceipt = (payload) => {
+        receipt.value = payload;
+    }
+
     const showDeleteModal = ref(false);
 
-    const openDeleteModal = (payload) => {
+    const openDeleteModal = () => {
         showDeleteModal.value = true;
-        receipt.value = payload;
     };
 
     const closeDeleteModal = () => {
         showDeleteModal.value = false;
-        receipt.value = null
     };
 
     return {
         expense,
         receipt,
         setExpense,
+        setReceipt,
         showDeleteModal,
         openDeleteModal,
         closeDeleteModal,

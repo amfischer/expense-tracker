@@ -22,6 +22,7 @@ class Receipt extends Model
 
     protected $appends = [
         'is_image',
+        'size_formatted',
     ];
 
     public function user(): BelongsTo
@@ -43,20 +44,33 @@ class Receipt extends Model
         );
     }
 
-    protected function base64(): Attribute
+    public function base64(): string
     {
-        return Attribute::make(
-            get: function (mixed $value, array $attr) {
-                $expense = Expense::find($attr['expense_id']);
-                $file = $expense->getReceiptStoragePath() . '/' . $attr['filename'];
+        $file = $this->expense->getReceiptStoragePath() . '/' . $this->filename;
 
-                return base64_encode(Storage::disk('receipts')->get($file));
-            }
-        );
+        return base64_encode(Storage::disk('receipts')->get($file));
     }
 
     public function filenameWithPath()
     {
         return $this->expense->getReceiptStoragePath() . '/' . $this->filename;
+    }
+
+    protected function sizeFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attr) {
+                $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+                $bytes = max($attr['size'], 0);
+                $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+                $pow = min($pow, count($units) - 1);
+
+                $bytes /= pow(1024, $pow);
+
+                return round($bytes, 0) . $units[$pow];
+            }
+        );
+
     }
 }
