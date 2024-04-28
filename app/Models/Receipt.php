@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class Receipt extends Model
 {
@@ -42,13 +41,6 @@ class Receipt extends Model
                 return in_array($attr['mimetype'], self::ALLOWED_IMAGE_MIME_TYPES);
             }
         );
-    }
-
-    public function base64(): string
-    {
-        $file = $this->expense->getReceiptStoragePath() . '/' . $this->filename;
-
-        return base64_encode(Storage::disk('receipts')->get($file));
     }
 
     public function filenameWithPath()

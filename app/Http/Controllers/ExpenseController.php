@@ -8,7 +8,6 @@ use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -19,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
@@ -149,18 +149,20 @@ class ExpenseController extends Controller
         return back()->with('message', 'Receipt successfully uploaded.');
     }
 
-    public function receiptBase64(Expense $expense, Receipt $receipt): JsonResponse
+    public function getReceiptContents(Expense $expense, Receipt $receipt): BinaryFileResponse
     {
         Gate::authorize('view', $expense);
 
-        return response()->json(['base64' => $receipt->base64()]);
+        $path = Storage::disk('receipts')->path($expense->getReceiptStoragePath() . '/' . $receipt->filename);
+
+        return response()->file($path);
     }
 
     public function deleteReceipt(Expense $expense, Receipt $receipt): RedirectResponse
     {
         Gate::authorize('delete', $expense);
 
-        Storage::disk('receipts')->delete($receipt->filenameWithPath());
+        Storage::disk('receipts')->delete($expense->getReceiptStoragePath() . '/' . $receipt->filename);
 
         $receipt->delete();
 
