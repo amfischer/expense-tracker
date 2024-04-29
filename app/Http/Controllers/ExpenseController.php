@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,12 +25,16 @@ class ExpenseController extends Controller
 {
     public function index(Request $request): Response
     {
-        $validator = Validator::make($request->all(['query', 'category_ids', 'sort_by']), [
-            'query'        => 'nullable',
-            'category_ids' => 'nullable|array',
-            'sort_by'      => 'nullable',
+        $validator = Validator::make($request->all(['query', 'category_ids', 'sort_by', 'payment_methods']), [
+            'query'             => 'nullable',
+            'category_ids'      => 'nullable|array',
+            'sort_by'           => 'nullable',
+            'payment_methods'   => 'nullable|array',
+            'payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 
+        // TODO - doesn't return an Inertia response, throws an error for some reason.
+        // test by forcing validation to fail.
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->messages());
         }
@@ -44,13 +49,18 @@ class ExpenseController extends Controller
             $query->whereIn('category_id', $validated['category_ids']);
         }
 
+        if ($validated['payment_methods']) {
+            $query->whereIn('payment_method', $validated['payment_methods']);
+        }
+
         $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
 
         $expenses = $query->paginate(10)->appends(Arr::whereNotNull($validated));
 
         $categories = $request->user()->categories;
+        $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
-        return Inertia::render('Expenses/Index', compact('expenses', 'categories'));
+        return Inertia::render('Expenses/Index', compact('expenses', 'categories', 'paymentMethods'));
     }
 
     public function create(Request $request): Response
@@ -58,7 +68,7 @@ class ExpenseController extends Controller
         $user = $request->user();
 
         $categories = $user->categoriesArray;
-        $currencies = Currency::values();
+        $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         return Inertia::render('Expenses/Create', compact('categories', 'currencies', 'paymentMethods'));
@@ -78,7 +88,7 @@ class ExpenseController extends Controller
         Gate::authorize('view', $expense);
 
         $categories = $expense->user->categoriesArray;
-        $currencies = Currency::values();
+        $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         $receipt = $expense->receipts()->first();

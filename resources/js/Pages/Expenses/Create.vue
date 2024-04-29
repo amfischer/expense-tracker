@@ -8,7 +8,7 @@ defineProps({
     categories: Array,
     tags: Array,
     currencies: Array,
-    paymentMethods: Object,
+    paymentMethods: Array,
 });
 
 const breadcrumbs = [{ name: 'Expenses', href: route('expenses.index'), current: false }];

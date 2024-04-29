@@ -2,14 +2,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import ExpensesTable from './Partials/Table/Table.vue';
 import { Head } from '@inertiajs/vue3';
-import { provide } from 'vue';
+import { useScoutStore } from '@/Stores/scout';
 
 const props = defineProps({
     expenses: Object,
     categories: Array,
+    paymentMethods: Array,
 });
 
-provide('categories', props.categories);
+const scout = useScoutStore();
+scout.setCategories(props.categories);
+scout.setPaymentMethods(props.paymentMethods);
 </script>
 
 <template>

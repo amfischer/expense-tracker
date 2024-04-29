@@ -1,12 +1,34 @@
 <script setup>
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import TableFilters from './TableFilters.vue';
 import Pagination from './Pagination.vue';
+import SearchBox from './SearchBox.vue';
+import SortByMenu from './SortByMenu.vue';
 import { Link, router } from '@inertiajs/vue3';
+import { useScoutStore } from '@/Stores/scout';
+import { storeToRefs } from 'pinia';
+import { onMounted, ref } from 'vue';
+import { FunnelIcon } from '@heroicons/vue/20/solid';
+import FilterDialog from './FilterDialog.vue';
 
 defineProps({
     expenses: Object,
 });
+
+const scout = useScoutStore();
+const { query, sortBy } = storeToRefs(scout);
+
+onMounted(() => {
+    let params = new URLSearchParams(document.location.search);
+    query.value = params.get('query') || '';
+    sortBy.value = params.get('sort_by') || 'effective_date';
+});
+
+const resetSearchQuery = () => {
+    query.value = '';
+    scout.runSearch();
+};
+
+const showFilters = ref(false);
 
 const goToExpense = (expenseId) => {
     // only for mobile view, i.e. views without the edit button
@@ -14,8 +36,8 @@ const goToExpense = (expenseId) => {
         return;
     }
 
-    router.get(route('expenses.edit', expenseId))
-}
+    router.get(route('expenses.edit', expenseId));
+};
 </script>
 
 <template>
@@ -29,7 +51,20 @@ const goToExpense = (expenseId) => {
         </div>
     </div>
 
-    <TableFilters />
+    <!-- Search & Filters -->
+    <div class="flex items-center justify-between gap-3 mb-10">
+        <SearchBox v-model="query" @keyup="scout.runSearch()" @reset="resetSearchQuery" />
+        <div class="flex items-center gap-3 md:gap-8">
+            <SortByMenu v-model="sortBy" />
+            <button
+                type="button"
+                class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
+                @click="showFilters = true">
+                <span class="sr-only">Filters</span>
+                <FunnelIcon class="h-5 w-5" aria-hidden="true" />
+            </button>
+        </div>
+    </div>
 
     <table class="min-w-full divide-y divide-gray-300 bg-white">
         <thead class="hidden md:table-header-group">
@@ -89,4 +124,6 @@ const goToExpense = (expenseId) => {
     </table>
 
     <Pagination :expenses="expenses" />
+
+    <FilterDialog :open="showFilters" @close="showFilters = false" />
 </template>

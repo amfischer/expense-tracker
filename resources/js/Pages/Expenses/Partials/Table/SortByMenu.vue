@@ -1,4 +1,5 @@
 <script setup>
+import { useScoutStore } from '@/Stores/scout';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid';
 
@@ -8,12 +9,15 @@ const sortOptions = [
     { name: 'Category', value: 'category_id' },
 ];
 
-const sortSelected = defineModel({
+const modelValue = defineModel({
     type: String,
 });
 
+const scout = useScoutStore();
+
 const triggerSort = (item) => {
-    sortSelected.value = item;
+    modelValue.value = item;
+    scout.applyFilters();
 };
 </script>
 
@@ -39,7 +43,7 @@ const triggerSort = (item) => {
                         <span
                             :class="[
                                 active ? 'bg-gray-100' : '',
-                                option.value === sortSelected ? 'text-gray-900' : 'text-gray-500',
+                                option.value === modelValue ? 'text-gray-900' : 'text-gray-500',
                                 'block px-4 py-2 text-sm font-medium cursor-pointer',
                             ]"
                             @click="triggerSort(option.value)">

@@ -13,7 +13,7 @@ const props = defineProps({
     expense: Object,
     categories: Array,
     currencies: Array,
-    paymentMethods: Object,
+    paymentMethods: Array,
     receipt: Object,
 });
 

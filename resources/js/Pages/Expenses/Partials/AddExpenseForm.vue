@@ -14,14 +14,14 @@ import { useAlertStore } from '@/Stores/alert';
 const props = defineProps({
     categories: Array,
     currencies: Array,
-    paymentMethods: Object,
+    paymentMethods: Array,
 });
 
 const form = useForm({
     payee: '',
     amount: '',
     foreign_currency_conversion_fee: '',
-    currency: props.currencies[0],
+    currency: props.currencies[0].id,
     payment_method: '',
     is_business_expense: false,
     transaction_date: '',
@@ -116,7 +116,7 @@ const create = () => {
                 <div class="mt-10 space-y-10 md:w-1/2 md:pr-5">
                     <div class="sm:col-span-3">
                         <InputLabel for="payment_method" value="Payment Method" />
-                        <SelectMenuBasic :options="paymentMethods" :has-keys="true" v-model="form.payment_method" />
+                        <SelectMenuBasic :options="paymentMethods" v-model="form.payment_method" :show-empty-option="true" />
                         <InputError class="mt-2" :message="form.errors.payment_method" />
                     </div>
 

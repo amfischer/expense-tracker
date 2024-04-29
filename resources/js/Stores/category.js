@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export const useCategoryStore = defineStore('CategoryStore', () => {
+export const useCategoryStore = defineStore('category', () => {
     const selectedCategory = ref(null);
 
     const showCreateModal = ref(false);

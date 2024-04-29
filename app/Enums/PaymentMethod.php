@@ -32,7 +32,10 @@ enum PaymentMethod: string
         $options = [];
 
         foreach (self::cases() as $paymentMethod) {
-            $options[$paymentMethod->value] = $paymentMethod->label();
+            $options[] = [
+                'id'   => $paymentMethod->value,
+                'name' => $paymentMethod->label(),
+            ];
         }
 
         return $options;
