@@ -1,5 +1,4 @@
 <script setup>
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -7,94 +6,38 @@ const props = defineProps({
     expenses: Object,
 });
 
-const pageLinks = computed(() => {
-    const links = props.expenses.links;
-    links.pop();
-    links.shift();
-    return links;
-});
+const hasPreviousLink = computed(() => props.expenses.prev_page_url !== null);
+const hasNextLink = computed(() => props.expenses.next_page_url !== null);
 </script>
 
 <template>
-    <div class="flex items-center justify-between mt-10">
-        <div class="flex flex-1 justify-between sm:hidden">
+    <nav class="flex items-center justify-between mt-10" aria-label="Pagination">
+        <p class="hidden sm:block text-sm text-gray-700">
+            Showing
+            <span class="font-medium">{{ expenses.from }}</span>
+            to
+            <span class="font-medium">{{ expenses.to }}</span>
+            of
+            <span class="font-medium">{{ expenses.total }}</span>
+            results
+        </p>
+        <div class="flex-1 sm:flex-none flex items-center justify-between gap-3">
             <Link
-                v-if="expenses.prev_page_url"
                 :href="expenses.prev_page_url"
-                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                as="button"
+                :disabled="!hasPreviousLink"
+                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium"
+                :class="hasPreviousLink ? 'text-gray-700 hover:bg-gray-50' : 'text-gray-400'">
                 Previous
             </Link>
-            <span v-else class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400">
-                Previous
-            </span>
             <Link
-                v-if="expenses.next_page_url"
                 :href="expenses.next_page_url"
-                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                as="button"
+                :disabled="!hasNextLink"
+                class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium"
+                :class="hasNextLink ? 'text-gray-700 hover:bg-gray-50' : 'text-gray-400'">
                 Next
             </Link>
-            <span v-else class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400">
-                Next
-            </span>
         </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm text-gray-700">
-                    Showing
-                    <span class="font-medium">{{ expenses.from }}</span>
-                    to
-                    <span class="font-medium">{{ expenses.to }}</span>
-                    of
-                    <span class="font-medium">{{ expenses.total }}</span>
-                    results
-                </p>
-            </div>
-            <div>
-                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                    <Link
-                        v-if="expenses.prev_page_url"
-                        :href="expenses.prev_page_url"
-                        class="relative inline-flex items-center rounded-l-md p-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 text-gray-500 ring-gray-300">
-                        <span class="sr-only">Previous</span>
-                        <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
-                    </Link>
-                    <span
-                        v-else
-                        class="relative inline-flex items-center rounded-l-md p-2 ring-1 ring-inset text-gray-300 ring-gray-200">
-                        <span class="sr-only">Previous</span>
-                        <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
-                    </span>
-
-                    <Link
-                        v-for="(link, i) in pageLinks"
-                        :key="i"
-                        :href="link.url"
-                        aria-current="page"
-                        class="relative inline-flex items-center px-4 py-2 text-sm font-semibold"
-                        :class="
-                            link.active
-                                ? 'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                                : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
-                        ">
-                        {{ link.label }}
-                    </Link>
-                    <!-- <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span> -->
-
-                    <Link
-                        v-if="expenses.next_page_url"
-                        :href="expenses.next_page_url"
-                        class="relative inline-flex items-center rounded-r-md p-2 ring-1 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 text-gray-500 ring-gray-300">
-                        <span class="sr-only">Next</span>
-                        <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
-                    </Link>
-                    <span
-                        v-else
-                        class="relative inline-flex items-center rounded-r-md p-2 ring-1 ring-inset text-gray-300 ring-gray-200">
-                        <span class="sr-only">Next</span>
-                        <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
-                    </span>
-                </nav>
-            </div>
-        </div>
-    </div>
+    </nav>
 </template>

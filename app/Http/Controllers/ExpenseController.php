@@ -35,6 +35,8 @@ class ExpenseController extends Controller
 
         // TODO - doesn't return an Inertia response, throws an error for some reason.
         // test by forcing validation to fail.
+        // try redirect()->back() ?
+        // or just add new return type, redirectresponse?
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->messages());
         }
@@ -55,7 +57,7 @@ class ExpenseController extends Controller
 
         $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
 
-        $expenses = $query->paginate(10)->appends(Arr::whereNotNull($validated));
+        $expenses = $query->paginate(15)->appends(Arr::whereNotNull($validated));
 
         $categories = $request->user()->categories;
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
