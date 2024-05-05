@@ -1,22 +1,24 @@
-import { router } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { useDebounceFn } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useScoutStore = defineStore('scout', () => {
-    const query = ref('');
-    const categoryIds = ref([]);
-    const sortBy = ref('effective_date');
-    const paymentMethods = ref([]);
+    const form = useForm({
+        query: '',
+        sort_by: 'effective_date',
+        category_ids: [],
+        payment_methods: [],
+    });
 
-    const runSearch = useDebounceFn(() => {
-        const payload = {
-            query: query.value,
-            category_ids: categoryIds.value,
-            sort_by: sortBy.value,
-            payment_methods: paymentMethods.value,
-        };
-        router.get(route('expenses.index'), payload, {
+    const clearFilters = () => {
+        form.category_ids = [];
+        form.payment_methods = [];
+        search();
+    }
+
+    const throttledSearch = useDebounceFn(() => {
+        form.get(route('expenses.index'), {
             preserveState: true,
             onSuccess: (resp) => {
                 // console.log('success', resp);
@@ -24,14 +26,8 @@ export const useScoutStore = defineStore('scout', () => {
         });
     }, 400);
 
-    const applyFilters = () => {
-        const payload = {
-            query: query.value,
-            category_ids: categoryIds.value,
-            sort_by: sortBy.value,
-            payment_methods: paymentMethods.value,
-        };
-        router.get(route('expenses.index'), payload, {
+    const search = () => {
+        form.get(route('expenses.index'), {
             preserveState: true,
         });
     };
@@ -45,13 +41,11 @@ export const useScoutStore = defineStore('scout', () => {
     const setPaymentMethods = (payload) => (options.value.paymentMethods = payload);
 
     return {
-        query,
-        categoryIds,
-        paymentMethods,
-        sortBy,
+        form,
         options,
-        runSearch,
-        applyFilters,
+        throttledSearch,
+        search,
+        clearFilters,
         setCategories,
         setPaymentMethods,
     };

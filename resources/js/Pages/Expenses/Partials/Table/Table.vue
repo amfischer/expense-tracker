@@ -5,7 +5,6 @@ import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
 import { Link, router } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
-import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { FunnelIcon } from '@heroicons/vue/20/solid';
 import FilterDialog from './FilterDialog.vue';
@@ -15,17 +14,16 @@ defineProps({
 });
 
 const scout = useScoutStore();
-const { query, sortBy } = storeToRefs(scout);
 
 onMounted(() => {
     let params = new URLSearchParams(document.location.search);
-    query.value = params.get('query') || '';
-    sortBy.value = params.get('sort_by') || 'effective_date';
+    scout.form.query = params.get('query') || '';
+    scout.form.sort_by = params.get('sort_by') || 'effective_date';
 });
 
 const resetSearchQuery = () => {
-    query.value = '';
-    scout.runSearch();
+    scout.form.query = '';
+    scout.search();
 };
 
 const showFilters = ref(false);
@@ -53,9 +51,9 @@ const goToExpense = (expenseId) => {
 
     <!-- Search & Filters -->
     <div class="flex items-center justify-between gap-3 mb-10">
-        <SearchBox v-model="query" @keyup="scout.runSearch()" @reset="resetSearchQuery" />
+        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="resetSearchQuery" />
         <div class="flex items-center gap-3 md:gap-8">
-            <SortByMenu v-model="sortBy" />
+            <SortByMenu v-model="scout.form.sort_by" />
             <button
                 type="button"
                 class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"

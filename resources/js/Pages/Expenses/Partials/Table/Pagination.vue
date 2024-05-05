@@ -23,7 +23,7 @@ const hasNextLink = computed(() => props.expenses.next_page_url !== null);
         </p>
         <div class="flex-1 sm:flex-none flex items-center justify-between gap-3">
             <Link
-                :href="expenses.prev_page_url"
+                :href="expenses.prev_page_url ?? '#'"
                 as="button"
                 :disabled="!hasPreviousLink"
                 class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium"
@@ -31,7 +31,7 @@ const hasNextLink = computed(() => props.expenses.next_page_url !== null);
                 Previous
             </Link>
             <Link
-                :href="expenses.next_page_url"
+                :href="expenses.next_page_url ?? '#'"
                 as="button"
                 :disabled="!hasNextLink"
                 class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium"

@@ -1,7 +1,7 @@
 <script setup>
-import { useScoutStore } from '@/Stores/scout';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid';
+import { useScoutStore } from '@/Stores/scout';
 
 const sortOptions = [
     { name: 'Date', value: 'effective_date' },
@@ -17,7 +17,7 @@ const scout = useScoutStore();
 
 const triggerSort = (item) => {
     modelValue.value = item;
-    scout.applyFilters();
+    scout.search();
 };
 </script>
 
