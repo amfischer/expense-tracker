@@ -10,6 +10,7 @@ use App\Models\Receipt;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -23,41 +24,54 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
-        $validator = Validator::make($request->all(['query', 'category_ids', 'sort_by', 'payment_methods']), [
+        $validator = Validator::make($request->all(), [
             'query'             => 'nullable',
+            'page'              => 'nullable|numeric|min:1',
+            'date'              => 'nullable|array|size:2',
+            'date.*'            => 'date_format:Y-m-d',
             'category_ids'      => 'nullable|array',
             'sort_by'           => 'nullable',
             'payment_methods'   => 'nullable|array',
             'payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 
-        // TODO - doesn't return an Inertia response, throws an error for some reason.
-        // test by forcing validation to fail.
-        // try redirect()->back() ?
-        // or just add new return type, redirectresponse?
         if ($validator->fails()) {
             return back()->withErrors($validator->errors()->messages());
         }
 
         $validated = $validator->valid();
 
-        $query = Expense::search($validated['query'])
+        $query = Expense::search($validated['query'] ?? '')
             ->where('user_id', $request->user()->id)
             ->query(fn (Builder $query) => $query->with(['category']));
 
-        if ($validated['category_ids']) {
+        if ($validated['date'] ?? false) {
+            // $query->where();
+        }
+
+        if ($validated['category_ids'] ?? false) {
             $query->whereIn('category_id', $validated['category_ids']);
         }
 
-        if ($validated['payment_methods']) {
+        if ($validated['payment_methods'] ?? false) {
             $query->whereIn('payment_method', $validated['payment_methods']);
         }
 
         $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
+        $results = $query->get();
 
-        $expenses = $query->paginate(15)->appends(Arr::whereNotNull($validated));
+        $sliced = array_slice($results->toArray(), ($validated['page'] ?? 1) - 1, 5);
+
+        $paginatorOptions = [
+            'path'  => $request->url(),
+            'query' => Arr::whereNotNull($validated),
+        ];
+
+        $expenses = new LengthAwarePaginator($sliced, $results->count(), 5, null, $paginatorOptions);
+
+        // $expenses = $query->paginate(15)->appends(Arr::whereNotNull($validated));
 
         $categories = $request->user()->categories;
         $paymentMethods = PaymentMethod::HTMLSelectOptions();

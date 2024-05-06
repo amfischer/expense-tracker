@@ -6,16 +6,18 @@ import { ref } from 'vue';
 export const useScoutStore = defineStore('scout', () => {
     const form = useForm({
         query: '',
+        date: '',
         sort_by: 'effective_date',
         category_ids: [],
         payment_methods: [],
     });
 
     const clearFilters = () => {
+        form.date = '';
         form.category_ids = [];
         form.payment_methods = [];
         search();
-    }
+    };
 
     const throttledSearch = useDebounceFn(() => {
         form.get(route('expenses.index'), {
@@ -29,6 +31,12 @@ export const useScoutStore = defineStore('scout', () => {
     const search = () => {
         form.get(route('expenses.index'), {
             preserveState: true,
+            onSuccess: (resp) => {
+                console.log('sucess', resp);
+            },
+            onError: (err) => {
+                console.log('error', err);
+            },
         });
     };
 
