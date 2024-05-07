@@ -7,15 +7,14 @@ use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
@@ -24,10 +23,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
-    public function index(Request $request): Response|RedirectResponse
+    public function index(Request $request): Response
     {
-        $validator = Validator::make($request->all(), [
-            'query'             => 'nullable',
+        $data = $request->validate([
+            'query'             => 'nullable|alpha',
             'page'              => 'nullable|numeric|min:1',
             'date'              => 'nullable|array|size:2',
             'date.*'            => 'date_format:Y-m-d',
@@ -37,43 +36,30 @@ class ExpenseController extends Controller
             'payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->messages());
-        }
-
-        $validated = $validator->valid();
-
-        $query = Expense::search($validated['query'] ?? '')
+        $query = Expense::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
-            ->query(fn (Builder $query) => $query->with(['category']));
+            ->query(function (Builder $query) use ($data) {
+                $query->with(['category']);
+                if ($data['date'] ?? false) {
+                    $query->where('effective_date', '>=', Carbon::createFromFormat('Y-m-d', $data['date'][0])->startOfDay());
+                    $query->where('effective_date', '<=', Carbon::createFromFormat('Y-m-d', $data['date'][1])->endOfDay());
+                }
+            });
 
-        if ($validated['date'] ?? false) {
-            // $query->where();
+        if ($data['category_ids'] ?? false) {
+            $query->whereIn('category_id', $data['category_ids']);
         }
 
-        if ($validated['category_ids'] ?? false) {
-            $query->whereIn('category_id', $validated['category_ids']);
+        if ($data['payment_methods'] ?? false) {
+            $query->whereIn('payment_method', $data['payment_methods']);
         }
 
-        if ($validated['payment_methods'] ?? false) {
-            $query->whereIn('payment_method', $validated['payment_methods']);
-        }
+        $query->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
 
-        $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
-        $results = $query->get();
-
-        $sliced = array_slice($results->toArray(), ($validated['page'] ?? 1) - 1, 5);
-
-        $paginatorOptions = [
-            'path'  => $request->url(),
-            'query' => Arr::whereNotNull($validated),
-        ];
-
-        $expenses = new LengthAwarePaginator($sliced, $results->count(), 5, null, $paginatorOptions);
-
-        // $expenses = $query->paginate(15)->appends(Arr::whereNotNull($validated));
+        $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
         $categories = $request->user()->categories;
+
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         return Inertia::render('Expenses/Index', compact('expenses', 'categories', 'paymentMethods'));
