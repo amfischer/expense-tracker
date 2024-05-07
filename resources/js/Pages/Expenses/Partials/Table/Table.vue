@@ -21,11 +21,6 @@ onMounted(() => {
     scout.form.sort_by = params.get('sort_by') || 'effective_date';
 });
 
-const resetSearchQuery = () => {
-    scout.form.query = '';
-    scout.search();
-};
-
 const showFilters = ref(false);
 
 const goToExpense = (expenseId) => {
@@ -51,7 +46,7 @@ const goToExpense = (expenseId) => {
 
     <!-- Search & Filters -->
     <div class="flex items-center justify-between gap-3 mb-10">
-        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="resetSearchQuery" />
+        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="scout.clearSearchQuery" />
         <div class="flex items-center gap-3 md:gap-8">
             <SortByMenu v-model="scout.form.sort_by" />
             <button

@@ -1,10 +1,9 @@
 <script setup>
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { useScoutStore } from '@/Stores/scout';
 import FilterOption from './FilterOption.vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import DatePicker from './DatePicker.vue';
+import { useScoutStore } from '@/Stores/scout';
 import { onMounted } from 'vue';
 
 defineProps({
@@ -97,12 +96,7 @@ onMounted(() => {
                                 :options="scout.options.paymentMethods"
                                 v-model="scout.form.payment_methods"
                                 @change="scout.search" />
-                            <VueDatePicker
-                                v-model="scout.form.date"
-                                model-type="yyyy-MM-dd"
-                                :enable-time-picker="false"
-                                range
-                                @update:model-value="scout.search" />
+                            <DatePicker />
                         </form>
                     </DialogPanel>
                 </TransitionChild>
