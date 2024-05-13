@@ -83,7 +83,7 @@ onMounted(() => {
                         </div>
 
                         <!-- Filters -->
-                        <form class="">
+                        <form>
                             <FilterOption
                                 id="category"
                                 title="Categories"

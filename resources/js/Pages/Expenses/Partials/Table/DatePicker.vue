@@ -50,13 +50,17 @@ const presetDates = ref([
 const { width } = useWindowSize();
 </script>
 
+<!-- TODO - add validation with :state=false -->
 <template>
-    <VueDatePicker
-        v-model="scout.form.date"
-        model-type="yyyy-MM-dd"
-        :enable-time-picker="false"
-        range
-        :preset-dates="presetDates"
-        :teleport-center="width > 600"
-        @update:model-value="scout.search" />
+    <div class="border-t border-gray-200 px-4 py-6">
+        <VueDatePicker
+            v-model="scout.form.date"
+            model-type="yyyy-MM-dd"
+            :enable-time-picker="false"
+            range
+            :preset-dates="presetDates"
+            :teleport-center="width > 600"
+            placeholder="Select Date Range"
+            @update:model-value="scout.search" />
+    </div>
 </template>
