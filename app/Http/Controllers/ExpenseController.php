@@ -7,6 +7,7 @@ use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,43 +24,49 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
-        $validator = Validator::make($request->all(['query', 'category_ids', 'sort_by', 'payment_methods']), [
-            'query'             => 'nullable',
+        $validator = Validator::make($request->all(), [
+            'query'             => 'nullable|alpha',
+            'date'              => 'nullable|array|size:2',
+            'date.*'            => 'date_format:Y-m-d',
             'category_ids'      => 'nullable|array',
-            'sort_by'           => 'nullable',
+            'category_ids.*'    => 'numeric',
+            'sort_by'           => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
             'payment_methods'   => 'nullable|array',
             'payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 
-        // TODO - doesn't return an Inertia response, throws an error for some reason.
-        // test by forcing validation to fail.
-        // try redirect()->back() ?
-        // or just add new return type, redirectresponse?
         if ($validator->fails()) {
-            return back()->withErrors($validator->errors()->messages());
+            return back()->setTargetUrl(route('expenses.index'))->withErrors($validator->errors()->messages(), 'scout');
         }
 
-        $validated = $validator->valid();
+        $data = $validator->validate();
 
-        $query = Expense::search($validated['query'])
+        $query = Expense::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
-            ->query(fn (Builder $query) => $query->with(['category']));
+            ->query(function (Builder $query) use ($data) {
+                $query->with(['category']);
+                if ($data['date'] ?? false) {
+                    $query->where('effective_date', '>=', Carbon::createFromFormat('Y-m-d', $data['date'][0])->startOfDay());
+                    $query->where('effective_date', '<=', Carbon::createFromFormat('Y-m-d', $data['date'][1])->endOfDay());
+                }
+            });
 
-        if ($validated['category_ids']) {
-            $query->whereIn('category_id', $validated['category_ids']);
+        if ($data['category_ids'] ?? false) {
+            $query->whereIn('category_id', $data['category_ids']);
         }
 
-        if ($validated['payment_methods']) {
-            $query->whereIn('payment_method', $validated['payment_methods']);
+        if ($data['payment_methods'] ?? false) {
+            $query->whereIn('payment_method', $data['payment_methods']);
         }
 
-        $query->orderBy($validated['sort_by'] ?? 'effective_date', 'desc');
+        $query->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
 
-        $expenses = $query->paginate(15)->appends(Arr::whereNotNull($validated));
+        $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
         $categories = $request->user()->categories;
+
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
         return Inertia::render('Expenses/Index', compact('expenses', 'categories', 'paymentMethods'));

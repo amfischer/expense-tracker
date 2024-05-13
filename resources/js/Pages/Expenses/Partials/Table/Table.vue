@@ -3,7 +3,7 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from './Pagination.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
 import { onMounted, ref } from 'vue';
 import { FunnelIcon } from '@heroicons/vue/20/solid';
@@ -19,12 +19,11 @@ onMounted(() => {
     let params = new URLSearchParams(document.location.search);
     scout.form.query = params.get('query') || '';
     scout.form.sort_by = params.get('sort_by') || 'effective_date';
-});
 
-const resetSearchQuery = () => {
-    scout.form.query = '';
-    scout.search();
-};
+    if (usePage().props.errors.scout !== undefined) {
+        console.error('search errors: ', usePage().props.errors.scout);
+    }
+});
 
 const showFilters = ref(false);
 
@@ -51,7 +50,7 @@ const goToExpense = (expenseId) => {
 
     <!-- Search & Filters -->
     <div class="flex items-center justify-between gap-3 mb-10">
-        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="resetSearchQuery" />
+        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="scout.clearSearchQuery" />
         <div class="flex items-center gap-3 md:gap-8">
             <SortByMenu v-model="scout.form.sort_by" />
             <button

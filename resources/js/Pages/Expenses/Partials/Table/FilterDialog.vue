@@ -2,6 +2,7 @@
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import FilterOption from './FilterOption.vue';
+import DatePicker from './DatePicker.vue';
 import { useScoutStore } from '@/Stores/scout';
 import { onMounted } from 'vue';
 
@@ -82,7 +83,7 @@ onMounted(() => {
                         </div>
 
                         <!-- Filters -->
-                        <form class="">
+                        <form>
                             <FilterOption
                                 id="category"
                                 title="Categories"
@@ -95,6 +96,7 @@ onMounted(() => {
                                 :options="scout.options.paymentMethods"
                                 v-model="scout.form.payment_methods"
                                 @change="scout.search" />
+                            <DatePicker />
                         </form>
                     </DialogPanel>
                 </TransitionChild>
