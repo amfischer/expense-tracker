@@ -25,6 +25,7 @@ const deleteReceipt = () => {
         preserveScroll: true,
         onSuccess: (resp) => {
             alert.setMessage(resp.props.flash.message);
+            receiptStore.setReceipt(null);
             errorMessage.value = '';
             closeDeleteModal();
         },

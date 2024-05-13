@@ -157,7 +157,7 @@ class ExpenseController extends Controller
 
         Storage::disk('receipts')->putFileAs($storagePath, $file, $filename);
 
-        Receipt::create([
+        $receipt = Receipt::create([
             'user_id'    => Auth::user()->id,
             'expense_id' => $expense->id,
             'filename'   => $filename,
@@ -165,7 +165,7 @@ class ExpenseController extends Controller
             'size'       => $file->getSize(),
         ]);
 
-        return back()->with('message', 'Receipt successfully uploaded.');
+        return back()->withInput(compact('receipt'))->with('message', 'Receipt successfully uploaded.');
     }
 
     public function getReceiptContents(Expense $expense, Receipt $receipt): BinaryFileResponse

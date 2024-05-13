@@ -26,6 +26,7 @@ const upload = () => {
         onSuccess: (resp) => {
             form.reset();
             alert.setMessage(resp.props.flash.message);
+            receiptStore.setReceipt(resp.props.receipt);
         },
         onError: () => {
             console.log('errors', form.errors);
