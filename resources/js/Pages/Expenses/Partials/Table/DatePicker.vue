@@ -50,7 +50,6 @@ const presetDates = ref([
 const { width } = useWindowSize();
 </script>
 
-<!-- TODO - add validation with :state=false -->
 <template>
     <div class="border-t border-gray-200 px-4 py-6">
         <VueDatePicker

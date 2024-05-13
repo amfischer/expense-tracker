@@ -3,7 +3,7 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from './Pagination.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
 import { onMounted, ref } from 'vue';
 import { FunnelIcon } from '@heroicons/vue/20/solid';
@@ -19,6 +19,10 @@ onMounted(() => {
     let params = new URLSearchParams(document.location.search);
     scout.form.query = params.get('query') || '';
     scout.form.sort_by = params.get('sort_by') || 'effective_date';
+
+    if (usePage().props.errors.scout !== undefined) {
+        console.error('search errors: ', usePage().props.errors.scout);
+    }
 });
 
 const showFilters = ref(false);
