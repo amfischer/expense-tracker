@@ -15,6 +15,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
@@ -23,18 +24,24 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
-        $data = $request->validate([
+        $validator = Validator::make($request->all(), [
             'query'             => 'nullable|alpha',
-            'page'              => 'nullable|numeric|min:1',
             'date'              => 'nullable|array|size:2',
             'date.*'            => 'date_format:Y-m-d',
             'category_ids'      => 'nullable|array',
-            'sort_by'           => 'nullable',
+            'category_ids.*'    => 'numeric',
+            'sort_by'           => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
             'payment_methods'   => 'nullable|array',
             'payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
+
+        if ($validator->fails()) {
+            return back()->setTargetUrl(route('expenses.index'))->withErrors($validator->errors()->messages(), 'scout');
+        }
+
+        $data = $validator->validate();
 
         $query = Expense::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
