@@ -14,9 +14,17 @@ class DashboardController extends Controller
         $reports = [
             array_merge(['label' => '2024'], $user->getExpenseSummary(now()->startOfYear(), now()->endOfYear())),
             array_merge(['label' => now()->format('F')], $user->getExpenseSummary(now()->startOfMonth(), now()->endOfMonth())),
-            array_merge(['label' => now()->subMonth()->format('F')], $user->getExpenseSummary(now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth())),
-            array_merge(['label' => now()->subMonths(2)->format('F')], $user->getExpenseSummary(now()->subMonths(2)->startOfMonth(), now()->subMonths(2)->endOfMonth())),
         ];
+
+        $currentMonth = now()->month;
+
+        for ($i = 1; $i < $currentMonth; $i++) { 
+            $reports[] = array_merge(
+                ['label' => now()->subMonths($i)->format('F')],
+                $user->getExpenseSummary(now()->subMonths($i)->startOfMonth(), now()->subMonths($i)->endOfMonth())
+            );
+        }
+
 
         return Inertia::render('Dashboard', compact('reports'));
     }

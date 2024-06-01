@@ -61,7 +61,7 @@ const maxWidthClass = computed(() => {
                                 :class="[maxWidthClass, dialogPanelClasses]">
                                 <DialogTitle
                                     as="h3"
-                                    class="text-base text-center font-semibold leading-6 text-gray-900">
+                                    class="text-lg font-medium leading-6 text-gray-900">
                                     <slot name="header" />
                                 </DialogTitle>
                                 <DialogDescription class="my-6 text-lg">

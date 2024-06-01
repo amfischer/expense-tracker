@@ -129,9 +129,17 @@ class ExpenseController extends Controller
         return back()->with('message', 'Expense successfully updated.');
     }
 
-    public function delete(Expense $expense): RedirectResponse
+    public function delete(Request $request, Expense $expense): RedirectResponse
     {
         Gate::authorize('delete', $expense);
+
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        if ($expense->receipts()->count() > 0) {
+            return back()->withErrors(['password' => 'Has attached receipts, cannot delete expense.']);
+        }
 
         $expense->delete();
 
@@ -177,9 +185,13 @@ class ExpenseController extends Controller
         return response()->file($path);
     }
 
-    public function deleteReceipt(Expense $expense, Receipt $receipt): RedirectResponse
+    public function deleteReceipt(Request $request, Expense $expense, Receipt $receipt): RedirectResponse
     {
         Gate::authorize('delete', $expense);
+
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
 
         Storage::disk('receipts')->delete($expense->getReceiptStoragePath() . '/' . $receipt->filename);
 

@@ -89,9 +89,9 @@ const update = () => {
                     </div>
 
                     <div class="sm:col-span-3">
-                        <InputLabel for="date" value="Transaction Date" />
+                        <InputLabel for="transaction_date" value="Transaction Date" />
                         <TextInput
-                            id="date"
+                            id="transaction_date"
                             type="date"
                             class="mt-1 block w-full"
                             v-model="form.transaction_date"
@@ -99,9 +99,9 @@ const update = () => {
                         <InputError class="mt-2" :message="form.errors.transaction_date" />
                     </div>
                     <div class="sm:col-span-3">
-                        <InputLabel for="date" value="Effective Date" />
+                        <InputLabel for="effective_date" value="Effective Date" />
                         <TextInput
-                            id="date"
+                            id="effective_date"
                             type="date"
                             class="mt-1 block w-full"
                             v-model="form.effective_date"
