@@ -31,6 +31,7 @@ class Expense extends Model
         'foreign_currency_conversion_fee_pretty',
         'total',
         'effective_date_pretty',
+        'has_receipt',
     ];
 
     public function toSearchableArray()
@@ -138,6 +139,13 @@ class Expense extends Model
             get: function (mixed $value, array $attr) {
                 return date('M d, Y', strtotime($attr['effective_date']));
             }
+        );
+    }
+
+    protected function hasReceipt(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->receipts()->count() > 0
         );
     }
 }

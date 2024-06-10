@@ -6,7 +6,7 @@ import SortByMenu from './SortByMenu.vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
 import { onMounted, ref } from 'vue';
-import { FunnelIcon } from '@heroicons/vue/20/solid';
+import { FunnelIcon, TagIcon, CurrencyDollarIcon } from '@heroicons/vue/20/solid';
 import FilterDialog from './FilterDialog.vue';
 
 defineProps({
@@ -82,7 +82,11 @@ const goToExpense = (expenseId) => {
                 class="hover:bg-gray-100 md:hover:bg-white"
                 @click="goToExpense(expense.id)">
                 <td class="whitespace-nowrap py-3 text-md text-gray-500">
-                    {{ expense.payee }}
+                    <div class="flex items-center gap-2">
+                        {{ expense.payee }}
+                        <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-500" />
+                        <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
+                    </div>
                     <div class="flex items-center gap-1 text-sm">
                         <span
                             class="rounded-full block w-2 h-2"
