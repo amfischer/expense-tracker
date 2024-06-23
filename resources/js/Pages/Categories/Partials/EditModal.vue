@@ -46,9 +46,9 @@ const updateCategory = () => {
 
 <template>
     <Modal :show="categoryStore.showEditModal" max-width="sm" @close="closeModal">
-        <template #header> Edit Category </template>
+        <!-- <template #header> Edit Category </template> -->
 
-        <form @submit.prevent="updateCategory" class="space-y-4 py-4">
+        <form @submit.prevent="updateCategory" class="space-y-4">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus />

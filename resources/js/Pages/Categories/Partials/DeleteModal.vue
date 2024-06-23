@@ -34,8 +34,6 @@ const deleteCategory = () => {
 
 <template>
     <Modal :show="categoryStore.showDeleteModal" max-width="sm" @close="closeModal">
-        <template #header>Delete Category</template>
-
         <template #description>
             Are you sure you want to delete this category?
 
@@ -49,6 +47,6 @@ const deleteCategory = () => {
             <span class="text-sm italic"> Note: to delete a category it must have no attached expenses.</span>
         </template>
 
-        <DangerButton @click="deleteCategory" class="table w-32 float-end">Delete</DangerButton>
+        <DangerButton @click="deleteCategory" class="table w-32 mt-6 float-end">Delete</DangerButton>
     </Modal>
 </template>

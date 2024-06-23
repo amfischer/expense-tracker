@@ -27,7 +27,7 @@ const src = route('expenses.receipts.show', { expense: expense.value.id, receipt
         :show="showModal"
         @close="showModal = false"
         :max-width="receipt.is_image ? '2xl' : '6xl'"
-        :dialog-panel-classes="receipt.is_image ? '' : 'h-screen my-10'">
+        :dialog-panel-classes="receipt.is_image ? 'overflow-y-scroll p-0' : 'h-screen p-0'">
         <img v-if="receipt.is_image" :src="src" />
         <iframe v-else :src="src" width="100%" height="100%" />
     </Modal>

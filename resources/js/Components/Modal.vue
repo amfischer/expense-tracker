@@ -57,14 +57,14 @@ const maxWidthClass = computed(() => {
                             leave-from="opacity-100 translate-y-0 sm:scale-100"
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                             <DialogPanel
-                                class="relative transform overflow-hidden rounded-lg bg-white p-6 w-full max-w-sm text-left shadow-xl transition-all"
+                                class="relative transform overflow-hidden rounded-lg bg-white p-6 text-left w-full max-w-sm max-h-[90vh] shadow-xl transition-all"
                                 :class="[maxWidthClass, dialogPanelClasses]">
                                 <DialogTitle
                                     as="h3"
                                     class="text-lg font-medium leading-6 text-gray-900">
                                     <slot name="header" />
                                 </DialogTitle>
-                                <DialogDescription class="my-6 text-lg">
+                                <DialogDescription class="my-0 text-lg">
                                     <slot name="description" />
                                 </DialogDescription>
                                 <slot />
