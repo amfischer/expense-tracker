@@ -46,9 +46,10 @@ namespace App\Models{
  * @property int $user_id
  * @property int $category_id
  * @property string $payee
- * @property string $amount
- * @property string|null $foreign_currency_conversion_fee
+ * @property-write string $amount
+ * @property-write string|null $foreign_currency_conversion_fee
  * @property string $currency
+ * @property string|null $payment_method
  * @property bool $is_business_expense
  * @property \Illuminate\Support\Carbon $transaction_date
  * @property \Illuminate\Support\Carbon $effective_date
@@ -57,8 +58,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $amount_pretty
  * @property-read \App\Models\Category $category
+ * @property-read mixed $effective_date_pretty
  * @property-read mixed $foreign_currency_conversion_fee_pretty
  * @property-read mixed $has_fees
+ * @property-read mixed $has_receipt
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts
  * @property-read int|null $receipts_count
  * @property-read mixed $total
@@ -77,6 +80,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereIsBusinessExpense($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense wherePayee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense wherePaymentMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereTransactionDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUserId($value)
@@ -97,7 +101,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Expense $expense
- * @property-read mixed $image_contents
+ * @property-read mixed $is_image
+ * @property-read mixed $size_formatted
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Receipt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Receipt newQuery()
