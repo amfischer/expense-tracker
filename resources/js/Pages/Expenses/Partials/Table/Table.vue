@@ -83,7 +83,9 @@ const goToExpense = (expenseId) => {
                 @click="goToExpense(expense.id)">
                 <td class="whitespace-nowrap py-3 text-md text-gray-500">
                     <div class="flex items-center gap-2">
-                        {{ expense.payee }}
+                        <span :class="{ 'underline decoration-dotted underline-offset-1': expense.notes }" :title="expense.notes">
+                            {{ expense.payee }}
+                        </span>
                         <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-500" />
                         <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
                     </div>
