@@ -65,7 +65,7 @@ class ExpenseController extends Controller
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
-        $categories = $request->user()->categories;
+        $categories = $request->user()->categoriesArray;
 
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 

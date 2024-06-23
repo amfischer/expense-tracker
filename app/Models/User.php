@@ -73,11 +73,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return Attribute::make(
             get: function () {
-                return $this->categories->reduce(function (array $carry, Category $category) {
-                    $carry[] = ['id' => $category->id, 'name' => $category->name];
-
-                    return $carry;
-                }, []);
+                return $this->categories->map(function (Category $category, int $key) {
+                    return ['id' => $category->id, 'name' => $category->name];
+                })->sortBy('name')->values()->all();
             }
         );
     }
