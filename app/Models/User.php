@@ -93,8 +93,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $expenses = $this->expenses()->whereBetween('effective_date', $dateRange)->get();
 
-        $total = $expenses->reduce(function ($carry, $item) {
-            return $carry->add(Money::USD($item->amount));
+        $total = $expenses->reduce(function (Money $carry, Expense $item) {
+            return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
         }, Money::USD(0));
 
         return [
