@@ -45,7 +45,7 @@ class Income extends Model
     {
         return Attribute::make(
             get: function (mixed $value, array $attr) {
-                $money = new Money($attr['amount'], new Currency($attr['currency']));
+                $money = new Money($attr['amount'], new Currency('USD'));
 
                 return app(IntlMoneyFormatter::class)->format($money);
             }
