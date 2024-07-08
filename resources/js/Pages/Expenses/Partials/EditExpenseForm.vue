@@ -111,7 +111,7 @@ const update = () => {
                 </div>
             </div>
 
-            <div class="border-b border-gray-900/10 pb-12">
+            <div>
                 <h2 class="text-lg font-medium text-gray-900">Additional Options</h2>
                 <p class="mt-1 text-sm text-gray-600">All fields in the section below are optional.</p>
 

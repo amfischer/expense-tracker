@@ -2,7 +2,6 @@
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Link, router } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
 
 defineProps({
     incomes: Object,
