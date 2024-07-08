@@ -38,14 +38,26 @@ class IncomeController extends Controller
         return back()->with('message', 'Income successfully created.');
     }
 
-    public function edit(Request $request, Income $income): Response|RedirectResponse
+    public function edit(Income $income): Response
     {
-        // code...
+        return Inertia::render('Incomes/Edit', compact('income'));
     }
 
-    public function update(Request $request): Response|RedirectResponse
+    public function update(Request $request, Income $income): Response|RedirectResponse
     {
-        // code...
+        // Gate::authorize('update', $income);
+
+        $data = $request->validate([
+            'source'         => ['required', new AlphaSpace],
+            'amount'         => 'required|decimal:0,2',
+            'payment_date'   => 'required|date_format:Y-m-d',
+            'effective_date' => 'required|date_format:Y-m-d',
+            'notes'          => 'nullable',
+        ]);
+
+        $income->update($data);
+
+        return back()->with('message', 'Income successfully updated.');
     }
 
     public function delete(Request $request): Response|RedirectResponse

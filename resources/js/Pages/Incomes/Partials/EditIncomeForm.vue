@@ -8,21 +8,24 @@ import Textarea from '@/Components/Forms/Textarea.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
 
+const props = defineProps({
+    income: Object,
+});
+
 const form = useForm({
-    source: '',
-    amount: '',
-    payment_date: '',
-    effective_date: '',
-    notes: '',
+    source: props.income.source,
+    amount: props.income.amount / 100,
+    payment_date: props.income.payment_date,
+    effective_date: props.income.effective_date,
+    notes: props.income.notes,
 });
 
 const alert = useAlertStore();
 
-const create = () => {
-    form.post(route('incomes.store'), {
+const update = () => {
+    form.patch(route('incomes.update', props.income.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            form.reset();
             alert.setMessage(resp.props.flash.message);
         },
         onError: () => {
@@ -33,7 +36,7 @@ const create = () => {
 </script>
 
 <template>
-    <form @submit.prevent="create">
+    <form @submit.prevent="update">
         <div class="space-y-12">
             <div class="border-b border-gray-900/10 pb-12">
                 <h2 class="text-lg font-medium text-gray-900">Income Information</h2>
