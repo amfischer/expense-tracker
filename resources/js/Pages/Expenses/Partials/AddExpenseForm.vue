@@ -109,7 +109,7 @@ const create = () => {
                 </div>
             </div>
 
-            <div class="border-b border-gray-900/10 pb-12">
+            <div>
                 <h2 class="text-lg font-medium text-gray-900">Additional Options</h2>
                 <p class="mt-1 text-sm text-gray-600">All fields in the section below are optional.</p>
 
@@ -162,7 +162,7 @@ const create = () => {
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end gap-4 w-full mt-10">
+        <div class="flex items-center justify-start gap-4 w-full mt-10">
             <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
         </div>
     </form>

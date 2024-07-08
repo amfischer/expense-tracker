@@ -1,6 +1,6 @@
 <script setup>
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import Pagination from './Pagination.vue';
+import Pagination from '@/Components/Pagination.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
@@ -126,7 +126,7 @@ const goToExpense = (expenseId) => {
         </tbody>
     </table>
 
-    <Pagination :expenses="expenses" />
+    <Pagination :paginator="expenses" />
 
     <FilterDialog :open="showFilters" @close="showFilters = false" />
 </template>

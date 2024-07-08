@@ -19,8 +19,10 @@ const breadcrumbs = [{ name: 'Expenses', href: route('expenses.index'), current:
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Add Expense</h2>
-            <Breadcrumbs class="pt-8 pb-0" :pages="breadcrumbs" />
+            <div class="flex items-center justify-between px-4">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Add Expense</h2>
+                <Breadcrumbs :pages="breadcrumbs" />
+            </div>
         </template>
 
         <div class="py-12">

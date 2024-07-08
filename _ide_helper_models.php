@@ -90,6 +90,38 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Income
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $source
+ * @property-write string $amount
+ * @property \Illuminate\Support\Carbon $payment_date
+ * @property \Illuminate\Support\Carbon $effective_date
+ * @property string|null $notes
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $amount_pretty
+ * @property-read mixed $effective_date_pretty
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Income newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Income newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Income query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereEffectiveDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income wherePaymentDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereUserId($value)
+ */
+	class Income extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Receipt
  *
  * @property int $id
@@ -137,6 +169,8 @@ namespace App\Models{
  * @property-read mixed $category_ids
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Expense> $expenses
  * @property-read int|null $expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Income> $incomes
+ * @property-read int|null $incomes_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts

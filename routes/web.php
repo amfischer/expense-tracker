@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,13 @@ Route::get('/ini', function () {
 
 Route::middleware(['auth', 'verified', 'can:access-application'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/incomes', [IncomeController::class, 'index'])->name('incomes.index');
+    Route::get('/incomes/create', [IncomeController::class, 'create'])->name('incomes.create');
+    Route::post('/incomes', [IncomeController::class, 'store'])->name('incomes.store');
+    Route::get('/incomes/{income}/edit', [IncomeController::class, 'edit'])->name('incomes.edit');
+    Route::patch('/incomes/{income}', [IncomeController::class, 'update'])->name('incomes.update');
+    Route::delete('/incomes/{income}', [IncomeController::class, 'delete'])->name('incomes.delete');
 
     Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
     Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
