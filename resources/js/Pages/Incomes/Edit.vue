@@ -20,7 +20,7 @@ const breadcrumbs = [{ name: 'Incomes', href: route('incomes.index'), current: f
         <template #header>
             <div class="flex items-center justify-between px-4">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Edit Income</h2>
-                <Breadcrumbs class="py-0" :pages="breadcrumbs" />
+                <Breadcrumbs :pages="breadcrumbs" />
             </div>
         </template>
 
