@@ -169,6 +169,8 @@ namespace App\Models{
  * @property-read mixed $category_ids
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Expense> $expenses
  * @property-read int|null $expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Income> $incomes
+ * @property-read int|null $incomes_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts
