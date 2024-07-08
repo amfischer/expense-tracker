@@ -6,6 +6,7 @@ use App\Models\Income;
 use App\Rules\AlphaSpace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,7 +14,7 @@ class IncomeController extends Controller
 {
     public function index(Request $request): Response|RedirectResponse
     {
-        $incomes = Income::paginate(15);
+        $incomes = $request->user()->incomes()->paginate(15);
 
         return Inertia::render('Incomes/Index', compact('incomes'));
     }
@@ -40,12 +41,14 @@ class IncomeController extends Controller
 
     public function edit(Income $income): Response
     {
+        Gate::authorize('view', $income);
+
         return Inertia::render('Incomes/Edit', compact('income'));
     }
 
     public function update(Request $request, Income $income): Response|RedirectResponse
     {
-        // Gate::authorize('update', $income);
+        Gate::authorize('update', $income);
 
         $data = $request->validate([
             'source'         => ['required', new AlphaSpace],
