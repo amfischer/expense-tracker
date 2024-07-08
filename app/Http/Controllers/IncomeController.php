@@ -12,7 +12,7 @@ use Inertia\Response;
 
 class IncomeController extends Controller
 {
-    public function index(Request $request): Response|RedirectResponse
+    public function index(Request $request): Response
     {
         $incomes = $request->user()->incomes()->paginate(15);
 
@@ -63,8 +63,16 @@ class IncomeController extends Controller
         return back()->with('message', 'Income successfully updated.');
     }
 
-    public function delete(Request $request): Response|RedirectResponse
+    public function delete(Request $request, Income $income): Response|RedirectResponse
     {
-        // code...
+        Gate::authorize('delete', $income);
+
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $income->delete();
+
+        return redirect()->route('incomes.index')->with('message', 'Income successfully deleted.');
     }
 }

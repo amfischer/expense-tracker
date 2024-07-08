@@ -5,6 +5,7 @@ import Container from '@/Components/Container.vue';
 import WhiteCard from '@/Components/WhiteCard.vue';
 import Breadcrumbs from '@/Components/Breadcrumbs.vue';
 import EditIncomeForm from './Partials/EditIncomeForm.vue';
+import DeleteIncomeForm from './Partials/DeleteIncomeForm.vue';
 
 const props = defineProps({
     income: Object,
@@ -25,9 +26,12 @@ const breadcrumbs = [{ name: 'Incomes', href: route('incomes.index'), current: f
         </template>
 
         <div class="py-12">
-            <Container>
+            <Container class="space-y-6">
                 <WhiteCard>
                     <EditIncomeForm :income="income" />
+                </WhiteCard>
+                <WhiteCard>
+                    <DeleteIncomeForm :income="income" />
                 </WhiteCard>
             </Container>
         </div>

@@ -1,8 +1,8 @@
 <script setup>
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import Pagination from '@/Components/Pagination.vue';
+import { Link, router } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
-import { FunnelIcon, TagIcon, CurrencyDollarIcon } from '@heroicons/vue/20/solid';
 
 defineProps({
     incomes: Object,
@@ -41,7 +41,13 @@ const goToIncome = (incomeId) => {
             </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-200">
+        <tbody v-if="incomes.data.length === 0" class="divide-y divide-gray-200">
+            <tr>
+                <td class="py-3 text-md text-gray-500">No income data found.</td>
+            </tr>
+        </tbody>
+
+        <tbody v-else class="divide-y divide-gray-200">
             <tr
                 v-for="income in incomes.data"
                 :key="income.id"
@@ -79,5 +85,5 @@ const goToIncome = (incomeId) => {
         </tbody>
     </table>
 
-    <!-- <Pagination :income="income" /> -->
+    <Pagination :paginator="incomes" />
 </template>
