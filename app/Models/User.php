@@ -96,15 +96,48 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $dateRange = [$from->format('Y-m-d'), $to->format('Y-m-d')];
 
-        $expenses = $this->expenses()->whereBetween('effective_date', $dateRange)->get();
+        $expenses = $this->expenses()->with('category')->whereBetween('effective_date', $dateRange)->get();
 
         $total = $expenses->reduce(function (Money $carry, Expense $item) {
             return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
         }, Money::USD(0));
 
+        $categories = [];
+
+        /** @var \App\Models\Expense $e */
+        foreach ($expenses as $e) {
+            if (! array_key_exists($e->category_id, $categories)) {
+                $categories[$e->category_id] = $e->category->toArray();
+                $categories[$e->category_id]['expenses'] = [];
+            }
+
+            $categories[$e->category_id]['expenses'][] = $e;
+        }
+
+        // order each category's expenses by date
+        foreach ($categories as &$category) {
+            usort($category['expenses'], function (Expense $a, Expense $b) {
+                if ($a->effective_date === $b->effective_date) {
+                    return 0;
+                }
+
+                return $a->effective_date->lessThan($b->effective_date) ? -1 : 1;
+            });
+        }
+
+        // get total for each category
+        foreach ($categories as &$category) {
+            $categoryTotal = array_reduce($category['expenses'], function (Money $carry, Expense $item) {
+                return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
+            }, Money::USD(0));
+
+            $category['total'] = app(IntlMoneyFormatter::class)->format($categoryTotal);
+        }
+
         return [
-            'total' => app(IntlMoneyFormatter::class)->format($total),
-            'count' => $expenses->count(),
+            'total'      => app(IntlMoneyFormatter::class)->format($total),
+            'count'      => $expenses->count(),
+            'categories' => array_values($categories),
         ];
     }
 }
