@@ -7,6 +7,7 @@ use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Models\Receipt;
+use App\Rules\AlphaSpace;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +28,7 @@ class ExpenseController extends Controller
     public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'query'             => 'nullable|alpha',
+            'query'             => ['nullable', new AlphaSpace],
             'date'              => 'nullable|array|size:2',
             'date.*'            => 'date_format:Y-m-d',
             'category_ids'      => 'nullable|array',
