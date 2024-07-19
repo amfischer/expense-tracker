@@ -3,10 +3,10 @@ import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
 import { onMounted, ref } from 'vue';
-import { FunnelIcon, TagIcon, CurrencyDollarIcon } from '@heroicons/vue/20/solid';
+import { FunnelIcon, TagIcon, CurrencyDollarIcon, PencilSquareIcon } from '@heroicons/vue/20/solid';
 import FilterDialog from './FilterDialog.vue';
 
 defineProps({
@@ -26,15 +26,6 @@ onMounted(() => {
 });
 
 const showFilters = ref(false);
-
-const goToExpense = (expenseId) => {
-    // only for mobile view, i.e. views without the edit button
-    if (window.innerWidth >= 768) {
-        return;
-    }
-
-    router.get(route('expenses.edit', expenseId));
-};
 </script>
 
 <template>
@@ -76,23 +67,20 @@ const goToExpense = (expenseId) => {
         </thead>
 
         <tbody class="divide-y divide-gray-200">
-            <tr
-                v-for="expense in expenses.data"
-                :key="expense.id"
-                class="hover:bg-gray-100 md:hover:bg-white"
-                @click="goToExpense(expense.id)">
+            <tr v-for="expense in expenses.data" :key="expense.id" class="hover:bg-gray-100">
                 <td class="whitespace-nowrap py-3 text-md text-gray-500">
                     <div class="flex items-center gap-2">
-                        <span :class="{ 'underline decoration-dotted underline-offset-1': expense.notes }" :title="expense.notes">
+                        <span
+                            :class="{ 'underline decoration-dotted underline-offset-2': expense.notes }"
+                            :title="expense.notes">
                             {{ expense.payee }}
                         </span>
                         <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-500" />
                         <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
                     </div>
                     <div class="flex items-center gap-1 text-sm">
-                        <span
-                            class="rounded-full block w-2 h-2"
-                            :style="{ backgroundColor: expense.category.color }"></span>
+                        <span class="rounded-full block w-2 h-2" :style="{ backgroundColor: expense.category.color }">
+                        </span>
                         {{ expense.category.name }}
                     </div>
                 </td>
@@ -115,11 +103,10 @@ const goToExpense = (expenseId) => {
                 <td class="hidden md:table-cell whitespace-nowrap py-3 text-sm text-gray-500">
                     {{ expense.effective_date_pretty }}
                 </td>
-                <td class="hidden md:table-cell whitespace-nowrap py-3 text-sm text-right font-medium">
-                    <Link
-                        :href="route('expenses.edit', expense.id)"
-                        class="text-indigo-600 hover:text-indigo-900 dark:text-gray-200">
-                        Edit
+                <td class="whitespace-nowrap py-3 text-sm text-right font-medium">
+                    <Link :href="route('expenses.edit', expense.id)" class="text-indigo-600 hover:text-indigo-900">
+                        <span class="hidden md:inline-block">Edit</span>
+                        <PencilSquareIcon class="h-4 w-4 md:hidden" aria-hidden="true" />
                     </Link>
                 </td>
             </tr>
