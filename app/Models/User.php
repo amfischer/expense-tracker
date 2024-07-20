@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Money\Formatter\DecimalMoneyFormatter;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
 
@@ -132,6 +133,7 @@ class User extends Authenticatable implements MustVerifyEmail
             }, Money::USD(0));
 
             $category['total'] = app(IntlMoneyFormatter::class)->format($categoryTotal);
+            $category['total_raw'] = app(DecimalMoneyFormatter::class)->format($categoryTotal);
         }
 
         return [

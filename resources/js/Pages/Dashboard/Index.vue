@@ -1,6 +1,7 @@
 <script setup>
 import Container from '@/Components/Container.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import BarChart from './Partials/BarChart.vue';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -48,6 +49,10 @@ const toggleReport = (index) => {
                     <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ report.total }}</dd>
                 </div>
             </dl>
+        </Container>
+
+        <Container class="py-12">
+            <BarChart :data="selectedReportIndex !== null ? reports[selectedReportIndex] : {}" />
         </Container>
 
         <Container class="py-12" v-if="selectedReportIndex !== null">

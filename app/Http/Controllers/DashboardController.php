@@ -27,7 +27,6 @@ class DashboardController extends Controller
             );
         }
 
-
-        return Inertia::render('Dashboard', compact('reports'));
+        return Inertia::render('Dashboard/Index', compact('reports'));
     }
 }
