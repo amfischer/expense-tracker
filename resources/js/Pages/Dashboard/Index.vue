@@ -1,11 +1,11 @@
 <script setup>
-import Container from '@/Components/Container.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Container from '@/Components/Container.vue';
+import WhiteCard from '@/Components/WhiteCard.vue';
 import BarChart from './Partials/BarChart.vue';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import WhiteCard from '@/Components/WhiteCard.vue';
 
 const props = defineProps({
     reports: Object,
