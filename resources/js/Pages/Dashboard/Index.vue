@@ -5,6 +5,7 @@ import BarChart from './Partials/BarChart.vue';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import WhiteCard from '@/Components/WhiteCard.vue';
 
 const props = defineProps({
     reports: Object,
@@ -32,7 +33,7 @@ const toggleReport = (index) => {
 
         <Container class="py-12">
             <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
-            <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <dl class="mt-5 grid grid-cols-2 gap-2 lg:gap-5 lg:grid-cols-4">
                 <div
                     v-for="(report, index) in reports"
                     :key="index"
@@ -51,8 +52,10 @@ const toggleReport = (index) => {
             </dl>
         </Container>
 
-        <Container class="py-12">
-            <BarChart :data="selectedReportIndex !== null ? reports[selectedReportIndex] : {}" />
+        <Container class="py-12 hidden md:block" v-if="selectedReportIndex !== null">
+            <WhiteCard>
+                <BarChart :data="reports[selectedReportIndex] ?? {}" />
+            </WhiteCard>
         </Container>
 
         <Container class="py-12" v-if="selectedReportIndex !== null">

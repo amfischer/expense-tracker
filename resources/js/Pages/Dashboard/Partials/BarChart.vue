@@ -9,7 +9,19 @@ const props = defineProps({
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-const chartOptions = ref({ responsive: true });
+const chartOptions = computed(() => ({
+    responsive: true,
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: function (context) {
+                    const label = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                    return label;
+                },
+            },
+        },
+    },
+}));
 
 const chartData = computed(() => ({
     labels: props.data.categories?.map((c) => c.name),
@@ -21,6 +33,7 @@ const chartData = computed(() => ({
         },
     ],
 }));
+
 </script>
 
 <template>
