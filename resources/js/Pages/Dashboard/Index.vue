@@ -3,15 +3,17 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Container from '@/Components/Container.vue';
 import WhiteCard from '@/Components/WhiteCard.vue';
 import BarChart from './Partials/BarChart.vue';
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import CategoryMenu from './Partials/CategoryMenu.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { CurrencyDollarIcon, TagIcon } from '@heroicons/vue/20/solid';
 
 const props = defineProps({
     reports: Object,
 });
 
 const selectedReportIndex = ref(null);
+const selectedCategory = ref(null);
 
 const toggleReport = (index) => {
     if (selectedReportIndex.value === index) {
@@ -20,6 +22,7 @@ const toggleReport = (index) => {
     }
 
     selectedReportIndex.value = index;
+    selectedCategory.value = props.reports[index].categories[0];
 };
 </script>
 
@@ -59,49 +62,84 @@ const toggleReport = (index) => {
         </Container>
 
         <Container class="py-12" v-if="selectedReportIndex !== null">
-            <ul role="list" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                <li class="col-span-1" v-for="category in reports[selectedReportIndex].categories">
-                    <Disclosure as="div" class="bg-white rounded-lg shadow pt-3 pb-1" v-slot="{ open }">
-                        <DisclosureButton
-                            class="w-full flex items-center gap-2 font-semibold px-3 pb-1 mb-2 border-b"
-                            :class="open && 'open'">
-                            <span class="rounded-full block w-4 h-4" :style="{ backgroundColor: category.color }">
-                            </span>
-                            <span class="flex-1 text-left">
-                                {{ category.name }} <sup class="text-xs">({{ category.expenses.length }})</sup>
-                            </span>
-                            <span class="dropdown-arrow"></span>
-                        </DisclosureButton>
-                        <transition
-                            enter-active-class="transition-all duration-300 ease-in overflow-hidden"
-                            enter-from-class="transform max-h-0"
-                            enter-to-class="transform max-h-96"
-                            leave-active-class="transition-all duration-300 ease-out overflow-hidden"
-                            leave-from-class="transform max-h-96"
-                            leave-to-class="transform max-h-0">
-                            <DisclosurePanel class="px-3">
-                                <table class="min-w-full">
-                                    <tbody class="divide-y">
-                                        <tr v-for="expense in category.expenses">
-                                            <td colspan="4" class="py-2">
-                                                <span class="block text-sm">{{ expense.payee }}</span>
-                                                <span class="text-xs">{{ expense.effective_date }}</span>
-                                            </td>
-                                            <td colspan="1" class="align-top text-right text-sm py-2">
-                                                {{ expense.total }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </DisclosurePanel>
-                        </transition>
-                        <div class="flex items-center justify-between px-3">
-                            <span class="font-bold pt-2">Total</span>
-                            <span class="font-bold pt-2">{{ category.total }}</span>
-                        </div>
-                    </Disclosure>
-                </li>
-            </ul>
+            <WhiteCard class="flex-1">
+                <div class="flex items-baseline justify-between mb-10">
+                    <div>
+                        <h3 class="text-xl font-semibold leading-6 text-gray-900">Category Details</h3>
+                        <p class="mt-2 text-sm text-gray-700">Select a category to see underlying expenses.</p>
+                    </div>
+
+                    <CategoryMenu :categories="reports[selectedReportIndex].categories" v-model="selectedCategory" />
+                </div>
+
+                <table class="min-w-full divide-y divide-gray-300 bg-white">
+                    <thead class="hidden md:table-header-group">
+                        <tr>
+                            <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900">Payee</th>
+                            <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-40">
+                                Amount
+                            </th>
+                            <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-40">Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+                        <tr v-for="expense in selectedCategory.expenses" :key="expense.id" class="hover:bg-gray-100">
+                            <td class="whitespace-nowrap py-3 text-md text-gray-500">
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        :class="{ 'underline decoration-dotted underline-offset-2': expense.notes }"
+                                        :title="expense.notes">
+                                        {{ expense.payee }}
+                                    </span>
+                                    <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-500" />
+                                    <CurrencyDollarIcon
+                                        v-if="expense.is_business_expense"
+                                        class="h-3 w-3 text-green-700" />
+                                </div>
+                                <div class="flex items-center gap-1 text-sm">
+                                    <span
+                                        class="rounded-full block w-2 h-2"
+                                        :style="{ backgroundColor: expense.category.color }">
+                                    </span>
+                                    {{ expense.category.name }}
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap py-3 text-sm text-gray-500">
+                                <span
+                                    :title="
+                                        expense.has_fees
+                                            ? 'Foreign Currency Conversion Fee: ' +
+                                              expense.foreign_currency_conversion_fee_pretty
+                                            : ''
+                                    "
+                                    :class="{
+                                        'underline underline-offset-2 decoration-dotted cursor-pointer':
+                                            expense.has_fees,
+                                    }"
+                                    class="font-bold text-md md:text-sm md:font-normal">
+                                    {{ expense.amount_pretty }}
+                                </span>
+
+                                <div class="md:hidden">
+                                    {{ expense.effective_date_pretty }}
+                                </div>
+                            </td>
+                            <td class="hidden md:table-cell whitespace-nowrap py-3 text-sm text-gray-500">
+                                {{ expense.effective_date_pretty }}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="font-bold pt-10">Total</td>
+                            <td class="font-bold pt-10">{{ selectedCategory.total }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </WhiteCard>
         </Container>
+
+        <Container class="py-48"></Container>
     </AuthenticatedLayout>
 </template>
