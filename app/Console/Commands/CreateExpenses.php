@@ -28,7 +28,11 @@ class CreateExpenses extends Command
      */
     public function handle()
     {
+        //
+    }
 
+    protected function digitalOcean()
+    {
         $this->createDigitalOceanExpense('24.55', '2023-11-30', '2023-11-30');
         $this->createDigitalOceanExpense('24.53', '2023-11-01', '2023-10-31');
         $this->createDigitalOceanExpense('17.35', '2023-10-01', '2023-09-30');
