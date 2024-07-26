@@ -21,7 +21,7 @@ class CreateExpenses extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Create expenses in bulk';
 
     /**
      * Execute the console command.
