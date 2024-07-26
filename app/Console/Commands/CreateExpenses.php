@@ -14,7 +14,7 @@ class CreateExpenses extends Command
      *
      * @var string
      */
-    protected $signature = 'expenses:fcc-create';
+    protected $signature = 'expenses:create';
 
     /**
      * The console command description.
@@ -27,6 +27,54 @@ class CreateExpenses extends Command
      * Execute the console command.
      */
     public function handle()
+    {
+
+        $this->createDigitalOceanExpense('24.55', '2023-11-30', '2023-11-30');
+        $this->createDigitalOceanExpense('24.53', '2023-11-01', '2023-10-31');
+        $this->createDigitalOceanExpense('17.35', '2023-10-01', '2023-09-30');
+        $this->createDigitalOceanExpense('17.35', '2023-08-31', '2023-08-31');
+        $this->createDigitalOceanExpense('17.35', '2023-07-31', '2023-07-31');
+        $this->createDigitalOceanExpense('17.35', '2023-06-30', '2023-06-30');
+        $this->createDigitalOceanExpense('17.35', '2023-05-31', '2023-05-31');
+        $this->createDigitalOceanExpense('17.35', '2023-05-01', '2023-04-30');
+        $this->createDigitalOceanExpense('17.35', '2023-04-01', '2023-03-31');
+        $this->createDigitalOceanExpense('13.55', '2023-02-28', '2023-02-28');
+        $this->createDigitalOceanExpense('13.35', '2023-01-31', '2023-01-31');
+
+        $this->createDigitalOceanExpense('13.35', '2022-12-31', '2022-12-31');
+        $this->createDigitalOceanExpense('15.01', '2022-12-01', '2022-11-30');
+        $this->createDigitalOceanExpense('19.35', '2022-10-31', '2022-10-31');
+        $this->createDigitalOceanExpense('19.35', '2022-09-30', '2022-09-30');
+        $this->createDigitalOceanExpense('19.35', '2022-08-31', '2022-08-31');
+        $this->createDigitalOceanExpense('19.35', '2022-08-01', '2022-07-31');
+        $this->createDigitalOceanExpense('16.29', '2022-07-01', '2022-06-30');
+        $this->createDigitalOceanExpense('16.29', '2022-06-01', '2022-05-31');
+        $this->createDigitalOceanExpense('16.29', '2022-04-30', '2022-04-30');
+        $this->createDigitalOceanExpense('16.29', '2022-04-01', '2022-03-31');
+        $this->createDigitalOceanExpense('16.29', '2022-03-01', '2022-02-28');
+        $this->createDigitalOceanExpense('16.29', '2022-01-31', '2022-01-31');
+    }
+
+    protected function createDigitalOceanExpense(string $amount, string $td, string $ed): void
+    {
+        $ctd = Carbon::createFromFormat('Y-m-d', $td);
+        $ced = Carbon::createFromFormat('Y-m-d', $ed);
+
+        Expense::create([
+            'user_id'             => 1,
+            'category_id'         => 14,
+            'payee'               => 'DigitalOcean',
+            'amount'              => $amount,
+            'currency'            => 'USD',
+            'payment_method'      => PaymentMethod::DISCOVER_CARD->value,
+            'is_business_expense' => true,
+            'transaction_date'    => $ctd,
+            'effective_date'      => $ced,
+        ]);
+
+    }
+
+    protected function createFreeCodeCampExpenses(): void
     {
         $date = Carbon::createFromFormat('Y-m-d', '2023-12-26');
 
@@ -48,5 +96,6 @@ class CreateExpenses extends Command
 
             $counter--;
         }
+
     }
 }
