@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         for ($i = 1; $i < $currentMonth; $i++) {
             $reports[] = array_merge(
-                ['label' => now()->subMonths($i)->format('F Y')],
+                ['label' => now()->subMonthsWithoutOverflow($i)->format('F Y')],
                 $user->getExpenseSummary(now()->subMonths($i)->startOfMonth(), now()->subMonths($i)->endOfMonth())
             );
         }
