@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         /** @var User $user */
         $user = $request->user();
@@ -28,5 +30,20 @@ class DashboardController extends Controller
         }
 
         return Inertia::render('Dashboard/Index', compact('reports'));
+    }
+
+    public function getSummaryDetails(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'date_from' => 'required|date_format:Y-m-d',
+            'date_to'   => 'required|date_format:Y-m-d',
+        ]);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $details = $user->getExpenseSummaryDetails($validated['date_from'], $validated['date_to']);
+
+        return response()->json($details);
     }
 }

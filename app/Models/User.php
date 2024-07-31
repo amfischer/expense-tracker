@@ -103,6 +103,18 @@ class User extends Authenticatable implements MustVerifyEmail
             return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
         }, Money::USD(0));
 
+        return [
+            'total'     => app(IntlMoneyFormatter::class)->format($total),
+            'count'     => $expenses->count(),
+            'date_from' => $dateRange[0],
+            'date_to'   => $dateRange[1],
+        ];
+    }
+
+    public function getExpenseSummaryDetails(string $from, string $to): array
+    {
+        $expenses = $this->expenses()->with('category')->whereBetween('effective_date', [$from, $to])->get();
+
         $categories = [];
 
         /** @var \App\Models\Expense $e */
@@ -115,6 +127,9 @@ class User extends Authenticatable implements MustVerifyEmail
             $categories[$e->category_id]['expenses'][] = $e;
         }
 
+        // sort categories alphabetically
+        usort($categories, fn (array $a, array $b) => strcmp($a['name'], $b['name']));
+
         // order each category's expenses by date
         foreach ($categories as &$category) {
             usort($category['expenses'], function (Expense $a, Expense $b) {
@@ -122,7 +137,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     return 0;
                 }
 
-                return $a->effective_date->lessThan($b->effective_date) ? -1 : 1;
+                return $a->effective_date->greaterThan($b->effective_date) ? -1 : 1;
             });
         }
 
@@ -137,8 +152,6 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return [
-            'total'      => app(IntlMoneyFormatter::class)->format($total),
-            'count'      => $expenses->count(),
             'categories' => array_values($categories),
         ];
     }

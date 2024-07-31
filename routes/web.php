@@ -35,6 +35,7 @@ Route::get('/ini', function () {
 
 Route::middleware(['auth', 'verified', 'can:access-application'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/summary-details', [DashboardController::class, 'getSummaryDetails'])->name('dashboard.summary.details');
 
     Route::get('/incomes', [IncomeController::class, 'index'])->name('incomes.index');
     Route::get('/incomes/create', [IncomeController::class, 'create'])->name('incomes.create');
