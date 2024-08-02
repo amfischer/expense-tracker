@@ -4,7 +4,7 @@ import WhiteCard from '@/Components/WhiteCard.vue';
 import BarChart from './BarChart.vue';
 import CategoryMenu from './CategoryMenu.vue';
 import { CurrencyDollarIcon, TagIcon } from '@heroicons/vue/20/solid';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     label: {
@@ -17,9 +17,7 @@ const props = defineProps({
     },
 });
 
-const selectedCategory = ref(null);
-
-onMounted(() => (selectedCategory.value = props.categories[0]));
+const selectedCategory = ref(props.categories[0]);
 </script>
 
 <template>
