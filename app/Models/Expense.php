@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use Money\Currency;
 use Money\Formatter\IntlMoneyFormatter;
@@ -138,6 +140,19 @@ class Expense extends Model
         return Attribute::make(
             get: function (mixed $value, array $attr) {
                 return date('M d, Y', strtotime($attr['effective_date']));
+            }
+        );
+    }
+
+    protected function notes(): Attribute
+    {
+        return Attribute::make(
+            get: function (?string $value) {
+                if (Route::getCurrentRoute()->getName() === 'expenses.edit') {
+                    return $value;
+                }
+
+                return Str::markdown($value ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false]);
             }
         );
     }
