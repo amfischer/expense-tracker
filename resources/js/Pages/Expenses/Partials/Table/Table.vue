@@ -142,7 +142,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                     </tr>
                     <tr class="border-none">
                         <td></td>
-                        <td colspan="4">
+                        <td>
                             <transition
                                 enter-active-class="transition-all duration-300 ease-in overflow-hidden"
                                 enter-from-class="transform max-h-0"
@@ -183,7 +183,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 </DisclosurePanel>
                             </transition>
                         </td>
-                        <td class="sm:hidden align-baseline">
+                        <td colspan="3" class="align-baseline">
                             <transition
                                 enter-active-class="transition-all duration-300 ease-in overflow-hidden"
                                 enter-from-class="transform max-h-0"
@@ -191,7 +191,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 leave-active-class="transition-all duration-300 ease-out overflow-hidden"
                                 leave-from-class="transform max-h-96"
                                 leave-to-class="transform max-h-0">
-                                <DisclosurePanel>
+                                <DisclosurePanel class="sm:hidden">
                                     <Link
                                         :href="route('expenses.edit', expense.id)"
                                         class="text-sm underline text-indigo-600 hover:text-indigo-900">
