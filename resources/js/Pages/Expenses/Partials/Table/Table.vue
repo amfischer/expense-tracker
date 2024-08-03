@@ -78,30 +78,33 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                     <span class="sr-only">Toggle Information</span>
                 </th>
                 <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900">Payee</th>
-                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 w-36">Amount</th>
-                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 w-36">Date</th>
+                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-36">Amount</th>
+                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-36">Date</th>
                 <th scope="col" class="relative p-4 w-14">
                     <span class="sr-only">Edit</span>
                 </th>
             </tr>
         </thead>
-
         <tbody class="divide-y divide-gray-200">
             <template v-for="expense in expenses.data" :key="expense.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
-                        <td class="py-3 text-center">
+                        <td class="py-3 text-center w-10 sm:w-14">
                             <DisclosureButton class="border border-gray-400 rounded" :class="open && 'open'">
-                                <ChevronUpIcon class="h-5 w-5" v-if="open" />
-                                <ChevronDownIcon class="h-5 w-5" v-else />
+                                <ChevronUpIcon class="h-5 w-5 text-gray-600" v-if="open" />
+                                <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>
                         </td>
-                        <td class="whitespace-nowrap py-3 text-md text-gray-500">
-                            <div class="flex items-center gap-2">
+                        <td class="py-3 text-md text-gray-500 align-baseline md:align-middle">
+                            <div class="flex flex-row items-baseline gap-2">
                                 {{ expense.payee }}
-                                <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
-                                <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
-                                <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
+                                <div class="hidden sm:flex sm:items-center sm:gap-2">
+                                    <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
+                                    <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
+                                    <CurrencyDollarIcon
+                                        v-if="expense.is_business_expense"
+                                        class="h-3 w-3 text-green-700" />
+                                </div>
                             </div>
                             <div class="flex items-center gap-1 text-sm">
                                 <span
@@ -110,33 +113,36 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 </span>
                                 {{ expense.category.name }}
                             </div>
+                            <div class="flex items-center gap-1 pt-1 px-2 sm:hidden">
+                                <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
+                                <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
+                                <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
+                            </div>
                         </td>
-                        <td class="whitespace-nowrap py-3 text-sm text-gray-500">
+                        <td class="py-3 text-sm text-gray-500 align-baseline md:align-middle">
                             <span
                                 :class="{ 'underline underline-offset-2 decoration-dotted': expense.has_fees }"
                                 class="font-bold text-md md:text-sm md:font-normal">
                                 {{ expense.amount_pretty }}
                             </span>
-
                             <div class="md:hidden">
                                 {{ expense.effective_date_pretty }}
                             </div>
                         </td>
-                        <td class="hidden md:table-cell whitespace-nowrap py-3 text-sm text-gray-500">
+                        <td class="hidden md:table-cell py-3 text-sm text-gray-500">
                             {{ expense.effective_date_pretty }}
                         </td>
-                        <td class="py-3 text-sm font-medium">
+                        <td class="hidden sm:table-cell py-3 text-sm font-medium md:w-14">
                             <Link
                                 :href="route('expenses.edit', expense.id)"
                                 class="text-indigo-600 hover:text-indigo-900">
-                                <span class="hidden md:inline-block hover:underline">Edit</span>
-                                <PencilSquareIcon class="h-4 w-4 md:hidden" aria-hidden="true" />
+                                <span class="inline-block hover:underline">Edit</span>
                             </Link>
                         </td>
                     </tr>
                     <tr class="border-none">
                         <td></td>
-                        <td colspan="3">
+                        <td colspan="4">
                             <transition
                                 enter-active-class="transition-all duration-300 ease-in overflow-hidden"
                                 enter-from-class="transform max-h-0"
@@ -144,7 +150,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 leave-active-class="transition-all duration-300 ease-out overflow-hidden"
                                 leave-from-class="transform max-h-96"
                                 leave-to-class="transform max-h-0">
-                                <DisclosurePanel class="flex items-baseline gap-16">
+                                <DisclosurePanel class="flex flex-col lg:flex-row lg:items-baseline lg:gap-16">
                                     <div class="pb-3">
                                         <p
                                             class="pb-1 text-xs text-gray-800 flex items-center justify-between gap-2 w-56">
@@ -168,14 +174,32 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                             </span>
                                         </p>
                                     </div>
-                                    <div class="flex items-baseline gap-2 pb-3" v-show="expense.notes !== ''">
+                                    <div
+                                        class="flex flex-col lg:flex-row lg:items-baseline lg:gap-2 pb-3"
+                                        v-show="expense.notes !== ''">
                                         <p class="text-xs text-gray-800">Notes:</p>
                                         <p class="text-sm text-gray-800" v-html="expense.notes"></p>
                                     </div>
                                 </DisclosurePanel>
                             </transition>
                         </td>
-                        <td></td>
+                        <td class="sm:hidden align-baseline">
+                            <transition
+                                enter-active-class="transition-all duration-300 ease-in overflow-hidden"
+                                enter-from-class="transform max-h-0"
+                                enter-to-class="transform max-h-96"
+                                leave-active-class="transition-all duration-300 ease-out overflow-hidden"
+                                leave-from-class="transform max-h-96"
+                                leave-to-class="transform max-h-0">
+                                <DisclosurePanel>
+                                    <Link
+                                        :href="route('expenses.edit', expense.id)"
+                                        class="text-sm underline text-indigo-600 hover:text-indigo-900">
+                                        Edit
+                                    </Link>
+                                </DisclosurePanel>
+                            </transition>
+                        </td>
                     </tr>
                 </Disclosure>
             </template>
