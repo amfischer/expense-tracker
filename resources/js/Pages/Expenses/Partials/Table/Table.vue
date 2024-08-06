@@ -4,7 +4,6 @@ import {
     FunnelIcon,
     TagIcon,
     CurrencyDollarIcon,
-    PencilSquareIcon,
     ChevronDownIcon,
     ChevronUpIcon,
     InformationCircleIcon,
@@ -18,12 +17,24 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { useScoutStore } from '@/Stores/scout';
 import { useDateFormatter } from '@/Composables/dateFormatter';
 import { onMounted, ref } from 'vue';
+import Modal from '@/Components/Modal.vue';
 
 defineProps({
     expenses: Object,
 });
 
 const scout = useScoutStore();
+
+const showReceiptModal = ref(false);
+const selectedReciept = ref(null);
+const toggleReceiptModal = (expense) => {
+    selectedReciept.value = expense.receipts[0];
+    selectedReciept.value.src = route('expenses.receipts.show', {
+        expense: expense.id,
+        receipt: expense.receipts[0].id,
+    });
+    showReceiptModal.value = true;
+};
 
 const { df } = useDateFormatter();
 
@@ -72,7 +83,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
     </div>
 
     <table class="min-w-full divide-y divide-gray-300 bg-white">
-        <thead class="hidden md:table-header-group">
+        <thead class="hidden lg:table-header-group">
             <tr>
                 <th scope="col" class="relative p-4 w-14">
                     <span class="sr-only">Toggle Information</span>
@@ -95,10 +106,10 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>
                         </td>
-                        <td class="py-3 text-md text-gray-500 align-baseline md:align-middle">
+                        <td class="py-3 text-md text-gray-500 align-baseline lg:align-middle">
                             <div class="flex flex-row items-baseline gap-2">
                                 {{ expense.payee }}
-                                <div class="hidden sm:flex sm:items-center sm:gap-2">
+                                <div class="flex items-center gap-2">
                                     <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
                                     <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
                                     <CurrencyDollarIcon
@@ -113,26 +124,22 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 </span>
                                 {{ expense.category.name }}
                             </div>
-                            <div class="flex items-center gap-1 pt-1 px-2 sm:hidden">
-                                <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
-                                <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
-                                <CurrencyDollarIcon v-if="expense.is_business_expense" class="h-3 w-3 text-green-700" />
-                            </div>
                         </td>
-                        <td class="py-3 text-sm text-gray-500 align-baseline md:align-middle">
+                        <td class="py-3 w-[100px] text-sm text-gray-500 align-baseline lg:align-middle">
                             <span
                                 :class="{ 'underline underline-offset-2 decoration-dotted': expense.has_fees }"
-                                class="font-bold text-md md:text-sm md:font-normal">
+                                class="font-bold text-md lg:text-sm lg:font-normal">
                                 {{ expense.amount_pretty }}
                             </span>
-                            <div class="md:hidden">
+                            <div class="lg:hidden">
                                 {{ expense.effective_date_pretty }}
                             </div>
                         </td>
-                        <td class="hidden md:table-cell py-3 text-sm text-gray-500">
+                        <td class="hidden lg:table-cell py-3 text-sm text-gray-500">
                             {{ expense.effective_date_pretty }}
                         </td>
-                        <td class="hidden sm:table-cell py-3 text-sm font-medium md:w-14">
+                        <td
+                            class="hidden sm:table-cell sm:align-baseline lg:align-middle py-3 text-sm font-medium md:w-14">
                             <Link
                                 :href="route('expenses.edit', expense.id)"
                                 class="text-indigo-600 hover:text-indigo-900">
@@ -150,35 +157,46 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 leave-active-class="transition-all duration-300 ease-out overflow-hidden"
                                 leave-from-class="transform max-h-96"
                                 leave-to-class="transform max-h-0">
-                                <DisclosurePanel class="flex flex-col lg:flex-row lg:items-baseline lg:gap-16">
+                                <DisclosurePanel as="dl" class="">
                                     <div class="pb-3">
-                                        <p
-                                            class="pb-1 text-xs text-gray-800 flex items-center justify-between gap-2 w-56">
-                                            Payment Method:
-                                            <span class="text-sm">
+                                        <div class="grid grid-cols-table-dl gap-4 pb-1">
+                                            <dt class="text-xs text-gray-800">Payment Method</dt>
+                                            <dd class="text-sm leading-4">
                                                 {{ pm[expense.payment_method] ?? 'None' }}
-                                            </span>
-                                        </p>
-                                        <p
-                                            class="pb-1 text-xs text-gray-800 flex items-center justify-between gap-2 w-56">
-                                            Transaction Date:
-                                            <span class="text-sm">
+                                            </dd>
+                                        </div>
+                                        <div class="grid grid-cols-table-dl gap-4 pb-1">
+                                            <dt class="text-xs text-gray-800">Transaction Date</dt>
+                                            <dd class="text-sm leading-4">
                                                 {{ df(expense.transaction_date) }}
-                                            </span>
-                                        </p>
-                                        <p
-                                            class="pb-1 text-xs text-gray-800 flex items-center justify-between gap-2 w-56">
-                                            Effective Date:
-                                            <span class="text-sm">
+                                            </dd>
+                                        </div>
+                                        <div class="grid grid-cols-table-dl gap-4 pb-1">
+                                            <dt class="text-xs text-gray-800">Effective Date</dt>
+                                            <dd class="text-sm leading-4">
                                                 {{ df(expense.effective_date) }}
-                                            </span>
-                                        </p>
+                                            </dd>
+                                        </div>
+                                    </div>
+                                    <div class="pb-3" v-if="expense.has_receipt">
+                                        <div class="grid grid-cols-table-dl gap-4 pb-1">
+                                            <dt class="text-xs text-gray-800">Reciept</dt>
+                                            <dd class="text-xs leading-4">
+                                                <button
+                                                    class="border rounded border-indigo-600 bg-indigo-600 hover:bg-indigo-900 text-white px-2"
+                                                    @click="toggleReceiptModal(expense)">
+                                                    Show
+                                                </button>
+                                            </dd>
+                                        </div>
                                     </div>
                                     <div
-                                        class="flex flex-col lg:flex-row lg:items-baseline lg:gap-2 pb-3"
+                                        class="pb-3 sm:grid sm:grid-cols-table-dl sm:gap-4"
                                         v-show="expense.notes !== ''">
-                                        <p class="text-xs text-gray-800">Notes:</p>
-                                        <p class="text-sm text-gray-800" v-html="expense.notes"></p>
+                                        <dt class="text-xs text-gray-800 pb-1">Notes</dt>
+                                        <dd
+                                            class="text-sm text-gray-800 leading-4 markdown-field"
+                                            v-html="expense.notes"></dd>
                                     </div>
                                 </DisclosurePanel>
                             </transition>
@@ -191,10 +209,10 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                 leave-active-class="transition-all duration-300 ease-out overflow-hidden"
                                 leave-from-class="transform max-h-96"
                                 leave-to-class="transform max-h-0">
-                                <DisclosurePanel class="sm:hidden">
+                                <DisclosurePanel class="sm:hidden leading-4">
                                     <Link
                                         :href="route('expenses.edit', expense.id)"
-                                        class="text-sm underline text-indigo-600 hover:text-indigo-900">
+                                        class="text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
                                         Edit
                                     </Link>
                                 </DisclosurePanel>
@@ -209,4 +227,13 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
     <Pagination :paginator="expenses" />
 
     <FilterDialog :open="showFilters" @close="showFilters = false" />
+
+    <Modal
+        :show="showReceiptModal"
+        @close="showReceiptModal = false"
+        :max-width="selectedReciept?.is_image ? '2xl' : '6xl'"
+        :dialog-panel-classes="selectedReciept?.is_image ? 'overflow-y-scroll p-0' : 'h-screen p-0'">
+        <img v-if="selectedReciept?.is_image" :src="selectedReciept.src" />
+        <iframe v-else :src="selectedReciept.src" width="100%" height="100%" />
+    </Modal>
 </template>

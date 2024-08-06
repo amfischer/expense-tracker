@@ -47,7 +47,7 @@ class ExpenseController extends Controller
         $query = Expense::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
             ->query(function (Builder $query) use ($data) {
-                $query->with(['category']);
+                $query->with(['category', 'receipts']);
                 if ($data['date'] ?? false) {
                     $query->where('effective_date', '>=', Carbon::createFromFormat('Y-m-d', $data['date'][0])->startOfDay());
                     $query->where('effective_date', '<=', Carbon::createFromFormat('Y-m-d', $data['date'][1])->endOfDay());

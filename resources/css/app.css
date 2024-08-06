@@ -8,3 +8,8 @@
 .table-tr-hover + tr:hover {
     @apply bg-gray-100;
 }
+
+.markdown-field p,
+.markdown-field td {
+    @apply pb-1 leading-4;
+}
