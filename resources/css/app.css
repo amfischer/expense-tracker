@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.table-tr-hover:hover,
+.table-tr-hover:hover + tr,
+.table-tr-hover:has(+ tr:hover),
+.table-tr-hover + tr:hover {
+    @apply bg-gray-100;
+}
