@@ -150,13 +150,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                     <tr class="border-none">
                         <td></td>
                         <td>
-                            <transition
-                                enter-active-class="transition-all duration-300 ease-in overflow-hidden"
-                                enter-from-class="transform max-h-0"
-                                enter-to-class="transform max-h-96"
-                                leave-active-class="transition-all duration-300 ease-out overflow-hidden"
-                                leave-from-class="transform max-h-96"
-                                leave-to-class="transform max-h-0">
+                            <transition name="slide-down">
                                 <DisclosurePanel as="dl" class="">
                                     <div class="pb-3">
                                         <div class="grid grid-cols-table-dl gap-4 pb-1">
@@ -202,21 +196,13 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                             </transition>
                         </td>
                         <td colspan="3" class="align-baseline">
-                            <transition
-                                enter-active-class="transition-all duration-300 ease-in overflow-hidden"
-                                enter-from-class="transform max-h-0"
-                                enter-to-class="transform max-h-96"
-                                leave-active-class="transition-all duration-300 ease-out overflow-hidden"
-                                leave-from-class="transform max-h-96"
-                                leave-to-class="transform max-h-0">
-                                <DisclosurePanel class="sm:hidden leading-4">
-                                    <Link
-                                        :href="route('expenses.edit', expense.id)"
-                                        class="text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
-                                        Edit
-                                    </Link>
-                                </DisclosurePanel>
-                            </transition>
+                            <DisclosurePanel class="sm:hidden leading-4">
+                                <Link
+                                    :href="route('expenses.edit', expense.id)"
+                                    class="text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
+                                    Edit
+                                </Link>
+                            </DisclosurePanel>
                         </td>
                     </tr>
                 </Disclosure>

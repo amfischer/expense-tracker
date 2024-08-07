@@ -13,3 +13,19 @@
 .markdown-field td {
     @apply pb-1 leading-4;
 }
+
+@media (min-width: 1024px) {
+    .slide-down-enter-active {
+        @apply transition-all duration-300 ease-in overflow-hidden;
+    }
+
+    .slide-down-enter-from,
+    .slide-down-leave-to {
+        @apply transform max-h-0;
+    }
+
+    .slide-down-enter-to,
+    .slide-down-leave-from {
+        @apply transform max-h-96;
+    }
+}

@@ -3,6 +3,7 @@ export function useDateFormatter() {
         year: 'numeric',
         month: 'short',
         day: '2-digit',
+        timeZone: 'UTC',
     };
 
     const americanDateTime = new Intl.DateTimeFormat('en-US', options).format;
