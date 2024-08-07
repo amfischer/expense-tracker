@@ -28,7 +28,58 @@ class CreateExpenses extends Command
      */
     public function handle()
     {
-        //
+        $this->googleStorage();
+    }
+
+    protected function googleStorage()
+    {
+        $this->createGoogleStorageExpense('2.17', '2023-12-21', '2023-12-21');
+        $this->createGoogleStorageExpense('2.17', '2023-11-21', '2023-11-21');
+        $this->createGoogleStorageExpense('2.17', '2023-10-21', '2023-10-21');
+        $this->createGoogleStorageExpense('2.17', '2023-09-22', '2023-09-21');
+        $this->createGoogleStorageExpense('2.17', '2023-08-22', '2023-08-21');
+        $this->createGoogleStorageExpense('2.17', '2023-07-22', '2023-07-21');
+        $this->createGoogleStorageExpense('2.17', '2023-06-22', '2023-06-21');
+        $this->createGoogleStorageExpense('2.17', '2023-05-21', '2023-05-21');
+        $this->createGoogleStorageExpense('2.17', '2023-04-22', '2023-04-21');
+        $this->createGoogleStorageExpense('2.17', '2023-03-21', '2023-03-21');
+        $this->createGoogleStorageExpense('2.17', '2023-02-21', '2023-02-21');
+        $this->createGoogleStorageExpense('2.17', '2023-01-21', '2023-01-21');
+
+        $this->createGoogleStorageExpense('2.17', '2022-12-22', '2022-12-21');
+        $this->createGoogleStorageExpense('2.17', '2022-11-22', '2022-11-21');
+        $this->createGoogleStorageExpense('2.17', '2022-10-21', '2022-10-21');
+        $this->createGoogleStorageExpense('2.17', '2022-09-22', '2022-09-21');
+        $this->createGoogleStorageExpense('2.17', '2022-08-22', '2022-08-21');
+        $this->createGoogleStorageExpense('2.17', '2022-07-22', '2022-07-21');
+        $this->createGoogleStorageExpense('2.17', '2022-06-22', '2022-06-21');
+        $this->createGoogleStorageExpense('2.17', '2022-05-22', '2022-05-21');
+        $this->createGoogleStorageExpense('2.17', '2022-04-22', '2022-04-21');
+        $this->createGoogleStorageExpense('2.17', '2022-03-22', '2022-03-21');
+        $this->createGoogleStorageExpense('2.17', '2022-02-21', '2022-02-21');
+        $this->createGoogleStorageExpense('2.17', '2022-01-21', '2022-01-21');
+
+        $this->createGoogleStorageExpense('2.17', '2021-12-21', '2021-12-21');
+        $this->createGoogleStorageExpense('2.17', '2021-11-22', '2021-11-21');
+    }
+
+    protected function createGoogleStorageExpense(string $amount, string $td, string $ed): void
+    {
+        $ctd = Carbon::createFromFormat('Y-m-d', $td);
+        $ced = Carbon::createFromFormat('Y-m-d', $ed);
+
+        Expense::create([
+            'user_id'             => 1,
+            'category_id'         => 14,
+            'payee'               => 'Google Storage',
+            'amount'              => $amount,
+            'currency'            => 'USD',
+            'payment_method'      => PaymentMethod::DISCOVER_CARD->value,
+            'is_business_expense' => true,
+            'transaction_date'    => $ctd,
+            'effective_date'      => $ced,
+        ]);
+
     }
 
     protected function digitalOcean()
