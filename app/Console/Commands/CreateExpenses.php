@@ -28,7 +28,7 @@ class CreateExpenses extends Command
      */
     public function handle()
     {
-        $this->googleStorage();
+        //
     }
 
     protected function googleStorage()
