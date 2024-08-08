@@ -11,6 +11,7 @@ enum PaymentMethod: string
 {
     use InvokableCases, Names, Options, Values;
 
+    case NONE = 'none';
     case WELLS_FARGO_VISA = 'wells-fargo-visa';
     case DISCOVER_CARD = 'discover-card';
     case CHARLES_SCHWAB_CHECKING = 'charles-schwab-checking';
@@ -20,6 +21,7 @@ enum PaymentMethod: string
     public function label(): string
     {
         return match ($this) {
+            self::NONE                    => 'None',
             self::WELLS_FARGO_VISA        => 'Wells Fargo Visa',
             self::DISCOVER_CARD           => 'Discover Card',
             self::CHARLES_SCHWAB_CHECKING => 'Charles Schwab Checking',

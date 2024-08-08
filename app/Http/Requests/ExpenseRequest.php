@@ -32,7 +32,7 @@ class ExpenseRequest extends FormRequest
             'foreign_currency_conversion_fee' => 'nullable|decimal:0,2',
             'is_business_expense'             => 'required|boolean',
             'currency'                        => ['required', Rule::in(Currency::names())],
-            'payment_method'                  => ['nullable', Rule::in(PaymentMethod::values())],
+            'payment_method'                  => Rule::in(PaymentMethod::values()),
             'transaction_date'                => 'required|date_format:Y-m-d',
             'effective_date'                  => 'required|date_format:Y-m-d',
             'category_id'                     => ['required', 'numeric', Rule::in(Auth::user()->categoryIds)],

@@ -96,7 +96,15 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                 </th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
+
+        <tbody v-if="expenses.data.length === 0" class="divide-y divide-gray-200">
+            <tr>
+                <td></td>
+                <td colspan="4" class="py-3 text-md text-gray-500">No expense data found.</td>
+            </tr>
+        </tbody>
+
+        <tbody v-else class="divide-y divide-gray-200">
             <template v-for="expense in expenses.data" :key="expense.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
@@ -156,7 +164,7 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
                                         <div class="grid grid-cols-table-dl gap-4 pb-1">
                                             <dt class="text-xs text-gray-800">Payment Method</dt>
                                             <dd class="text-sm leading-4">
-                                                {{ pm[expense.payment_method] ?? 'None' }}
+                                                {{ pm[expense.payment_method] }}
                                             </dd>
                                         </div>
                                         <div class="grid grid-cols-table-dl gap-4 pb-1">
