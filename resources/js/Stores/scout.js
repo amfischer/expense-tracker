@@ -57,12 +57,7 @@ export const useScoutStore = defineStore('scout', () => {
     });
 
     const setCategories = (payload) => (options.value.categories = payload);
-
-    // reorder none option as last
-    const setPaymentMethods = (payload) => {
-        const noneOption = payload.shift();
-        options.value.paymentMethods = payload.concat([noneOption]);
-    }
+    const setPaymentMethods = (payload) => (options.value.paymentMethods = payload);
 
     return {
         form,
