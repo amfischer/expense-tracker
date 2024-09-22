@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentMethod;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,9 @@ class DashboardController extends Controller
             );
         }
 
-        return Inertia::render('Dashboard/Index', compact('reports'));
+        $paymentMethods = PaymentMethod::HTMLSelectOptions();
+
+        return Inertia::render('Dashboard/Index', compact('reports', 'paymentMethods'));
     }
 
     public function getSummaryDetails(Request $request): JsonResponse

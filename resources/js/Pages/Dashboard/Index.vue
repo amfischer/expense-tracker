@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const props = defineProps({
     reports: Object,
+    paymentMethods: Array,
 });
 
 const selectedReportIndex = ref(null);
@@ -77,7 +78,8 @@ const toggleReport = (index) => {
         <Report
             v-if="selectedReportIndex !== null"
             :label="selectedReportLabel"
-            :categories="selectedReportCategories" />
+            :categories="selectedReportCategories"
+            :payment-methods="paymentMethods" />
 
         <Container class="py-48"></Container>
     </AuthenticatedLayout>
