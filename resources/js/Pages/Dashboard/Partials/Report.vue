@@ -2,7 +2,6 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import Container from '@/Components/Container.vue';
 import WhiteCard from '@/Components/WhiteCard.vue';
-import BarChart from './BarChart.vue';
 import CategoryMenu from './CategoryMenu.vue';
 import {
     CurrencyDollarIcon,
@@ -17,18 +16,18 @@ import { useDateFormatter } from '@/Composables/dateFormatter';
 import Modal from '@/Components/Modal.vue';
 
 const props = defineProps({
-    label: {
-        type: String,
-        default: '',
-    },
-    categories: {
-        type: Array,
-        default: [],
-    },
+    // categories: {
+    //     type: Array,
+    //     default: [],
+    // },
     paymentMethods: Array,
 });
 
-const selectedCategory = ref(props.categories[0]);
+const categories = defineModel({
+    default: [],
+});
+
+const selectedCategory = ref(categories.value[0]);
 
 const { df } = useDateFormatter();
 
@@ -50,12 +49,6 @@ const toggleReceiptModal = (expense) => {
 </script>
 
 <template>
-    <Container class="py-12 hidden md:block">
-        <WhiteCard>
-            <BarChart :label="label" :categories="categories" />
-        </WhiteCard>
-    </Container>
-
     <Container class="py-12">
         <WhiteCard class="flex-1">
             <div class="flex items-baseline justify-between mb-10">

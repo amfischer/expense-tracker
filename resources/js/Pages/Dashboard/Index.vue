@@ -5,6 +5,7 @@ import Container from '@/Components/Container.vue';
 import Report from './Partials/Report.vue';
 import { ref } from 'vue';
 import axios from 'axios';
+import BarChart from './Partials/BarChart.vue';
 
 const props = defineProps({
     reports: Object,
@@ -75,10 +76,11 @@ const toggleReport = (index) => {
             </dl>
         </Container>
 
+        <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" />
+
         <Report
             v-if="selectedReportIndex !== null"
-            :label="selectedReportLabel"
-            :categories="selectedReportCategories"
+            v-model="selectedReportCategories"
             :payment-methods="paymentMethods" />
 
         <Container class="py-48"></Container>
