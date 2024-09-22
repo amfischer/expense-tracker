@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getExpenseSummaryDetails(string $from, string $to): array
     {
-        $expenses = $this->expenses()->with('category')->whereBetween('effective_date', [$from, $to])->get();
+        $expenses = $this->expenses()->with(['category', 'receipts'])->whereBetween('effective_date', [$from, $to])->get();
 
         $categories = [];
 
