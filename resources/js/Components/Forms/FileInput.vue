@@ -26,7 +26,7 @@ const fileUploaded = computed(() => {
                 </label>
                 <p class="pl-1">or drag and drop</p>
             </div>
-            <p class="text-xs leading-5 text-gray-600">PNG, JPG, WEBP up to 1MB</p>
+            <p class="text-xs leading-5 text-gray-600">PNG, JPG, WEBP up to 2MB</p>
         </div>
         <p class="text-sm text-center" v-if="fileUploaded">{{ model.name }}</p>
     </div>

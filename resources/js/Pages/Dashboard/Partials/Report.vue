@@ -114,9 +114,7 @@ const toggleReceiptModal = (expense) => {
                                     </div>
                                 </td>
                                 <td class="py-3 w-[100px] text-sm text-gray-500 align-baseline lg:align-middle">
-                                    <span
-                                        :class="{ 'underline underline-offset-2 decoration-dotted': expense.has_fees }"
-                                        class="font-bold text-md lg:text-sm lg:font-normal">
+                                    <span class="font-bold text-md lg:text-sm lg:font-normal">
                                         {{ expense.amount_pretty }}
                                     </span>
                                     <div class="lg:hidden">

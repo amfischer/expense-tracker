@@ -7,6 +7,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import BarChart from './Partials/BarChart.vue';
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     reports: Object,
     paymentMethods: Array,
@@ -50,39 +52,34 @@ const toggleReport = (index) => {
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
-        </template>
+    <template slot="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+    </template>
 
-        <Container class="py-12">
-            <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
-            <dl class="mt-5 grid grid-cols-2 gap-2 lg:gap-5 lg:grid-cols-4">
-                <div
-                    v-for="(report, index) in reports"
-                    :key="index"
-                    :class="{ 'border-2 border-red-400': selectedReportIndex === index }"
-                    class="overflow-hidden rounded-lg bg-white shadow cursor-pointer px-4 py-5 sm:p-6"
-                    @click="toggleReport(index)">
-                    <div class="flex items-center justify-between">
-                        <dt class="truncate text-sm font-medium text-gray-500">{{ report.label }}</dt>
-                        <div
-                            class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
-                            {{ report.count }}
-                        </div>
+    <Container class="py-12">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
+        <dl class="mt-5 grid grid-cols-2 gap-2 lg:gap-5 lg:grid-cols-4">
+            <div
+                v-for="(report, index) in reports"
+                :key="index"
+                :class="{ 'border-2 border-red-400': selectedReportIndex === index }"
+                class="overflow-hidden rounded-lg bg-white shadow cursor-pointer px-4 py-5 sm:p-6"
+                @click="toggleReport(index)">
+                <div class="flex items-center justify-between">
+                    <dt class="truncate text-sm font-medium text-gray-500">{{ report.label }}</dt>
+                    <div
+                        class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
+                        {{ report.count }}
                     </div>
-                    <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ report.total }}</dd>
                 </div>
-            </dl>
-        </Container>
+                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ report.total }}</dd>
+            </div>
+        </dl>
+    </Container>
 
-        <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" />
+    <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" />
 
-        <Report
-            v-if="selectedReportIndex !== null"
-            v-model="selectedReportCategories"
-            :payment-methods="paymentMethods" />
+    <Report v-if="selectedReportIndex !== null" v-model="selectedReportCategories" :payment-methods="paymentMethods" />
 
-        <Container class="py-48"></Container>
-    </AuthenticatedLayout>
+    <Container class="py-48"></Container>
 </template>
