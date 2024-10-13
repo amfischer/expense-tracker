@@ -155,7 +155,7 @@ class ExpenseController extends Controller
         Gate::authorize('update', $expense);
 
         $validated = $request->validate([
-            'receipt_upload' => ['required', File::types(['png', 'jpg', 'jpeg', 'webp', 'pdf'])->min('1kb')->max('1mb')],
+            'receipt_upload' => ['required', File::types(['png', 'jpg', 'jpeg', 'webp', 'pdf'])->min('1kb')->max('2mb')],
         ]);
 
         /** @var \Illuminate\Http\UploadedFile $file */
