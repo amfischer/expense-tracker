@@ -160,7 +160,7 @@ const toggleReceiptModal = (expense) => {
                                             </div>
                                             <div class="pb-3" v-if="expense.has_receipt">
                                                 <div class="grid grid-cols-table-dl gap-4 pb-1">
-                                                    <dt class="text-xs text-gray-800">Reciept</dt>
+                                                    <dt class="text-xs text-gray-800">Receipt</dt>
                                                     <dd class="text-xs leading-4">
                                                         <button
                                                             class="border rounded border-indigo-600 bg-indigo-600 hover:bg-indigo-900 text-white px-2"

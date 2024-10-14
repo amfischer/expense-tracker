@@ -63,7 +63,7 @@ const toggleReport = (index) => {
                 v-for="(report, index) in reports"
                 :key="index"
                 :class="{ 'border-2 border-red-400': selectedReportIndex === index }"
-                class="overflow-hidden rounded-lg bg-white shadow cursor-pointer px-4 py-5 sm:p-6"
+                class="overflow-hidden rounded-lg bg-white shadow cursor-pointer px-4 py-5 sm:px-6 sm:py-3"
                 @click="toggleReport(index)">
                 <div class="flex items-center justify-between">
                     <dt class="truncate text-sm font-medium text-gray-500">{{ report.label }}</dt>
@@ -72,12 +72,29 @@ const toggleReport = (index) => {
                         {{ report.count }}
                     </div>
                 </div>
-                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ report.total }}</dd>
+                <dd class="mt-1 tracking-tight text-gray-900">
+                    <div class="flex items-center justify-between">
+                        <span class="text-md">Expenses</span>
+                        <span class="font-semibold">{{ report.total_expenses }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-md">Incomes</span>
+                        <span class="font-semibold">{{ report.total_income }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-md"></span>
+                        <span
+                            class="font-semibold text-red-500"
+                            :class="report.is_loss ? 'text-red-600' : 'text-emerald-600'">
+                            {{ report.total_difference }}
+                        </span>
+                    </div>
+                </dd>
             </div>
         </dl>
     </Container>
 
-    <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" />
+    <!-- <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" /> -->
 
     <Report v-if="selectedReportIndex !== null" v-model="selectedReportCategories" :payment-methods="paymentMethods" />
 
