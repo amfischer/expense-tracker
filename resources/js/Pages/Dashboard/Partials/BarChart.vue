@@ -2,6 +2,8 @@
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { computed } from 'vue';
+import Container from '@/Components/Container.vue';
+import WhiteCard from '@/Components/WhiteCard.vue';
 
 const props = defineProps({
     label: String,
@@ -39,5 +41,9 @@ const chartData = computed(() => ({
 </script>
 
 <template>
-    <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+    <Container class="py-12 hidden md:block">
+        <WhiteCard>
+            <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+        </WhiteCard>
+    </Container>
 </template>

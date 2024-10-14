@@ -5,6 +5,8 @@ import { Head } from '@inertiajs/vue3';
 import WhiteCard from '@/Components/WhiteCard.vue';
 import Container from '@/Components/Container.vue';
 
+defineOptions({ layout: AuthenticatedLayout });
+
 const props = defineProps({
     incomes: Object,
 });
@@ -13,13 +15,11 @@ const props = defineProps({
 <template>
     <Head title="Expenses" />
 
-    <AuthenticatedLayout>
-        <div class="py-12">
-            <Container>
-                <WhiteCard>
-                    <IncomesTable :incomes="incomes" />
-                </WhiteCard>
-            </Container>
-        </div>
-    </AuthenticatedLayout>
+    <div class="py-12">
+        <Container>
+            <WhiteCard>
+                <IncomesTable :incomes="incomes" />
+            </WhiteCard>
+        </Container>
+    </div>
 </template>
