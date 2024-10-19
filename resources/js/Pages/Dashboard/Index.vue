@@ -58,7 +58,7 @@ const toggleReport = (index) => {
 
     <Container class="py-12">
         <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
-        <dl class="mt-5 grid grid-cols-2 gap-2 lg:gap-5 lg:grid-cols-4">
+        <dl class="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:gap-5 lg:grid-cols-4">
             <div
                 v-for="(report, index) in reports"
                 :key="index"
