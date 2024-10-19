@@ -13,11 +13,11 @@ import Pagination from '@/Components/Pagination.vue';
 import FilterDialog from './FilterDialog.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
-import { Link, usePage } from '@inertiajs/vue3';
-import { useScoutStore } from '@/Stores/scout';
+import ShowReceiptModal from '../ShowReceiptModal.vue';
 import { useDateFormatter } from '@/Composables/dateFormatter';
+import { useScoutStore } from '@/Stores/scout';
+import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
-import Modal from '@/Components/Modal.vue';
 
 defineProps({
     expenses: Object,
@@ -25,18 +25,12 @@ defineProps({
 
 const scout = useScoutStore();
 
-const showReceiptModal = ref(false);
-const selectedReciept = ref(null);
-const toggleReceiptModal = (expense) => {
-    selectedReciept.value = expense.receipts[0];
-    selectedReciept.value.src = route('expenses.receipts.show', {
-        expense: expense.id,
-        receipt: expense.receipts[0].id,
-    });
-    showReceiptModal.value = true;
-};
-
 const { df } = useDateFormatter();
+
+const pm = scout.options.paymentMethods.reduce((obj, method) => {
+    obj[method.id] = method.name;
+    return obj;
+}, {});
 
 onMounted(() => {
     let params = new URLSearchParams(document.location.search);
@@ -50,10 +44,14 @@ onMounted(() => {
 
 const showFilters = ref(false);
 
-const pm = scout.options.paymentMethods.reduce((obj, method) => {
-    obj[method.id] = method.name;
-    return obj;
-}, {});
+const showReceipt = ref(false);
+const selectedExpense = ref(null);
+const selectedReceipt = ref(null);
+const toggleReceiptModal = (expense) => {
+    selectedExpense.value = expense;
+    selectedReceipt.value = expense.receipts[0];
+    showReceipt.value = true;
+};
 </script>
 
 <template>
@@ -221,13 +219,5 @@ const pm = scout.options.paymentMethods.reduce((obj, method) => {
     <Pagination :paginator="expenses" />
 
     <FilterDialog :open="showFilters" @close="showFilters = false" />
-
-    <Modal
-        :show="showReceiptModal"
-        @close="showReceiptModal = false"
-        :max-width="selectedReciept?.is_image ? '2xl' : '6xl'"
-        :dialog-panel-classes="selectedReciept?.is_image ? 'overflow-y-scroll p-0' : 'h-screen p-0'">
-        <img v-if="selectedReciept?.is_image" :src="selectedReciept.src" />
-        <iframe v-else :src="selectedReciept.src" width="100%" height="100%" />
-    </Modal>
+    <ShowReceiptModal v-model="showReceipt" :expense="selectedExpense" :receipt="selectedReceipt" />
 </template>

@@ -3,10 +3,13 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import FileInput from '@/Components/Forms/FileInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
-import { useReceiptStore } from '@/Stores/receipt';
+import { useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
+
+const props = defineProps({
+    expense: Object,
+});
 
 const form = useForm({
     receipt_upload: '',
@@ -17,16 +20,14 @@ watch(
     () => form.clearErrors(),
 );
 
-const receiptStore = useReceiptStore();
 const alert = useAlertStore();
 
 const upload = () => {
-    form.post(route('expenses.receipts.store', receiptStore.expense.id), {
+    form.post(route('expenses.receipts.store', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
             form.reset();
             alert.setMessage(resp.props.flash.message);
-            receiptStore.setReceipt(resp.props.receipt);
         },
         onError: () => {
             console.log('errors', form.errors);
