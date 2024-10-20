@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Money\Currency;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
@@ -18,8 +20,9 @@ class Income extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'payment_date'   => 'datetime:Y-m-d',
-        'effective_date' => 'datetime:Y-m-d',
+        'payment_date'     => 'datetime:Y-m-d',
+        'effective_date'   => 'datetime:Y-m-d',
+        'is_earned_income' => 'boolean',
     ];
 
     protected $appends = [
@@ -61,4 +64,16 @@ class Income extends Model
         );
     }
 
+    protected function notes(): Attribute
+    {
+        return Attribute::make(
+            get: function (?string $value) {
+                if (Route::getCurrentRoute()->getName() === 'incomes.edit') {
+                    return $value;
+                }
+
+                return Str::markdown($value ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false]);
+            }
+        );
+    }
 }

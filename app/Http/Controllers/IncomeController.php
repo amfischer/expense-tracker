@@ -27,11 +27,12 @@ class IncomeController extends Controller
     public function store(Request $request): Response|RedirectResponse
     {
         $data = $request->validate([
-            'source'         => ['required', new AlphaSpace],
-            'amount'         => 'required|decimal:0,2',
-            'payment_date'   => 'required|date_format:Y-m-d',
-            'effective_date' => 'required|date_format:Y-m-d',
-            'notes'          => 'nullable',
+            'source'           => ['required', new AlphaSpace],
+            'amount'           => 'required|decimal:0,2',
+            'payment_date'     => 'required|date_format:Y-m-d',
+            'effective_date'   => 'required|date_format:Y-m-d',
+            'is_earned_income' => 'required|boolean',
+            'notes'            => 'nullable',
         ]);
 
         $request->user()->incomes()->create($data);
@@ -51,11 +52,12 @@ class IncomeController extends Controller
         Gate::authorize('update', $income);
 
         $data = $request->validate([
-            'source'         => ['required', new AlphaSpace],
-            'amount'         => 'required|decimal:0,2',
-            'payment_date'   => 'required|date_format:Y-m-d',
-            'effective_date' => 'required|date_format:Y-m-d',
-            'notes'          => 'nullable',
+            'source'           => ['required', new AlphaSpace],
+            'amount'           => 'required|decimal:0,2',
+            'payment_date'     => 'required|date_format:Y-m-d',
+            'effective_date'   => 'required|date_format:Y-m-d',
+            'is_earned_income' => 'required|boolean',
+            'notes'            => 'nullable',
         ]);
 
         $income->update($data);

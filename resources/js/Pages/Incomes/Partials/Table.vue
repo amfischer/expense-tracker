@@ -1,4 +1,5 @@
 <script setup>
+import { TagIcon, CurrencyDollarIcon, InformationCircleIcon } from '@heroicons/vue/20/solid';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Link, router } from '@inertiajs/vue3';
@@ -54,11 +55,12 @@ const goToIncome = (incomeId) => {
                 @click="goToIncome(income.id)">
                 <td class="whitespace-nowrap py-3 text-md text-gray-500">
                     <div class="flex items-center gap-2">
-                        <span
-                            :class="{ 'underline decoration-dotted underline-offset-1': income.notes }"
-                            :title="income.notes">
-                            {{ income.source }}
-                        </span>
+                        {{ income.source }}
+                        <div class="flex items-center gap-2">
+                            <InformationCircleIcon v-if="income.notes !== ''" class="h-3 w-3 text-blue-400" />
+                            <!-- <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" /> -->
+                            <CurrencyDollarIcon v-if="income.is_earned_income" class="h-3 w-3 text-green-700" />
+                        </div>
                     </div>
                 </td>
                 <td class="whitespace-nowrap py-3 text-sm text-gray-500">
