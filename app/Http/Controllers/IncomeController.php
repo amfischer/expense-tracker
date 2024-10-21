@@ -6,7 +6,10 @@ use App\Models\Income;
 use App\Rules\AlphaSpace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +17,22 @@ class IncomeController extends Controller
 {
     public function index(Request $request): Response
     {
-        $incomes = $request->user()->incomes()->paginate(15);
+        $validator = Validator::make($request->all(), [
+            'query'   => ['nullable', new AlphaSpace],
+            'sort_by' => ['nullable', Rule::in(['effective_date', 'amount', 'source'])],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->setTargetUrl(route('incomes.index'))->withErrors($validator->errors()->messages(), 'scout');
+        }
+
+        $data = $validator->validate();
+
+        $query = Income::search($data['query'] ?? '')
+            ->where('user_id', $request->user()->id)
+            ->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
+
+        $incomes = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
         return Inertia::render('Incomes/Index', compact('incomes'));
     }

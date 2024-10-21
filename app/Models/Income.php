@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 use Money\Currency;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
@@ -15,7 +16,7 @@ use Money\Parser\DecimalMoneyParser;
 
 class Income extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $guarded = [];
 
@@ -29,6 +30,18 @@ class Income extends Model
         'amount_pretty',
         'effective_date_pretty',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'id'               => $this->id,
+            'source'           => $this->source,
+            'amount'           => $this->amount,
+            'is_earned_income' => $this->is_earned_income,
+            'payment_date'     => $this->payment_date,
+            'effective_date'   => $this->effective_date,
+        ];
+    }
 
     public function user(): BelongsTo
     {
