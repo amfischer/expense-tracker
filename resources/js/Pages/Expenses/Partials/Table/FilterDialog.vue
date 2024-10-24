@@ -3,40 +3,20 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import FilterOption from './FilterOption.vue';
 import DatePicker from './DatePicker.vue';
-import { useScoutStore } from '@/Stores/scout';
-import { onMounted } from 'vue';
+import { inject } from 'vue';
 
 defineProps({
     open: {
         type: Boolean,
         default: false,
     },
+    scout: Object,
 });
+
+const categories = inject('categories');
+const paymentMethods = inject('paymentMethods');
 
 defineEmits(['close']);
-
-const scout = useScoutStore();
-
-onMounted(() => {
-    let params = new URLSearchParams(document.location.search);
-
-    let category_ids = [];
-    let payment_methods = [];
-
-    // the paginate strings provided by Laravel encode array values
-    // so we need to manually set array values
-    for (const [key, value] of params) {
-        if (key.startsWith('category_ids')) {
-            category_ids.push(value);
-        }
-        if (key.startsWith('payment_methods')) {
-            payment_methods.push(value);
-        }
-    }
-
-    scout.form.category_ids = category_ids;
-    scout.form.payment_methods = payment_methods;
-});
 </script>
 
 <template>
@@ -85,18 +65,16 @@ onMounted(() => {
                         <!-- Filters -->
                         <form>
                             <FilterOption
-                                id="category"
                                 title="Categories"
-                                :options="scout.options.categories"
-                                v-model="scout.form.category_ids"
-                                @change="scout.search" />
+                                field="category_ids"
+                                :options="categories"
+                                :scout="scout" />
                             <FilterOption
-                                id="payment_method"
                                 title="Payment Methods"
-                                :options="scout.options.paymentMethods"
-                                v-model="scout.form.payment_methods"
-                                @change="scout.search" />
-                            <DatePicker />
+                                field="payment_methods"
+                                :options="paymentMethods"
+                                :scout="scout" />
+                            <!-- <DatePicker /> -->
                         </form>
                     </DialogPanel>
                 </TransitionChild>

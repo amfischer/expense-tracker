@@ -1,7 +1,10 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid';
-import { useScoutStore } from '@/Stores/scout';
+
+const props = defineProps({
+    scout: Object,
+});
 
 const sortOptions = [
     { name: 'Date', value: 'effective_date' },
@@ -9,15 +12,9 @@ const sortOptions = [
     { name: 'Category', value: 'category_id' },
 ];
 
-const modelValue = defineModel({
-    type: String,
-});
-
-const scout = useScoutStore();
-
 const triggerSort = (item) => {
-    modelValue.value = item;
-    scout.search();
+    props.scout.sortBy(item);
+    props.scout.search();
 };
 </script>
 
@@ -43,7 +40,7 @@ const triggerSort = (item) => {
                         <span
                             :class="[
                                 active ? 'bg-gray-100' : '',
-                                option.value === modelValue ? 'text-gray-900' : 'text-gray-500',
+                                option.value === scout.form.sort_by ? 'text-gray-900' : 'text-gray-500',
                                 'block px-4 py-2 text-sm font-medium cursor-pointer',
                             ]"
                             @click="triggerSort(option.value)">

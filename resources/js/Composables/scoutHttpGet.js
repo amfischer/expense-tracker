@@ -93,6 +93,11 @@ export function useScoutHttpGet({ url }) {
         search();
     };
 
+    const clearFilters = () => {
+        form.filters = {};
+        search();
+    };
+
     /**
      * SORTING
      */
@@ -155,5 +160,6 @@ export function useScoutHttpGet({ url }) {
         sortBy,
         search,
         clearQuery,
+        clearFilters,
     };
 }

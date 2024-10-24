@@ -9,6 +9,7 @@ use App\Models\Expense;
 use App\Rules\AlphaSpace;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -24,14 +25,17 @@ class ExpenseController extends Controller
     public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'query'             => ['nullable', new AlphaSpace],
-            'date'              => 'nullable|array|size:2',
-            'date.*'            => 'date_format:Y-m-d',
-            'category_ids'      => 'nullable|array',
-            'category_ids.*'    => 'numeric',
-            'sort_by'           => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
-            'payment_methods'   => 'nullable|array',
-            'payment_methods.*' => Rule::in(PaymentMethod::values()),
+            'query'                     => ['nullable', new AlphaSpace],
+            'sort_by'                   => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
+            'date'                      => 'nullable|array|size:2',
+            'date.*'                    => 'date_format:Y-m-d',
+            'filters'                   => 'nullable|array:category_ids,payment_methods',
+            'filters.category_ids.*'    => [
+                'numeric',
+                Rule::exists('categories', 'id')->where(function (QueryBuilder $query) use ($request) {
+                return $query->where('user_id', $request->user()->id);
+            })],
+            'filters.payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 
         if ($validator->fails()) {
@@ -50,19 +54,19 @@ class ExpenseController extends Controller
                 }
             });
 
-        if ($data['category_ids'] ?? false) {
-            $query->whereIn('category_id', $data['category_ids']);
+        if ($data['filters']['category_ids'] ?? false) {
+            $query->whereIn('category_id', $data['filters']['category_ids']);
         }
 
-        if ($data['payment_methods'] ?? false) {
-            $query->whereIn('payment_method', $data['payment_methods']);
+        if ($data['filters']['payment_methods'] ?? false) {
+            $query->whereIn('payment_method', $data['filters']['payment_methods']);
         }
 
         $query->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
-        $categories = $request->user()->categoriesArray;
+        $categories = $request->user()->categories_array;
 
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
