@@ -27,14 +27,15 @@ class ExpenseController extends Controller
         $validator = Validator::make($request->all(), [
             'query'                     => ['nullable', new AlphaSpace],
             'sort_by'                   => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
+            'sort_dir'                  => ['nullable', Rule::in(['asc', 'desc'])],
             'date'                      => 'nullable|array|size:2',
             'date.*'                    => 'date_format:Y-m-d',
             'filters'                   => 'nullable|array:category_ids,payment_methods',
             'filters.category_ids.*'    => [
                 'numeric',
                 Rule::exists('categories', 'id')->where(function (QueryBuilder $query) use ($request) {
-                return $query->where('user_id', $request->user()->id);
-            })],
+                    return $query->where('user_id', $request->user()->id);
+                })],
             'filters.payment_methods.*' => Rule::in(PaymentMethod::values()),
         ]);
 

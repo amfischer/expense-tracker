@@ -63,19 +63,13 @@ defineEmits(['close']);
                         </div>
 
                         <!-- Filters -->
-                        <form>
-                            <FilterOption
-                                title="Categories"
-                                field="category_ids"
-                                :options="categories"
-                                :scout="scout" />
-                            <FilterOption
-                                title="Payment Methods"
-                                field="payment_methods"
-                                :options="paymentMethods"
-                                :scout="scout" />
-                            <!-- <DatePicker /> -->
-                        </form>
+                        <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />
+                        <FilterOption
+                            title="Payment Methods"
+                            field="payment_methods"
+                            :options="paymentMethods"
+                            :scout="scout" />
+                        <DatePicker :scout="scout" />
                     </DialogPanel>
                 </TransitionChild>
             </div>
