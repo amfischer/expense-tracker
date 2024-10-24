@@ -35,7 +35,7 @@ test('users can upload a receipt', function (UploadedFile $file) {
     'pdf'  => UploadedFile::fake()->create('receipt.pdf', 500, 'application/pdf'),
 ]);
 
-test('disallowed file types return a validation error', function (UploadedFile $file) {
+test('prohibited file types return a validation error', function (UploadedFile $file) {
 
     post(route('expenses.receipts.store', $this->expense->id), ['receipt_upload' => $file])
         ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be a file of type: png, jpg, jpeg, webp, pdf.'])

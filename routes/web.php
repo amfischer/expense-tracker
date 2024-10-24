@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseReceiptController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -51,9 +52,9 @@ Route::middleware(['auth', 'verified', 'can:access-application'])->group(functio
     Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'delete'])->name('expenses.delete');
 
-    Route::post('/expenses/{expense}/receipts', [ExpenseController::class, 'storeReceipt'])->name('expenses.receipts.store');
-    Route::get('/expenses/{expense}/receipts/{receipt}', [ExpenseController::class, 'getReceiptContents'])->name('expenses.receipts.show');
-    Route::delete('/expenses/{expense}/receipts/{receipt}', [ExpenseController::class, 'deleteReceipt'])->name('expenses.receipts.delete');
+    Route::post('/expenses/{expense}/receipts', [ExpenseReceiptController::class, 'store'])->name('expenses.receipts.store');
+    Route::get('/expenses/{expense}/receipts/{receipt}', [ExpenseReceiptController::class, 'show'])->name('expenses.receipts.show');
+    Route::delete('/expenses/{expense}/receipts/{receipt}', [ExpenseReceiptController::class, 'destroy'])->name('expenses.receipts.delete');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

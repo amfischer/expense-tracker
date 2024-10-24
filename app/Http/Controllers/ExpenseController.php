@@ -6,22 +6,18 @@ use App\Enums\Currency;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
-use App\Models\Receipt;
 use App\Rules\AlphaSpace;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExpenseController extends Controller
 {
@@ -145,59 +141,5 @@ class ExpenseController extends Controller
         $expense->delete();
 
         return redirect()->route('expenses.index')->with('message', 'Expense successfully deleted.');
-    }
-
-    /**
-     * Receipt Endpoints
-     */
-    public function storeReceipt(Request $request, Expense $expense): RedirectResponse
-    {
-        Gate::authorize('update', $expense);
-
-        $validated = $request->validate([
-            'receipt_upload' => ['required', File::types(['png', 'jpg', 'jpeg', 'webp', 'pdf'])->min('1kb')->max('2mb')],
-        ]);
-
-        /** @var \Illuminate\Http\UploadedFile $file */
-        $file = $validated['receipt_upload'];
-
-        $storagePath = $expense->getReceiptStoragePath();
-        $filename = $file->hashName();
-
-        Storage::disk('receipts')->putFileAs($storagePath, $file, $filename);
-
-        $receipt = Receipt::create([
-            'user_id'    => Auth::user()->id,
-            'expense_id' => $expense->id,
-            'filename'   => $filename,
-            'mimetype'   => $file->getMimeType(),
-            'size'       => $file->getSize(),
-        ]);
-
-        return back()->withInput(compact('receipt'))->with('message', 'Receipt successfully uploaded.');
-    }
-
-    public function getReceiptContents(Expense $expense, Receipt $receipt): BinaryFileResponse
-    {
-        Gate::authorize('view', $expense);
-
-        $path = Storage::disk('receipts')->path($expense->getReceiptStoragePath() . '/' . $receipt->filename);
-
-        return response()->file($path);
-    }
-
-    public function deleteReceipt(Request $request, Expense $expense, Receipt $receipt): RedirectResponse
-    {
-        Gate::authorize('delete', $expense);
-
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
-        Storage::disk('receipts')->delete($expense->getReceiptStoragePath() . '/' . $receipt->filename);
-
-        $receipt->delete();
-
-        return back()->with('message', 'Receipt successfully deleted');
     }
 }
