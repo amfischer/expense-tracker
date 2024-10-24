@@ -8,6 +8,7 @@ export function useScoutHttpGet({ url }) {
         query: '',
         sort_by: '',
         sort_dir: '',
+        date: [],
         filters: {},
     });
 
@@ -28,6 +29,7 @@ export function useScoutHttpGet({ url }) {
         form.query = params.query || '';
         form.sort_by = params.sort_by || '';
         form.sort_dir = params.sort_dir || '';
+        form.date = params.date || [];
         form.filters = params.filters || {};
 
         // toggle any validation errors from bad query params
@@ -93,6 +95,12 @@ export function useScoutHttpGet({ url }) {
         search();
     };
 
+    const clearFilters = () => {
+        form.date = [];
+        form.filters = {};
+        search();
+    };
+
     /**
      * SORTING
      */
@@ -155,5 +163,6 @@ export function useScoutHttpGet({ url }) {
         sortBy,
         search,
         clearQuery,
+        clearFilters,
     };
 }

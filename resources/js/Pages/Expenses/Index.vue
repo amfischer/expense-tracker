@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import ExpensesTable from './Partials/Table/Table.vue';
 import { Head } from '@inertiajs/vue3';
-import { useScoutStore } from '@/Stores/scout';
+import { provide } from 'vue';
 
 defineOptions({ layout: AuthenticatedLayout });
 
@@ -12,9 +12,8 @@ const props = defineProps({
     paymentMethods: Array,
 });
 
-const scout = useScoutStore();
-scout.setCategories(props.categories);
-scout.setPaymentMethods(props.paymentMethods);
+provide('categories', props.categories);
+provide('paymentMethods', props.paymentMethods);
 </script>
 
 <template>

@@ -80,7 +80,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return Attribute::make(
             get: function () {
                 return $this->categories->map(function (Category $category, int $key) {
-                    return ['id' => $category->id, 'name' => $category->name];
+                    return ['id' => (string) $category->id, 'name' => $category->name];
                 })->sortBy('name')->values()->all();
             }
         );
