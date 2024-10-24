@@ -100,7 +100,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $expenses = $this->expenses()->with('category')->whereBetween('effective_date', $dateRange)->get();
 
         $expenses_total = $expenses->reduce(function (Money $carry, Expense $item) {
-            return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
+            return $carry->add(Money::USD($item->amount));
         }, Money::USD(0));
 
         $incomes = $this->incomes()->whereBetween('effective_date', $dateRange)->get();
@@ -156,7 +156,7 @@ class User extends Authenticatable implements MustVerifyEmail
         // get total for each category
         foreach ($categories as &$category) {
             $categoryTotal = array_reduce($category['expenses'], function (Money $carry, Expense $item) {
-                return $carry->add(Money::USD($item->amount), Money::USD($item->foreign_currency_conversion_fee));
+                return $carry->add(Money::USD($item->amount));
             }, Money::USD(0));
 
             $category['total'] = app(IntlMoneyFormatter::class)->format($categoryTotal);

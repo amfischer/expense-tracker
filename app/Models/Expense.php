@@ -28,10 +28,7 @@ class Expense extends Model
     ];
 
     protected $appends = [
-        'has_fees',
         'amount_pretty',
-        'foreign_currency_conversion_fee_pretty',
-        'total',
         'effective_date_pretty',
         'has_receipt',
     ];
@@ -39,12 +36,11 @@ class Expense extends Model
     public function toSearchableArray()
     {
         return [
-            'id'                              => $this->id,
-            'payee'                           => $this->payee,
-            'amount'                          => $this->amount,
-            'foreign_currency_conversion_fee' => $this->foreign_currency_conversion_fee,
-            'transaction_date'                => $this->transaction_date,
-            'effective_date'                  => $this->effective_date,
+            'id'               => $this->id,
+            'payee'            => $this->payee,
+            'amount'           => $this->amount,
+            'transaction_date' => $this->transaction_date,
+            'effective_date'   => $this->effective_date,
         ];
     }
 
@@ -79,53 +75,6 @@ class Expense extends Model
                 $money = new Money($attr['amount'], new Currency($attr['currency']));
 
                 return app(IntlMoneyFormatter::class)->format($money);
-            }
-        );
-    }
-
-    protected function foreignCurrencyConversionFee(): Attribute
-    {
-        return Attribute::make(
-            set: function (?string $value) {
-                if ($value === null) {
-                    return 0;
-                }
-
-                return app(DecimalMoneyParser::class)->parse($value, new Currency('USD'))->getAmount();
-            }
-        );
-    }
-
-    protected function foreignCurrencyConversionFeePretty(): Attribute
-    {
-        return Attribute::make(
-            get: function (mixed $value, array $attr) {
-                $money = new Money($attr['foreign_currency_conversion_fee'], new Currency($attr['currency']));
-
-                return app(IntlMoneyFormatter::class)->format($money);
-            }
-        );
-    }
-
-    protected function hasFees(): Attribute
-    {
-        return Attribute::make(
-            get: function (mixed $value, array $attr) {
-                return $attr['foreign_currency_conversion_fee'] > 0;
-            }
-        );
-    }
-
-    protected function total(): Attribute
-    {
-        return Attribute::make(
-            get: function (mixed $value, array $attr) {
-                $amount = Money::USD($attr['amount']);
-                $fees = Money::USD($attr['foreign_currency_conversion_fee']);
-
-                $total = $amount->add($fees);
-
-                return app(IntlMoneyFormatter::class)->format($total);
             }
         );
     }

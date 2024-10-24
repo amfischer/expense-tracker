@@ -47,24 +47,21 @@ namespace App\Models{
  * @property int $category_id
  * @property string $payee
  * @property-write string $amount
- * @property-write string|null $foreign_currency_conversion_fee
+ * @property int $foreign_currency_conversion_fee
  * @property string $currency
- * @property string|null $payment_method
+ * @property string $payment_method
  * @property bool $is_business_expense
  * @property \Illuminate\Support\Carbon $transaction_date
  * @property \Illuminate\Support\Carbon $effective_date
- * @property string|null $notes
+ * @property-read string|null $notes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $amount_pretty
  * @property-read \App\Models\Category $category
  * @property-read mixed $effective_date_pretty
- * @property-read mixed $foreign_currency_conversion_fee_pretty
- * @property-read mixed $has_fees
  * @property-read mixed $has_receipt
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Receipt> $receipts
  * @property-read int|null $receipts_count
- * @property-read mixed $total
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ExpenseFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
@@ -96,9 +93,10 @@ namespace App\Models{
  * @property int $user_id
  * @property string $source
  * @property-write string $amount
+ * @property bool $is_earned_income
  * @property \Illuminate\Support\Carbon $payment_date
  * @property \Illuminate\Support\Carbon $effective_date
- * @property string|null $notes
+ * @property-read string|null $notes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $amount_pretty
@@ -111,6 +109,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Income whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Income whereEffectiveDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Income whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Income whereIsEarnedIncome($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Income whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Income wherePaymentDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Income whereSource($value)

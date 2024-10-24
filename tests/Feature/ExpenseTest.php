@@ -47,19 +47,17 @@ test('users can create new expenses', function () {
 
     // db formats money as integer (in cents)
     $formData['amount'] *= 100;
-    $formData['foreign_currency_conversion_fee'] *= 100;
 
     // Expense::class includes $appends property to show custom attributes in JSON response,
     // but we don't want those extra attributes when testing database rows
     $dataWithoutAppendedFields = [
-        'user_id'                         => $formData['user_id'],
-        'category_id'                     => $formData['category_id'],
-        'payee'                           => $formData['payee'],
-        'amount'                          => $formData['amount'],
-        'foreign_currency_conversion_fee' => $formData['foreign_currency_conversion_fee'],
-        'transaction_date'                => $formData['transaction_date'],
-        'effective_date'                  => $formData['effective_date'],
-        'currency'                        => $formData['currency'],
+        'user_id'          => $formData['user_id'],
+        'category_id'      => $formData['category_id'],
+        'payee'            => $formData['payee'],
+        'amount'           => $formData['amount'],
+        'transaction_date' => $formData['transaction_date'],
+        'effective_date'   => $formData['effective_date'],
+        'currency'         => $formData['currency'],
     ];
 
     $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);
@@ -79,19 +77,17 @@ test('users can update existing expenses', function () {
 
     // db formats money as integer (in cents)
     $formData['amount'] *= 100;
-    $formData['foreign_currency_conversion_fee'] *= 100;
 
     // Expense::class includes $appends property to show custom attributes in JSON response,
     // but we don't want those extra attributes when testing database rows
     $dataWithoutAppendedFields = [
-        'user_id'                         => $formData['user_id'],
-        'category_id'                     => $formData['category_id'],
-        'payee'                           => $formData['payee'],
-        'amount'                          => $formData['amount'],
-        'foreign_currency_conversion_fee' => $formData['foreign_currency_conversion_fee'],
-        'transaction_date'                => $formData['transaction_date'],
-        'effective_date'                  => $formData['effective_date'],
-        'currency'                        => $formData['currency'],
+        'user_id'          => $formData['user_id'],
+        'category_id'      => $formData['category_id'],
+        'payee'            => $formData['payee'],
+        'amount'           => $formData['amount'],
+        'transaction_date' => $formData['transaction_date'],
+        'effective_date'   => $formData['effective_date'],
+        'currency'         => $formData['currency'],
     ];
 
     $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);

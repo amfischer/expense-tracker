@@ -30,17 +30,16 @@ class ExpenseFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'                         => User::factory(),
-            'category_id'                     => function (array $attr) {
+            'user_id'             => User::factory(),
+            'category_id'         => function (array $attr) {
                 return Category::factory()->set('user_id', $attr['user_id']);
             },
-            'payee'                           => $this->faker->randomElement($this->payees),
-            'amount'                          => $this->faker->randomFloat(2, 1, 1000), // between $1 USD - $1,000 USD
-            'foreign_currency_conversion_fee' => $this->faker->randomFloat(2, 1, 5),
-            'currency'                        => Currency::USD(),
-            'is_business_expense'             => $this->faker->boolean(30),
-            'transaction_date'                => $this->faker->dateTimeBetween('-1 year')->format('Y-m-d'),
-            'effective_date'                  => function (array $attr) {
+            'payee'               => $this->faker->randomElement($this->payees),
+            'amount'              => $this->faker->randomFloat(2, 1, 1000), // between $1 USD - $1,000 USD
+            'currency'            => Currency::USD(),
+            'is_business_expense' => $this->faker->boolean(30),
+            'transaction_date'    => $this->faker->dateTimeBetween('-1 year')->format('Y-m-d'),
+            'effective_date'      => function (array $attr) {
                 return $attr['transaction_date'];
             },
         ];

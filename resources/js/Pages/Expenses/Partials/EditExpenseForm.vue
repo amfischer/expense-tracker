@@ -21,7 +21,6 @@ const props = defineProps({
 const form = useForm({
     payee: props.expense.payee,
     amount: props.expense.amount / 100,
-    foreign_currency_conversion_fee: props.expense.foreign_currency_conversion_fee / 100,
     is_business_expense: props.expense.is_business_expense,
     currency: props.expense.currency,
     payment_method: props.expense.payment_method ?? '',
@@ -122,16 +121,6 @@ const update = () => {
                         <InputError class="mt-2" :message="form.errors.payment_method" />
                     </div>
 
-                    <div>
-                        <InputLabel for="foreign_currency_conversion_fee" value="Foreign Currency Conversion Fee" />
-                        <NumberInput
-                            id="foreign_currency_conversion_fee"
-                            class="mt-1 block w-full"
-                            step=".01"
-                            placeholder="0.00"
-                            v-model="form.foreign_currency_conversion_fee" />
-                        <InputError class="mt-2" :message="form.errors.foreign_currency_conversion_fee" />
-                    </div>
                     <SwitchGroup as="div" class="flex items-center justify-between">
                         <span class="flex flex-grow flex-col">
                             <SwitchLabel as="span" class="text-sm font-medium text-gray-700" passive>
@@ -156,6 +145,7 @@ const update = () => {
                         </Switch>
                     </SwitchGroup>
                     <InputError class="mt-2" :message="form.errors.is_business_expense" />
+
                     <div>
                         <InputLabel for="notes" value="Notes" />
                         <Textarea id="notes" class="mt-1 block w-full" rows="5" v-model="form.notes" />
