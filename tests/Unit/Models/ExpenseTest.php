@@ -15,7 +15,7 @@ test('amountPretty returns a formatted string with a dollar-sign and correct com
     $amount = 1233.89;
     $expense = Expense::factory()->create(['amount' => $amount, 'currency' => 'USD']);
 
-    expect($expense->amountPretty)
+    expect($expense->amount_pretty)
         ->toBeString()
         ->toBe('$1,233.89');
 

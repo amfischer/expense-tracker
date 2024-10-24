@@ -48,6 +48,7 @@ expect()->extend('toBeOne', function () {
 function login(?User $user = null): User
 {
     if ($user === null) {
+        /** @var \Illuminate\Foundation\Auth\User $user */
         $user = User::factory()->hasAppAcess()->create(); // needs to use an email in APP_ACCESS
     }
 

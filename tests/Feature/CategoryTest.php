@@ -33,33 +33,39 @@ it("will not show another user's categories", function () {
 
 test('users can create new categories', function () {
 
-    $formData = Category::factory()->make(['user_id' => $this->user->id])->toArray();
+    $payload = Category::factory()->make(['user_id' => $this->user->id])->toArray();
 
-    $this->post(route('categories.store'), $formData);
+    $this->post(route('categories.store'), $payload);
 
-    $this->assertDatabaseHas('categories', $formData);
+    $this->assertDatabaseHas('categories', $payload);
 });
 
 test('users can update existing categories', function () {
 
     $category = Category::factory()->create(['user_id' => $this->user->id]);
 
-    $this->assertModelExists($category);
+    $payload = [
+        'name'  => 'new name',
+        'color' => '#ffee00',
+    ];
 
-    $formData = Category::factory()->make(['user_id' => $this->user->id])->toArray();
+    $this->put(route('categories.update', $category), $payload);
 
-    $this->put(route('categories.update', $category), $formData);
+    $this->assertDatabaseHas('categories', $payload);
 
-    $this->assertDatabaseHas('categories', $formData);
+    expect($category->refresh()->name)->toBe('new name');
+    expect($category->refresh()->color)->toBe('#ffee00');
 });
 
 test('users cannot rename the default category', function () {
     $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
 
-    $formData = $category->toArray();
-    $formData['name'] = 'updated name';
+    $payload = [
+        'name'  => 'updated name',
+        'color' => '#ffee22',
+    ];
 
-    $this->put(route('categories.update', $category), $formData)
+    $this->put(route('categories.update', $category), $payload)
         ->assertRedirect()
         ->assertSessionHasErrors(['name' => 'The default category cannot be renamed.']);
 });
@@ -73,7 +79,6 @@ test('users can delete existing categories', function () {
 
     $this->assertModelMissing($category);
     $this->assertDatabaseMissing('categories', ['id' => $category->id]);
-
 });
 
 it('will block category deletion if the category is linked to any expenses', function () {
@@ -82,8 +87,7 @@ it('will block category deletion if the category is linked to any expenses', fun
 
     $this->delete(route('categories.delete', $category))
         ->assertRedirect()
-        ->assertSessionHasErrors(['message' => 'category is linked to '.count($expenses).' expenses. Remove these relationships before deleting.']);
-
+        ->assertSessionHasErrors(['message' => 'category is linked to ' . count($expenses) . ' expenses. Remove these relationships before deleting.']);
 });
 
 test('default category cannot be deleted', function () {

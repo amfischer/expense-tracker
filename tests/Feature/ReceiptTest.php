@@ -52,15 +52,15 @@ test('disallowed file types return a validation error', function (UploadedFile $
     'pdf'  => UploadedFile::fake()->create('receipt.xml', 500, 'application/xml'),
 ]);
 
-test('files cannot be bigger than 1MB', function (UploadedFile $file) {
+test('files cannot be bigger than 2MB', function (UploadedFile $file) {
 
     post(route('expenses.receipts.store', $this->expense->id), ['receipt_upload' => $file])
-        ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be between 1 and 1000 kilobytes.'])
+        ->assertSessionHasErrors(['receipt_upload' => 'The receipt upload field must be between 1 and 2000 kilobytes.'])
         ->assertRedirect();
 })->with([
-    'png'  => UploadedFile::fake()->create('receipt.png', 1001, 'image/png'),
+    'png'  => UploadedFile::fake()->create('receipt.png', 2001, 'image/png'),
     'jpeg' => UploadedFile::fake()->create('receipt.jpeg', 5000, 'image/jpeg'),
-    'jpg'  => UploadedFile::fake()->create('receipt.jpg', 2000, 'image/jpeg'),
+    'jpg'  => UploadedFile::fake()->create('receipt.jpg', 2010, 'image/jpeg'),
     'webp' => UploadedFile::fake()->create('receipt.webp', 3000, 'image/webp'),
     'pdf'  => UploadedFile::fake()->create('receipt.pdf', 4000, 'application/pdf'),
 ]);
@@ -77,7 +77,7 @@ test('users can delete a receipt', function () {
 
     Storage::disk('receipts')->assertExists($receipt->filenameWithPath());
 
-    delete(route('expenses.receipts.delete', [$this->expense->id, $receipt->id]))
+    delete(route('expenses.receipts.delete', [$this->expense->id, $receipt->id]), ['password' => 'password'])
         ->assertSessionDoesntHaveErrors()
         ->assertRedirect();
 

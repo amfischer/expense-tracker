@@ -2,17 +2,11 @@
 
 use App\Models\Category;
 use App\Models\Expense;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 it('can show expenses', function () {
-    $user = User::factory()->hasAppAcess()->create();
+    $user = login();
+
     $expense = Expense::factory()->create(['user_id' => $user->id]);
-
-    $this->get('/expenses')
-        ->assertRedirect(route('login'));
-
-    login($user);
 
     $this->get(route('expenses.index'))
         ->assertSee($expense->payee)
@@ -20,11 +14,9 @@ it('can show expenses', function () {
 });
 
 it("will not show another user's expenses", function () {
+    $user = login();
+
     $expenseRestricted = Expense::factory()->create();
-
-    login();
-
-    $user = Auth::user();
 
     $this->get(route('expenses.index'))
         ->assertOk()
@@ -37,30 +29,20 @@ it("will not show another user's expenses", function () {
 });
 
 test('users can create new expenses', function () {
-    login();
+    $user = login();
 
-    $user = Auth::user();
+    $payload = Expense::factory()->make(['user_id' => $user->id])->toArray();
 
-    $formData = Expense::factory()->make(['user_id' => $user->id])->toArray();
-
-    $this->post(route('expenses.store'), $formData);
+    $this->post(route('expenses.store'), $payload);
 
     // db formats money as integer (in cents)
-    $formData['amount'] *= 100;
+    $payload['amount'] *= 100;
 
     // Expense::class includes $appends property to show custom attributes in JSON response,
     // but we don't want those extra attributes when testing database rows
-    $dataWithoutAppendedFields = [
-        'user_id'          => $formData['user_id'],
-        'category_id'      => $formData['category_id'],
-        'payee'            => $formData['payee'],
-        'amount'           => $formData['amount'],
-        'transaction_date' => $formData['transaction_date'],
-        'effective_date'   => $formData['effective_date'],
-        'currency'         => $formData['currency'],
-    ];
+    unset($payload['amount_pretty'], $payload['effective_date_pretty'], $payload['has_receipt']);
 
-    $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);
+    $this->assertDatabaseHas('expenses', $payload);
 
 });
 
@@ -69,28 +51,31 @@ test('users can update existing expenses', function () {
 
     $expense = Expense::factory()->create(['user_id' => $user->id]);
 
-    $this->assertModelExists($expense);
-
-    $formData = Expense::factory()->make(['user_id' => $user->id])->toArray();
-
-    $this->patch(route('expenses.update', $expense), $formData);
-
-    // db formats money as integer (in cents)
-    $formData['amount'] *= 100;
-
-    // Expense::class includes $appends property to show custom attributes in JSON response,
-    // but we don't want those extra attributes when testing database rows
-    $dataWithoutAppendedFields = [
-        'user_id'          => $formData['user_id'],
-        'category_id'      => $formData['category_id'],
-        'payee'            => $formData['payee'],
-        'amount'           => $formData['amount'],
-        'transaction_date' => $formData['transaction_date'],
-        'effective_date'   => $formData['effective_date'],
-        'currency'         => $formData['currency'],
+    $payload = [
+        'category_id'         => $expense->category->id,
+        'payee'               => 'new payee',
+        'amount'              => 201.56,
+        'currency'            => 'USD',
+        'is_business_expense' => true,
+        'transaction_date'    => '2024-10-10',
+        'effective_date'      => '2024-09-30',
     ];
 
-    $this->assertDatabaseHas('expenses', $dataWithoutAppendedFields);
+    $this->patch(route('expenses.update', $expense), $payload);
+
+    // db formats money as integer (in cents)
+    $payload['amount'] *= 100;
+
+    $this->assertDatabaseHas('expenses', $payload);
+
+    $expense->refresh();
+
+    expect($expense->payee)->toBe('new payee');
+    expect($expense->amount)->toBe(20156);
+    expect($expense->amount_pretty)->toBe('$201.56');
+    expect($expense->is_business_expense)->toBeTrue();
+    expect($expense->transaction_date->format('Y-m-d'))->toBe('2024-10-10');
+    expect($expense->effective_date->format('Y-m-d'))->toBe('2024-09-30');
 });
 
 test('users can delete existing expenses', function () {
@@ -100,7 +85,7 @@ test('users can delete existing expenses', function () {
 
     $this->assertModelExists($expense);
 
-    $this->delete(route('expenses.delete', $expense));
+    $this->delete(route('expenses.delete', $expense), ['password' => 'password']);
 
     $this->assertModelMissing($expense);
     $this->assertDatabaseMissing('expenses', ['id' => $expense->id]);
@@ -123,12 +108,12 @@ it('will return a 403 if user attempts to update expenses from other accounts', 
 
     $expenseRestricted = Expense::factory()->create();
 
-    $formData = $expenseRestricted->toArray();
+    $payload = $expenseRestricted->toArray();
 
     // create user owned category to pass validation. Gate auth check happens right after validation.
-    $formData['category_id'] = Category::factory()->create(['user_id' => $user->id])->id;
+    $payload['category_id'] = Category::factory()->create(['user_id' => $user->id])->id;
 
-    $this->patch(route('expenses.update', $expenseRestricted), $formData)
+    $this->patch(route('expenses.update', $expenseRestricted), $payload)
         ->assertForbidden();
 });
 
@@ -137,11 +122,11 @@ it('will return a 403 if user attempts to delete expenses from other accounts', 
 
     $expenseRestricted = Expense::factory()->create();
 
-    $formData = $expenseRestricted->toArray();
+    $payload = $expenseRestricted->toArray();
 
     // create user owned category to pass validation. authentication happens right after validation
-    $formData['category_id'] = Category::factory()->create(['user_id' => $user->id])->id;
+    $payload['category_id'] = Category::factory()->create(['user_id' => $user->id])->id;
 
-    $this->delete(route('expenses.delete', $expenseRestricted), $formData)
+    $this->delete(route('expenses.delete', $expenseRestricted), $payload)
         ->assertForbidden();
 });
