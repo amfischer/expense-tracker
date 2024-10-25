@@ -8,8 +8,8 @@ use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
 use App\Rules\AlphaSpace;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -33,7 +33,7 @@ class ExpenseController extends Controller
             'filters'                   => 'nullable|array:category_ids,payment_methods',
             'filters.category_ids.*'    => [
                 'numeric',
-                Rule::exists('categories', 'id')->where(function (QueryBuilder $query) use ($request) {
+                Rule::exists('categories', 'id')->where(function (Builder $query) use ($request) {
                     return $query->where('user_id', $request->user()->id);
                 })],
             'filters.payment_methods.*' => Rule::in(PaymentMethod::values()),
@@ -47,7 +47,7 @@ class ExpenseController extends Controller
 
         $query = Expense::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
-            ->query(function (Builder $query) use ($data) {
+            ->query(function (EloquentBuilder $query) use ($data) {
                 $query->with(['category', 'receipts']);
                 if ($data['date'] ?? false) {
                     $query->where('effective_date', '>=', Carbon::createFromFormat('Y-m-d', $data['date'][0])->startOfDay());
