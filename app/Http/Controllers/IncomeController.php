@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Income;
 use App\Rules\AlphaSpace;
+use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -18,8 +20,11 @@ class IncomeController extends Controller
     public function index(Request $request): Response
     {
         $validator = Validator::make($request->all(), [
-            'query'   => ['nullable', new AlphaSpace],
-            'sort_by' => ['nullable', Rule::in(['effective_date', 'amount', 'source'])],
+            'query'    => ['nullable', new AlphaSpace],
+            'sort_by'  => ['nullable', Rule::in(['effective_date', 'amount', 'source'])],
+            'sort_dir' => ['nullable', Rule::in(['asc', 'desc'])],
+            'date'     => 'nullable|array|size:2',
+            'date.*'   => 'date_format:Y-m-d',
         ]);
 
         if ($validator->fails()) {
@@ -30,7 +35,17 @@ class IncomeController extends Controller
 
         $query = Income::search($data['query'] ?? '')
             ->where('user_id', $request->user()->id)
-            ->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
+            ->query(function (EloquentBuilder $query) use ($data) {
+                // $query->with(['documents']);
+                if ($data['date'] ?? false) {
+                    $query->where('effective_date', '>=', Carbon::createFromFormat('Y-m-d', $data['date'][0])->startOfDay());
+                    $query->where('effective_date', '<=', Carbon::createFromFormat('Y-m-d', $data['date'][1])->endOfDay());
+                }
+            });
+
+        if ($data['sort_by'] ?? false) {
+            $query->orderBy($data['sort_by'], $data['sort_dir'] ?? 'asc');
+        }
 
         $incomes = $query->paginate(15)->appends(Arr::whereNotNull($data));
 

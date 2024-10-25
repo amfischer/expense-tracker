@@ -8,11 +8,13 @@ import {
     ChevronUpIcon,
     InformationCircleIcon,
 } from '@heroicons/vue/20/solid';
+import SearchBox from '@/Components/Tables/SearchBox.vue';
 import TableHeader from '@/Components/Tables/TableHeader.vue';
+import FilterDialog from '@/Components/Tables/FilterDialog.vue';
+import FilterOption from '@/Components/Tables/FilterOption.vue';
+import DatePicker from '@/Components/Tables/DatePicker.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
-import FilterDialog from './FilterDialog.vue';
-import SearchBox from './SearchBox.vue';
 import ShowReceiptModal from '../ShowReceiptModal.vue';
 import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
@@ -27,7 +29,10 @@ const scout = reactive(useScoutHttpGet({ url: route('expenses.index') }));
 
 const { df } = useDateFormatter();
 
-const pm = inject('paymentMethods').reduce((obj, method) => {
+const categories = inject('categories');
+const paymentMethods = inject('paymentMethods');
+
+const pm = paymentMethods.reduce((obj, method) => {
     obj[method.id] = method.name;
     return obj;
 }, {});
@@ -203,6 +208,10 @@ const toggleReceiptModal = (expense) => {
 
     <Pagination :paginator="expenses" />
 
-    <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false" />
+    <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false">
+        <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />
+        <FilterOption title="Payment Methods" field="payment_methods" :options="paymentMethods" :scout="scout" />
+        <DatePicker :scout="scout" />
+    </FilterDialog>
     <ShowReceiptModal v-model="showReceipt" :expense="selectedExpense" :receipt="selectedReceipt" />
 </template>

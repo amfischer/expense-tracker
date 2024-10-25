@@ -1,9 +1,6 @@
 <script setup>
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import FilterOption from './FilterOption.vue';
-import DatePicker from './DatePicker.vue';
-import { inject } from 'vue';
 
 defineProps({
     open: {
@@ -12,9 +9,6 @@ defineProps({
     },
     scout: Object,
 });
-
-const categories = inject('categories');
-const paymentMethods = inject('paymentMethods');
 
 defineEmits(['close']);
 </script>
@@ -61,15 +55,7 @@ defineEmits(['close']);
                                 Clear
                             </button>
                         </div>
-
-                        <!-- Filters -->
-                        <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />
-                        <FilterOption
-                            title="Payment Methods"
-                            field="payment_methods"
-                            :options="paymentMethods"
-                            :scout="scout" />
-                        <DatePicker :scout="scout" />
+                        <slot />
                     </DialogPanel>
                 </TransitionChild>
             </div>
