@@ -63,7 +63,7 @@ class ExpenseController extends Controller
             $query->whereIn('payment_method', $data['filters']['payment_methods']);
         }
 
-        $query->orderBy($data['sort_by'] ?? 'effective_date', 'desc');
+        $query->orderBy($data['sort_by'] ?? 'effective_date', $data['sort_dir'] ?? 'asc');
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
