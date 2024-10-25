@@ -8,6 +8,7 @@ export function useScoutHttpGet({ url }) {
         query: '',
         sort_by: '',
         sort_dir: '',
+        date: [],
         filters: {},
     });
 
@@ -28,6 +29,7 @@ export function useScoutHttpGet({ url }) {
         form.query = params.query || '';
         form.sort_by = params.sort_by || '';
         form.sort_dir = params.sort_dir || '';
+        form.date = params.date || [];
         form.filters = params.filters || {};
 
         // toggle any validation errors from bad query params
@@ -66,6 +68,10 @@ export function useScoutHttpGet({ url }) {
      * @param {string} option The option being toggled
      */
     const toggleArrayFilter = (key, option) => {
+        // make sure type is String and NOT Number, so checkbox UI works.
+        // id values coming from server are Numbers.
+        option = String(option);
+
         // If filter doesn't exist, create with <key> as property name, and add option to a new array
         if (!Object.hasOwn(form.filters, key)) {
             form.filters[key] = [option];
@@ -90,6 +96,12 @@ export function useScoutHttpGet({ url }) {
             delete form.filters[key];
         }
 
+        search();
+    };
+
+    const clearFilters = () => {
+        form.date = [];
+        form.filters = {};
         search();
     };
 
@@ -155,5 +167,6 @@ export function useScoutHttpGet({ url }) {
         sortBy,
         search,
         clearQuery,
+        clearFilters,
     };
 }

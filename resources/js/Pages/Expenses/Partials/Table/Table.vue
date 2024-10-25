@@ -14,33 +14,23 @@ import FilterDialog from './FilterDialog.vue';
 import SearchBox from './SearchBox.vue';
 import SortByMenu from './SortByMenu.vue';
 import ShowReceiptModal from '../ShowReceiptModal.vue';
+import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
-import { useScoutStore } from '@/Stores/scout';
-import { Link, usePage } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+import { inject, reactive, ref } from 'vue';
 
 defineProps({
     expenses: Object,
 });
 
-const scout = useScoutStore();
+const scout = reactive(useScoutHttpGet({ url: route('expenses.index') }));
 
 const { df } = useDateFormatter();
 
-const pm = scout.options.paymentMethods.reduce((obj, method) => {
+const pm = inject('paymentMethods').reduce((obj, method) => {
     obj[method.id] = method.name;
     return obj;
 }, {});
-
-onMounted(() => {
-    let params = new URLSearchParams(document.location.search);
-    scout.form.query = params.get('query') || '';
-    scout.form.sort_by = params.get('sort_by') || 'effective_date';
-
-    if (usePage().props.errors.scout !== undefined) {
-        console.error('search errors: ', usePage().props.errors.scout);
-    }
-});
 
 const showFilters = ref(false);
 
@@ -67,9 +57,9 @@ const toggleReceiptModal = (expense) => {
 
     <!-- Search & Filters -->
     <div class="flex items-center justify-between gap-3 mb-10">
-        <SearchBox v-model="scout.form.query" @keyup="scout.throttledSearch" @reset="scout.clearSearchQuery" />
+        <SearchBox v-model="scout.form.query" @keyup="scout.search" @reset="scout.clearQuery" />
         <div class="flex items-center gap-3 md:gap-8">
-            <SortByMenu v-model="scout.form.sort_by" />
+            <SortByMenu :scout="scout" />
             <button
                 type="button"
                 class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
@@ -216,6 +206,6 @@ const toggleReceiptModal = (expense) => {
 
     <Pagination :paginator="expenses" />
 
-    <FilterDialog :open="showFilters" @close="showFilters = false" />
+    <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false" />
     <ShowReceiptModal v-model="showReceipt" :expense="selectedExpense" :receipt="selectedReceipt" />
 </template>

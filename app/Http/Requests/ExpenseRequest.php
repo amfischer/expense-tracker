@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\Currency;
 use App\Enums\PaymentMethod;
 use App\Rules\AlphaSpace;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -34,7 +35,9 @@ class ExpenseRequest extends FormRequest
             'payment_method'      => Rule::in(PaymentMethod::values()),
             'transaction_date'    => 'required|date_format:Y-m-d',
             'effective_date'      => 'required|date_format:Y-m-d',
-            'category_id'         => ['required', 'numeric', Rule::in(Auth::user()->categoryIds)],
+            'category_id'         => ['required', 'numeric', Rule::exists('categories', 'id')->where(function (Builder $query) {
+                return $query->where('user_id', Auth::user()->id);
+            })],
             'notes'               => 'nullable',
         ];
     }
@@ -42,7 +45,7 @@ class ExpenseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.in' => 'Invalid category selection.',
+            'category_id.exists' => 'Invalid category selection.',
         ];
     }
 }

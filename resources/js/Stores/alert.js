@@ -12,6 +12,9 @@ export const useAlertStore = defineStore('alert', () => {
 
     const clear = () => (message.value = '');
 
+    // should avoid onMounted() in pinia
+    // https://github.com/vuejs/pinia/discussions/1508
+
     // clear alert if navigating to a new page
     // router.on('finish', () => clear());
 

@@ -2,27 +2,12 @@
 import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, startOfWeek, endOfWeek } from 'date-fns';
 import '@vuepic/vue-datepicker/dist/main.css';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import { useScoutStore } from '@/Stores/scout';
 import { useWindowSize } from '@vueuse/core';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
-onMounted(() => {
-    let params = new URLSearchParams(document.location.search);
-
-    let date_range = [];
-
-    // the paginate strings provided by Laravel encode array values
-    // so we need to manually set array values
-    for (const [key, value] of params) {
-        if (key.startsWith('date')) {
-            date_range.push(value);
-        }
-    }
-
-    scout.form.date = date_range;
+defineProps({
+    scout: Object,
 });
-
-const scout = useScoutStore();
 
 const presetDates = ref([
     {
