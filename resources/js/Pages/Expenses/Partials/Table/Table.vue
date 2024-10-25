@@ -8,11 +8,11 @@ import {
     ChevronUpIcon,
     InformationCircleIcon,
 } from '@heroicons/vue/20/solid';
+import TableHeader from '@/Components/Tables/TableHeader.vue';
 import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
 import FilterDialog from './FilterDialog.vue';
 import SearchBox from './SearchBox.vue';
-import SortByMenu from './SortByMenu.vue';
 import ShowReceiptModal from '../ShowReceiptModal.vue';
 import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
@@ -58,16 +58,13 @@ const toggleReceiptModal = (expense) => {
     <!-- Search & Filters -->
     <div class="flex items-center justify-between gap-3 mb-10">
         <SearchBox v-model="scout.form.query" @keyup="scout.search" @reset="scout.clearQuery" />
-        <div class="flex items-center gap-3 md:gap-8">
-            <SortByMenu :scout="scout" />
-            <button
-                type="button"
-                class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
-                @click="showFilters = true">
-                <span class="sr-only">Filters</span>
-                <FunnelIcon class="h-5 w-5" aria-hidden="true" />
-            </button>
-        </div>
+        <button
+            type="button"
+            class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
+            @click="showFilters = true">
+            <span class="sr-only">Filters</span>
+            <FunnelIcon class="h-5 w-5" aria-hidden="true" />
+        </button>
     </div>
 
     <table class="min-w-full divide-y divide-gray-300 bg-white">
@@ -76,9 +73,9 @@ const toggleReceiptModal = (expense) => {
                 <th scope="col" class="relative p-4 w-14">
                     <span class="sr-only">Toggle Information</span>
                 </th>
-                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900">Payee</th>
-                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-36">Amount</th>
-                <th scope="col" class="py-4 text-left text-sm font-semibold text-gray-900 lg:w-36">Date</th>
+                <TableHeader title="Payee" field="payee" :scout="scout" />
+                <TableHeader title="Amount" field="amount" width="lg:w-36" :scout="scout" />
+                <TableHeader title="Date" field="effective_date" width="lg:w-36" :scout="scout" />
                 <th scope="col" class="relative p-4 w-14">
                     <span class="sr-only">Edit</span>
                 </th>

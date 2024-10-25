@@ -2,7 +2,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid';
 
-const props = defineProps({
+defineProps({
     scout: Object,
 });
 
@@ -11,11 +11,6 @@ const sortOptions = [
     { name: 'Amount', value: 'amount' },
     { name: 'Category', value: 'category_id' },
 ];
-
-const triggerSort = (item) => {
-    props.scout.sortBy(item);
-    props.scout.search();
-};
 </script>
 
 <template>
@@ -43,7 +38,7 @@ const triggerSort = (item) => {
                                 option.value === scout.form.sort_by ? 'text-gray-900' : 'text-gray-500',
                                 'block px-4 py-2 text-sm font-medium cursor-pointer',
                             ]"
-                            @click="triggerSort(option.value)">
+                            @click="scout.sortBy(option.value)">
                             {{ option.name }}
                         </span>
                     </MenuItem>

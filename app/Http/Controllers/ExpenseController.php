@@ -26,7 +26,7 @@ class ExpenseController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'query'                     => ['nullable', new AlphaSpace],
-            'sort_by'                   => ['nullable', Rule::in(['effective_date', 'amount', 'category_id'])],
+            'sort_by'                   => ['nullable', Rule::in(['effective_date', 'amount', 'payee'])],
             'sort_dir'                  => ['nullable', Rule::in(['asc', 'desc'])],
             'date'                      => 'nullable|array|size:2',
             'date.*'                    => 'date_format:Y-m-d',
@@ -63,7 +63,9 @@ class ExpenseController extends Controller
             $query->whereIn('payment_method', $data['filters']['payment_methods']);
         }
 
-        $query->orderBy($data['sort_by'] ?? 'effective_date', $data['sort_dir'] ?? 'desc');
+        if ($data['sort_by'] ?? false) {
+            $query->orderBy($data['sort_by'], $data['sort_dir'] ?? 'asc');
+        }
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
