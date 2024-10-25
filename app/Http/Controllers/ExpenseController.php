@@ -67,7 +67,7 @@ class ExpenseController extends Controller
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
-        $categories = $request->user()->categories_array;
+        $categories = $request->user()->categories()->orderBy('name')->get();
 
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
@@ -76,9 +76,7 @@ class ExpenseController extends Controller
 
     public function create(Request $request): Response
     {
-        $user = $request->user();
-
-        $categories = $user->categoriesArray;
+        $categories = $request->user()->categories()->orderBy('name')->get();
         $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
@@ -98,7 +96,7 @@ class ExpenseController extends Controller
     {
         Gate::authorize('view', $expense);
 
-        $categories = $expense->user->categoriesArray;
+        $categories = $expense->user->categories()->orderBy('name')->get();
         $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 

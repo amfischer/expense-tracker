@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Events\UserCreated;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -73,24 +72,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
-    }
-
-    protected function categoriesArray(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                return $this->categories->map(function (Category $category, int $key) {
-                    return ['id' => (string) $category->id, 'name' => $category->name];
-                })->sortBy('name')->values()->all();
-            }
-        );
-    }
-
-    protected function categoryIds(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->categories->map(fn (Category $category) => $category->id)->all()
-        );
     }
 
     public function getExpenseSummary(Carbon $from, Carbon $to): array

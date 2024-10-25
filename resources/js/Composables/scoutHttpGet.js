@@ -68,6 +68,10 @@ export function useScoutHttpGet({ url }) {
      * @param {string} option The option being toggled
      */
     const toggleArrayFilter = (key, option) => {
+        // make sure type is String and NOT Number, so checkbox UI works.
+        // id values coming from server are Numbers.
+        option = String(option);
+
         // If filter doesn't exist, create with <key> as property name, and add option to a new array
         if (!Object.hasOwn(form.filters, key)) {
             form.filters[key] = [option];

@@ -35,7 +35,7 @@ const filter = computed(() => props.scout.form.filters[props.field] || []);
                 <div class="flex items-center" @click="scout.toggleArrayFilter(field, option.id)">
                     <input
                         :id="`filter-mobile-${field}-${option.id}`"
-                        :checked="scout.form.filters[field]?.includes(option.id)"
+                        :checked="scout.form.filters[field]?.includes(`${option.id}`)"
                         type="checkbox"
                         class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
                     <label
