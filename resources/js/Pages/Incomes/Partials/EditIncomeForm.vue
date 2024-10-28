@@ -2,9 +2,10 @@
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import NumberInput from '@/Components/Forms/NumberInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import ButtonBack from '@/Components/Buttons/ButtonBack.vue';
 import Textarea from '@/Components/Forms/Textarea.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
@@ -31,7 +32,7 @@ const update = () => {
             alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
         },
         onError: () => {
-            console.log('errors', form.errors);
+            console.error('errors', form.errors);
         },
     });
 };
@@ -41,8 +42,15 @@ const update = () => {
     <form @submit.prevent="update">
         <div class="space-y-12">
             <div class="border-b border-gray-900/10 pb-12">
-                <h2 class="text-lg font-medium text-gray-900">Income Information</h2>
-                <p class="mt-1 text-sm text-gray-600">All fields in the section below are required.</p>
+                <div class="sm:flex sm:items-start">
+                    <div class="sm:flex-auto">
+                        <h2 class="text-lg font-medium text-gray-900">Income Information</h2>
+                        <p class="mt-1 text-sm text-gray-600">All fields in the section below are required.</p>
+                    </div>
+                    <div class="mt-3 sm:mt-0 sm:flex-none">
+                        <ButtonBack />
+                    </div>
+                </div>
 
                 <div class="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-6">
                     <div class="sm:col-span-3">
