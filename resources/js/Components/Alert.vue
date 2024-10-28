@@ -36,7 +36,7 @@ const { title, message, status, show } = storeToRefs(store);
                         <XMarkIcon class="h-5 w-5" aria-hidden="true" />
                     </button>
                 </div>
-                <div class="bg-white text-wrap rounded-b-md p-3">
+                <div class="bg-white text-wrap rounded-b-md p-3 text-sm">
                     {{ message }}
                 </div>
             </div>

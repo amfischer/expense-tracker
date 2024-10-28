@@ -1,4 +1,5 @@
 import { useDebounceFn } from '@vueuse/core';
+import { useAlertStore } from '@/Stores/alert';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { onMounted, toValue } from 'vue';
 import { parse } from 'qs';
@@ -17,7 +18,7 @@ export function useScoutHttpGet({ url }) {
         search();
     };
 
-    // const toast = useToastStore();
+    const alert = useAlertStore();
 
     /**
      * FULL PAGE LOAD
@@ -33,9 +34,10 @@ export function useScoutHttpGet({ url }) {
         form.filters = params.filters || {};
 
         // toggle any validation errors from bad query params
-        if (usePage().props.errors.scout !== undefined) {
-            // toast.setErrorMessage(usePage().props.errors.scout[0]);
-            console.error('search errors: ', usePage().props.errors.scout);
+        const errors = usePage().props.errors.scout;
+        if (errors !== undefined) {
+            alert.setErrorMessage(errors[Object.keys(errors)[0]]);
+            console.error('search errors: ', errors);
         }
     });
 
@@ -151,11 +153,11 @@ export function useScoutHttpGet({ url }) {
             preserveScroll: true,
             errorBag: 'scout',
             onSuccess: (resp) => {
-                console.log('success', resp);
+                // console.log('success', resp);
             },
             onError: (err) => {
-                console.log('test', err, Object.values(err));
-                // toast.setErrorMessage(Object.values(err)[0]);
+                alert.setErrorMessage(Object.values(err)[0]);
+                console.error('test', err, Object.values(err));
             },
         });
     }, 400);
