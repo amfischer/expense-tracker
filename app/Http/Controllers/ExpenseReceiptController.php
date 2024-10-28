@@ -45,7 +45,7 @@ class ExpenseReceiptController extends Controller
             'size'     => $file->getSize(),
         ]);
 
-        return back()->withInput(compact('receipt'))->with('message', 'Receipt successfully uploaded.');
+        return back()->withInput(compact('receipt'))->with('message', 'Receipt successfully uploaded.')->with('title', 'Uploaded!');
     }
 
     public function destroy(Request $request, Expense $expense, Receipt $receipt): RedirectResponse
@@ -60,6 +60,6 @@ class ExpenseReceiptController extends Controller
 
         $receipt->delete();
 
-        return back()->with('message', 'Receipt successfully deleted');
+        return back()->with('message', 'Receipt successfully deleted')->with('title', 'Deleted!');
     }
 }

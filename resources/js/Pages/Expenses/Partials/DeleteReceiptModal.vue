@@ -31,7 +31,7 @@ const submit = () => {
     form.delete(route('expenses.receipts.delete', { expense: props.expense.id, receipt: props.receipt.id }), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
             close();
         },
         onError: (err) => {

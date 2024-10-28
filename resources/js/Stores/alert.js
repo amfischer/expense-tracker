@@ -41,7 +41,7 @@ export const useAlertStore = defineStore('alert', () => {
             show.value = true;
         }
 
-        timeoutId.value = setTimeout(() => (show.value = false), 500000);
+        timeoutId.value = setTimeout(() => (show.value = false), 5000);
     };
 
     const hide = () => {
@@ -57,7 +57,7 @@ export const useAlertStore = defineStore('alert', () => {
     // https://github.com/vuejs/pinia/discussions/1508
 
     // clear alert if navigating to a new page
-    // router.on('finish', () => clear());
+    // router.on('finish', () => hide());
 
     return {
         status,

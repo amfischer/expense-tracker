@@ -27,7 +27,7 @@ const upload = () => {
         preserveScroll: true,
         onSuccess: (resp) => {
             form.reset();
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
         },
         onError: () => {
             console.log('errors', form.errors);

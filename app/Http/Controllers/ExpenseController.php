@@ -91,7 +91,7 @@ class ExpenseController extends Controller
 
         $request->user()->expenses()->create($validated);
 
-        return back()->with('message', 'Expense successfully created.');
+        return back()->with('message', 'Expense successfully created.')->with('title', 'Created!');
     }
 
     public function edit(Expense $expense): Response
@@ -128,7 +128,7 @@ class ExpenseController extends Controller
             }
         }
 
-        return back()->with('message', 'Expense successfully updated.');
+        return back()->with('message', 'Expense successfully updated.')->with('title', 'Updated!');
     }
 
     public function delete(Request $request, Expense $expense): RedirectResponse
@@ -145,6 +145,6 @@ class ExpenseController extends Controller
 
         $expense->delete();
 
-        return redirect()->route('expenses.index')->with('message', 'Expense successfully deleted.');
+        return redirect()->route('expenses.index')->with('message', 'Expense successfully deleted.')->with('title', 'Deleted!');
     }
 }
