@@ -9,7 +9,7 @@ const { title, message, status, show } = storeToRefs(store);
 </script>
 
 <template>
-    <div class="fixed w-max max-w-full z-50 mx-auto sm:mr-0 sm:right-10 bottom-10 shadow-xl">
+    <div class="fixed w-max max-w-full z-50 mx-auto left-0 right-0 sm:mr-0 sm:right-10 bottom-10 shadow-xl">
         <Transition name="fade">
             <div
                 v-if="show"
