@@ -20,11 +20,6 @@ export const useAlertStore = defineStore('alert', () => {
         toggleAlert();
     };
 
-    const setMessage = (msg) => {
-        message.value = msg;
-        setTimeout(() => clear(), 3000);
-    };
-
     const show = ref(false);
     const timeoutId = ref(null);
 
@@ -51,8 +46,6 @@ export const useAlertStore = defineStore('alert', () => {
         }
     };
 
-    const clear = () => (message.value = '');
-
     // should avoid onMounted() in pinia
     // https://github.com/vuejs/pinia/discussions/1508
 
@@ -67,7 +60,5 @@ export const useAlertStore = defineStore('alert', () => {
         setErrorMessage,
         show,
         hide,
-        setMessage,
-        clear,
     };
 });
