@@ -70,19 +70,10 @@ class ExpenseController extends Controller
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
         $categories = $request->user()->categories()->orderBy('name')->get();
-
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
-
-        return Inertia::render('Expenses/Index', compact('expenses', 'categories', 'paymentMethods'));
-    }
-
-    public function create(Request $request): Response
-    {
-        $categories = $request->user()->categories()->orderBy('name')->get();
         $currencies = Currency::HTMLSelectOptions();
-        $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
-        return Inertia::render('Expenses/Create', compact('categories', 'currencies', 'paymentMethods'));
+        return Inertia::render('Expenses/Index', compact('expenses', 'categories', 'paymentMethods', 'currencies'));
     }
 
     public function store(ExpenseRequest $request): RedirectResponse

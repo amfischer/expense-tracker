@@ -45,7 +45,6 @@ Route::middleware(['auth', 'verified', 'can:access-application'])->group(functio
     Route::delete('/incomes/{income}', [IncomeController::class, 'delete'])->name('incomes.delete');
 
     Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
-    Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
     Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
     Route::get('/expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
     Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');

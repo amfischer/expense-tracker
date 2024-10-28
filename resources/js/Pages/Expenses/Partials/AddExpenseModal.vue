@@ -1,5 +1,6 @@
 <script setup>
 import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from '@headlessui/vue';
+import Modal from '@/Components/Modal.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -7,36 +8,45 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import NumberInput from '@/Components/Forms/NumberInput.vue';
 import Textarea from '@/Components/Forms/Textarea.vue';
-import Modal from '@/Components/Modal.vue';
+import SelectMenu from '@/Components/Forms/SelectMenu.vue';
+import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
+import { inject } from 'vue';
 
 const show = defineModel({
     type: Boolean,
     default: false,
 });
 
+const categories = inject('categories');
+const paymentMethods = inject('paymentMethods');
+const currencies = inject('currencies');
+
 const form = useForm({
-    source: '',
+    payee: '',
     amount: '',
-    payment_date: '',
+    currency: currencies[0].id,
+    payment_method: 'none',
+    is_business_expense: false,
+    transaction_date: '',
     effective_date: '',
-    is_earned_income: false,
+    category_id: categories[0].id,
     notes: '',
 });
 
 const alert = useAlertStore();
 
 const create = () => {
-    form.post(route('incomes.store'), {
+    form.post(route('expenses.store'), {
         preserveScroll: true,
         onSuccess: (resp) => {
             show.value = false;
             form.reset();
             alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
         },
-        onError: (errors) => {
-            console.error('errors', errors);
+        onError: () => {
+            console.error('errors', form.errors);
         },
     });
 };
@@ -51,7 +61,7 @@ const cancel = () => {
 <template>
     <Modal :show="show" max-width="xl" @close="show = false">
         <template #header>
-            <span>Add Income</span>
+            <span>Add Expense</span>
         </template>
         <form @submit.prevent="create">
             <div class="space-y-6">
@@ -61,16 +71,28 @@ const cancel = () => {
                     <div class="mt-6">
                         <div class="mb-6">
                             <div class="sm:flex sm:items-center">
-                                <InputLabel for="source" value="Source" class="grow" />
+                                <InputLabel for="payee" value="Payee" class="grow" />
                                 <TextInput
-                                    id="source"
+                                    id="payee"
                                     type="text"
                                     class="block w-full mt-1 sm:w-[300px] sm:mt-0"
-                                    v-model="form.source"
+                                    v-model="form.payee"
                                     required
                                     autofocus />
                             </div>
-                            <InputError class="mt-2 w-full sm:w-[300px] sm:ml-auto" :message="form.errors.source" />
+                            <InputError class="mt-2 w-full sm:w-[300px] sm:ml-auto" :message="form.errors.payee" />
+                        </div>
+                        <div class="mb-6">
+                            <div class="sm:flex sm:items-center">
+                                <InputLabel for="category" value="Category" class="grow" />
+                                <SelectMenu
+                                    :options="categories"
+                                    v-model="form.category_id"
+                                    class="mt-1 sm:w-[300px] sm:mt-0" />
+                            </div>
+                            <InputError
+                                class="mt-2 w-full sm:w-[300px] sm:ml-auto"
+                                :message="form.errors.category_id" />
                         </div>
                         <div class="mb-6">
                             <div class="sm:flex sm:items-center">
@@ -87,23 +109,33 @@ const cancel = () => {
                         </div>
                         <div class="mb-6">
                             <div class="sm:flex sm:items-center">
-                                <InputLabel for="payment_date" value="Payment Date" class="grow" />
+                                <InputLabel for="currency" value="Currency" class="grow" />
+                                <SelectMenuBasic
+                                    :options="currencies"
+                                    v-model="form.currency"
+                                    class="mt-1 sm:w-[300px] sm:mt-0" />
+                            </div>
+                            <InputError class="mt-2 w-full sm:w-[300px] sm:ml-auto" :message="form.errors.currency" />
+                        </div>
+                        <div class="mb-6">
+                            <div class="sm:flex sm:items-center">
+                                <InputLabel for="date" value="Transaction Date" class="grow" />
                                 <TextInput
-                                    id="payment_date"
+                                    id="date"
                                     type="date"
                                     class="block w-full mt-1 sm:w-[300px] sm:mt-0"
-                                    v-model="form.payment_date"
+                                    v-model="form.transaction_date"
                                     required />
                             </div>
                             <InputError
                                 class="mt-2 w-full sm:w-[300px] sm:ml-auto"
-                                :message="form.errors.payment_date" />
+                                :message="form.errors.transaction_date" />
                         </div>
                         <div class="mb-6">
                             <div class="sm:flex sm:items-center">
-                                <InputLabel for="effective_date" value="Effective Date" class="grow" />
+                                <InputLabel for="date" value="Effective Date" class="grow" />
                                 <TextInput
-                                    id="effective_date"
+                                    id="date"
                                     type="date"
                                     class="block w-full mt-1 sm:w-[300px] sm:mt-0"
                                     v-model="form.effective_date"
@@ -120,30 +152,44 @@ const cancel = () => {
                     <h4 class="text-lg text-gray-900">Optional Fields</h4>
 
                     <div class="mt-6 space-y-6">
+                        <div class="mb-6">
+                            <div class="sm:flex sm:items-center">
+                                <InputLabel for="payment_method" value="Payment Method" class="grow" />
+                                <SelectMenuBasic
+                                    :options="paymentMethods"
+                                    v-model="form.payment_method"
+                                    class="mt-1 sm:w-[300px] sm:mt-0" />
+                            </div>
+                            <InputError
+                                class="mt-2 w-full sm:w-[300px] sm:ml-auto"
+                                :message="form.errors.payment_method" />
+                        </div>
+
                         <SwitchGroup as="div" class="flex items-center justify-between">
                             <span class="flex flex-grow flex-col">
                                 <SwitchLabel as="span" class="text-sm font-medium text-gray-700" passive>
-                                    Earned Income
+                                    Business Expense
                                 </SwitchLabel>
                                 <SwitchDescription as="span" class="text-sm text-gray-500">
-                                    Track earned income for tax purposes & reporting.
+                                    Track business expenses for tax purposes & reporting.
                                 </SwitchDescription>
                             </span>
                             <Switch
-                                v-model="form.is_earned_income"
+                                v-model="form.is_business_expense"
                                 :class="[
-                                    form.is_earned_income ? 'bg-indigo-600' : 'bg-gray-200',
+                                    form.is_business_expense ? 'bg-indigo-600' : 'bg-gray-200',
                                     'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
                                 ]">
                                 <span
                                     aria-hidden="true"
                                     :class="[
-                                        form.is_earned_income ? 'translate-x-5' : 'translate-x-0',
+                                        form.is_business_expense ? 'translate-x-5' : 'translate-x-0',
                                         'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
                                     ]" />
                             </Switch>
                         </SwitchGroup>
-                        <InputError class="mt-2" :message="form.errors.is_earned_income" />
+                        <InputError class="mt-2" :message="form.errors.is_business_expense" />
+
                         <div>
                             <InputLabel for="notes" value="Notes" />
                             <Textarea id="notes" class="mt-1 block w-full" rows="5" v-model="form.notes" />

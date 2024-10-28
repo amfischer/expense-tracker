@@ -10,10 +10,12 @@ const props = defineProps({
     expenses: Object,
     categories: Array,
     paymentMethods: Array,
+    currencies: Array,
 });
 
 provide('categories', props.categories);
 provide('paymentMethods', props.paymentMethods);
+provide('currencies', props.currencies);
 </script>
 
 <template>

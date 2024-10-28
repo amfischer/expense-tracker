@@ -40,7 +40,7 @@ const showCreateModal = ref(false);
             <p class="mt-2 text-sm text-gray-700">A table of all recorded income.</p>
         </div>
         <div class="mt-3 sm:mt-0 sm:flex-none">
-            <PrimaryButton @click.prevent="showCreateModal = true">Add income</PrimaryButton>
+            <PrimaryButton @click="showCreateModal = true">Add income</PrimaryButton>
         </div>
     </div>
 

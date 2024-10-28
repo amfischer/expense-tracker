@@ -13,9 +13,10 @@ import TableHeader from '@/Components/Tables/TableHeader.vue';
 import FilterDialog from '@/Components/Tables/FilterDialog.vue';
 import FilterOption from '@/Components/Tables/FilterOption.vue';
 import DatePicker from '@/Components/Tables/DatePicker.vue';
-import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ShowReceiptModal from '../ShowReceiptModal.vue';
+import AddExpenseModal from '../AddExpenseModal.vue';
 import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
 import { Link } from '@inertiajs/vue3';
@@ -39,6 +40,8 @@ const pm = paymentMethods.reduce((obj, method) => {
 
 const showFilters = ref(false);
 
+const showCreateModal = ref(false);
+
 const showReceipt = ref(false);
 const selectedExpense = ref(null);
 const selectedReceipt = ref(null);
@@ -56,7 +59,7 @@ const toggleReceiptModal = (expense) => {
             <p class="mt-2 text-sm text-gray-700">A searchable and filterable table of all recorded expenses.</p>
         </div>
         <div class="mt-3 sm:mt-0 sm:flex-none">
-            <ButtonLink :href="route('expenses.create')">Add expense</ButtonLink>
+            <PrimaryButton @click="showCreateModal = true">Add expense</PrimaryButton>
         </div>
     </div>
 
@@ -207,6 +210,8 @@ const toggleReceiptModal = (expense) => {
     </table>
 
     <Pagination :paginator="expenses" />
+
+    <AddExpenseModal v-model="showCreateModal" />
 
     <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false">
         <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />
