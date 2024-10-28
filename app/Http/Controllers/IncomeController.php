@@ -17,7 +17,7 @@ use Inertia\Response;
 
 class IncomeController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'query'    => ['nullable', new AlphaSpace],
@@ -70,7 +70,7 @@ class IncomeController extends Controller
 
         $request->user()->incomes()->create($data);
 
-        return back()->with('message', 'Income successfully created.');
+        return back()->with('message', 'Income successfully created.')->with('title', 'Created!');
     }
 
     public function edit(Income $income): Response
@@ -95,7 +95,7 @@ class IncomeController extends Controller
 
         $income->update($data);
 
-        return back()->with('message', 'Income successfully updated.');
+        return back()->with('message', 'Income successfully updated.')->with('title', 'Updated!');
     }
 
     public function delete(Request $request, Income $income): Response|RedirectResponse
@@ -108,6 +108,6 @@ class IncomeController extends Controller
 
         $income->delete();
 
-        return redirect()->route('incomes.index')->with('message', 'Income successfully deleted.');
+        return redirect()->route('incomes.index')->with('message', 'Income successfully deleted.')->with('title', 'Deleted!');
     }
 }

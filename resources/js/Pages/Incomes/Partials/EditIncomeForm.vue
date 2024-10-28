@@ -28,7 +28,7 @@ const update = () => {
     form.patch(route('incomes.update', props.income.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
         },
         onError: () => {
             console.log('errors', form.errors);

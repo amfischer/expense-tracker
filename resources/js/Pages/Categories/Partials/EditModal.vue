@@ -34,7 +34,7 @@ const updateCategory = () => {
     form.put(route('categories.update', categoryStore.selectedCategory.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
             closeModal();
         },
         onError: () => {

@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { useAlertStore } from '@/Stores/alert';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -18,10 +19,15 @@ const form = useForm({
 
 const showConfirmModal = ref(false);
 
+const alert = useAlertStore();
+
 const deleteExpense = () => {
     form.delete(route('expenses.delete', props.expense.id), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: (resp) => {
+            closeModal();
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
+        },
         onError: (err) => {
             console.log('expense delete error', err);
         },

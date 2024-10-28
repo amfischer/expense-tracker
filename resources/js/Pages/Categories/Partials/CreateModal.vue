@@ -26,7 +26,7 @@ const create = () => {
     form.post(route('categories.store'), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
             closeModal();
         },
         onError: () => {

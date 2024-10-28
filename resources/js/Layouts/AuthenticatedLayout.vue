@@ -1,6 +1,6 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import AlertSuccess from '@/Components/Alerts/Success.vue';
+import Alert from '@/Components/Alert.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -46,7 +46,9 @@ router.on('navigate', (e) => {
                                     :active="route().current('categories.index')">
                                     Categories
                                 </NavLink>
-                                <NavLink :href="route('incomes.index')" :active="route().current('incomes.index')">
+                                <NavLink
+                                    :href="route('incomes.index', { sort_by: 'effective_date', sort_dir: 'desc' })"
+                                    :active="route().current('incomes.index')">
                                     Incomes
                                 </NavLink>
                             </div>
@@ -135,7 +137,9 @@ router.on('navigate', (e) => {
                             :active="route().current('categories.index')">
                             Categories
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('incomes.index')" :active="route().current('incomes.index')">
+                        <ResponsiveNavLink
+                            :href="route('incomes.index', { sort_by: 'effective_date', sort_dir: 'desc' })"
+                            :active="route().current('incomes.index')">
                             Incomes
                         </ResponsiveNavLink>
                     </div>
@@ -171,7 +175,7 @@ router.on('navigate', (e) => {
                 <slot />
             </main>
 
-            <AlertSuccess class="fixed w-full md:w-96 bottom-10 right-0 left-0 py-12 px-4 md:left-auto md:right-4" />
+            <Alert />
         </div>
     </div>
 </template>
