@@ -40,7 +40,7 @@ test('users can create new expenses', function () {
 
     // Expense::class includes $appends property to show custom attributes in JSON response,
     // but we don't want those extra attributes when testing database rows
-    unset($payload['amount_pretty'], $payload['effective_date_pretty'], $payload['has_receipt']);
+    unset($payload['amount_pretty'], $payload['effective_date_pretty'], $payload['has_receipt'], $payload['notes_raw']);
 
     $this->assertDatabaseHas('expenses', $payload);
 

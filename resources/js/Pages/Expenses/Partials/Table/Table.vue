@@ -41,6 +41,19 @@ const pm = paymentMethods.reduce((obj, method) => {
 const showFilters = ref(false);
 
 const showCreateModal = ref(false);
+const copiedProperties = ref({});
+const createCopy = (expense) => {
+    copiedProperties.value = {
+        payee: expense.payee,
+        category_id: expense.category_id,
+        amount: expense.amount / 100,
+        payment_method: expense.payment_method,
+        is_business_expense: expense.is_business_expense,
+        notes: expense.notes_raw,
+    };
+
+    showCreateModal.value = true;
+};
 
 const showReceipt = ref(false);
 const selectedExpense = ref(null);
@@ -87,6 +100,9 @@ const toggleReceiptModal = (expense) => {
                 <th scope="col" class="relative p-4 w-14">
                     <span class="sr-only">Edit</span>
                 </th>
+                <th scope="col" class="relative p-4 w-14">
+                    <span class="sr-only">Copy</span>
+                </th>
             </tr>
         </thead>
 
@@ -94,6 +110,7 @@ const toggleReceiptModal = (expense) => {
             <tr>
                 <td></td>
                 <td colspan="4" class="py-3 text-md text-gray-500">No expense data found.</td>
+                <td></td>
             </tr>
         </tbody>
 
@@ -145,6 +162,14 @@ const toggleReceiptModal = (expense) => {
                                 <span class="inline-block hover:underline">Edit</span>
                             </Link>
                         </td>
+                        <td
+                            class="hidden sm:table-cell sm:align-baseline lg:align-middle py-3 text-sm font-medium md:w-14">
+                            <button
+                                class="rounded px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                @click="createCopy(expense)">
+                                Copy
+                            </button>
+                        </td>
                     </tr>
                     <tr class="border-none">
                         <td></td>
@@ -194,13 +219,18 @@ const toggleReceiptModal = (expense) => {
                                 </DisclosurePanel>
                             </transition>
                         </td>
-                        <td colspan="3" class="align-baseline">
+                        <td colspan="4" class="align-baseline">
                             <DisclosurePanel class="sm:hidden leading-4">
                                 <Link
                                     :href="route('expenses.edit', expense.id)"
-                                    class="text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
+                                    class="block mb-6 text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
                                     Edit
                                 </Link>
+                                <button
+                                    class="rounded px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                    @click="createCopy(expense)">
+                                    Copy
+                                </button>
                             </DisclosurePanel>
                         </td>
                     </tr>
@@ -211,7 +241,7 @@ const toggleReceiptModal = (expense) => {
 
     <Pagination :paginator="expenses" />
 
-    <AddExpenseModal v-model="showCreateModal" />
+    <AddExpenseModal v-model:show="showCreateModal" v-model:copy="copiedProperties" />
 
     <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false">
         <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />

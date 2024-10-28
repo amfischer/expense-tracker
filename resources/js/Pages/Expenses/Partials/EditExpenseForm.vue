@@ -28,7 +28,7 @@ const form = useForm({
     transaction_date: props.expense.transaction_date,
     effective_date: props.expense.effective_date,
     category_id: props.expense.category_id,
-    notes: props.expense.notes,
+    notes: props.expense.notes_raw,
 });
 
 const alert = useAlertStore();

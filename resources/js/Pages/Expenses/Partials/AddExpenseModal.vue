@@ -12,11 +12,16 @@ import SelectMenu from '@/Components/Forms/SelectMenu.vue';
 import SelectMenuBasic from '@/Components/Forms/SelectMenuBasic.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useAlertStore } from '@/Stores/alert';
-import { inject } from 'vue';
+import { inject, watch } from 'vue';
 
-const show = defineModel({
+const show = defineModel('show', {
     type: Boolean,
     default: false,
+});
+
+const copy = defineModel('copy', {
+    type: Object,
+    default: {},
 });
 
 const categories = inject('categories');
@@ -33,6 +38,19 @@ const form = useForm({
     effective_date: '',
     category_id: categories[0].id,
     notes: '',
+});
+
+watch(show, (newValue, oldValue) => {
+    if (newValue === true && Object.keys(copy.value).length > 0) {
+        Object.entries(copy.value).forEach(([key, value]) => {
+            form[key] = value;
+        });
+    }
+
+    if (newValue === false) {
+        form.reset();
+        copy.value = {};
+    }
 });
 
 const alert = useAlertStore();
