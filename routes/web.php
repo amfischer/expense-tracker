@@ -39,7 +39,6 @@ Route::middleware(['auth', 'verified', 'can:access-application'])->group(functio
     Route::get('/dashboard/summary-details', [DashboardController::class, 'getSummaryDetails'])->name('dashboard.summary.details');
 
     Route::get('/incomes', [IncomeController::class, 'index'])->name('incomes.index');
-    Route::get('/incomes/create', [IncomeController::class, 'create'])->name('incomes.create');
     Route::post('/incomes', [IncomeController::class, 'store'])->name('incomes.store');
     Route::get('/incomes/{income}/edit', [IncomeController::class, 'edit'])->name('incomes.edit');
     Route::patch('/incomes/{income}', [IncomeController::class, 'update'])->name('incomes.update');

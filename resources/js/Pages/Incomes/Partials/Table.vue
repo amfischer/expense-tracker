@@ -9,11 +9,12 @@ import {
     ChevronDownIcon,
 } from '@heroicons/vue/20/solid';
 import SearchBox from '@/Components/Tables/SearchBox.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TableHeader from '@/Components/Tables/TableHeader.vue';
 import FilterDialog from '@/Components/Tables/FilterDialog.vue';
 import DatePicker from '@/Components/Tables/DatePicker.vue';
-import ButtonLink from '@/Components/Buttons/ButtonLink.vue';
 import Pagination from '@/Components/Pagination.vue';
+import AddIncomeModal from './AddIncomeModal.vue';
 import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
 import { Link } from '@inertiajs/vue3';
@@ -28,6 +29,8 @@ const scout = reactive(useScoutHttpGet({ url: route('incomes.index') }));
 const { df } = useDateFormatter();
 
 const showFilters = ref(false);
+
+const showCreateModal = ref(false);
 </script>
 
 <template>
@@ -37,7 +40,7 @@ const showFilters = ref(false);
             <p class="mt-2 text-sm text-gray-700">A table of all recorded income.</p>
         </div>
         <div class="mt-3 sm:mt-0 sm:flex-none">
-            <ButtonLink :href="route('incomes.create')">Add income</ButtonLink>
+            <PrimaryButton @click.prevent="showCreateModal = true">Add income</PrimaryButton>
         </div>
     </div>
 
@@ -161,6 +164,8 @@ const showFilters = ref(false);
     </table>
 
     <Pagination :paginator="incomes" />
+
+    <AddIncomeModal v-model="showCreateModal" />
 
     <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false">
         <DatePicker :scout="scout" />

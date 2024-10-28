@@ -22,10 +22,10 @@ const maxWidth = computed(() => (props.receipt?.is_image ? '2xl' : '6xl'));
 
 const panelClasses = computed(() => {
     if (props.receipt?.is_image) {
-        return 'overflow-y-scroll p-0';
+        return 'p-0';
     }
 
-    return 'h-screen p-0';
+    return 'h-[calc(100vh-4rem)] p-0';
 });
 </script>
 

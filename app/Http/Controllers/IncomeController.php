@@ -52,11 +52,6 @@ class IncomeController extends Controller
         return Inertia::render('Incomes/Index', compact('incomes'));
     }
 
-    public function create(): Response
-    {
-        return Inertia::render('Incomes/Create');
-    }
-
     public function store(Request $request): Response|RedirectResponse
     {
         $data = $request->validate([
