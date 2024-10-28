@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
         $request->user()->categories()->create($validated);
 
-        return back()->with('message', 'Category successfully created.');
+        return back()->with('message', 'Category successfully created.')->with('title', 'Created!');
     }
 
     /**
@@ -59,7 +59,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return back()->with('message', 'Category successfully updated.');
+        return back()->with('message', 'Category successfully updated.')->with('title', 'Updated!');
     }
 
     /**
@@ -78,11 +78,11 @@ class CategoryController extends Controller
         if ($category->expenses_count !== 0) {
             $count = $category->expenses_count;
 
-            return back()->withErrors(['message' => 'category is linked to '.$count.' expenses. Remove these relationships before deleting.']);
+            return back()->withErrors(['message' => 'category is linked to ' . $count . ' expenses. Remove these relationships before deleting.']);
         }
 
         $category->delete();
 
-        return redirect()->route('categories.index')->with('message', 'Category successfully deleted.');
+        return redirect()->route('categories.index')->with('message', 'Category successfully deleted.')->with('title', 'Deleted!');
     }
 }
