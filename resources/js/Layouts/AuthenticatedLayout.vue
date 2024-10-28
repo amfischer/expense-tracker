@@ -46,7 +46,9 @@ router.on('navigate', (e) => {
                                     :active="route().current('categories.index')">
                                     Categories
                                 </NavLink>
-                                <NavLink :href="route('incomes.index')" :active="route().current('incomes.index')">
+                                <NavLink
+                                    :href="route('incomes.index', { sort_by: 'effective_date', sort_dir: 'desc' })"
+                                    :active="route().current('incomes.index')">
                                     Incomes
                                 </NavLink>
                             </div>
@@ -135,7 +137,9 @@ router.on('navigate', (e) => {
                             :active="route().current('categories.index')">
                             Categories
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('incomes.index')" :active="route().current('incomes.index')">
+                        <ResponsiveNavLink
+                            :href="route('incomes.index', { sort_by: 'effective_date', sort_dir: 'desc' })"
+                            :active="route().current('incomes.index')">
                             Incomes
                         </ResponsiveNavLink>
                     </div>

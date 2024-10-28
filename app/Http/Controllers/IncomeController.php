@@ -17,7 +17,7 @@ use Inertia\Response;
 
 class IncomeController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'query'    => ['nullable', new AlphaSpace],
