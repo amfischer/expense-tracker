@@ -1,6 +1,6 @@
 <script setup>
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import AlertSuccess from '@/Components/Alerts/Success.vue';
+import Alert from '@/Components/Alert.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -171,7 +171,7 @@ router.on('navigate', (e) => {
                 <slot />
             </main>
 
-            <AlertSuccess class="fixed w-full md:w-96 bottom-10 right-0 left-0 py-12 px-4 md:left-auto md:right-4" />
+            <Alert />
         </div>
     </div>
 </template>

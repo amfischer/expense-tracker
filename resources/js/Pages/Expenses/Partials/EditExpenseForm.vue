@@ -36,7 +36,7 @@ const update = () => {
     form.patch(route('expenses.update', props.expense.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
-            alert.setMessage(resp.props.flash.message);
+            alert.setSuccessMessage(resp.props.flash.message);
         },
         onError: () => {
             console.log('errors', form.errors);
