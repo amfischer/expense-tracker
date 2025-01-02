@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PaymentMethod;
 use App\Models\User;
+use App\Services\ExpenseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,28 +12,16 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, ExpenseService $expenseService): Response
     {
-        /** @var User $user */
-        $user = $request->user();
-
-        $reports = [
-            array_merge(['label' => '2024'], $user->getExpenseSummary(now()->startOfYear(), now()->endOfYear())),
-            array_merge(['label' => now()->format('F Y')], $user->getExpenseSummary(now()->startOfMonth(), now()->endOfMonth())),
+        $totals = [
+            $expenseService->getMonthlyTotals($request->user(), '2025'),
+            $expenseService->getMonthlyTotals($request->user(), '2024'),
         ];
-
-        $currentMonth = now()->month;
-
-        for ($i = 1; $i < $currentMonth; $i++) {
-            $reports[] = array_merge(
-                ['label' => now()->subMonthsWithoutOverflow($i)->format('F Y')],
-                $user->getExpenseSummary(now()->subMonthsWithoutOverflow($i)->startOfMonth(), now()->subMonthsWithoutOverflow($i)->endOfMonth())
-            );
-        }
 
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
-        return Inertia::render('Dashboard/Index', compact('reports', 'paymentMethods'));
+        return Inertia::render('Dashboard/Index', compact('totals', 'paymentMethods'));
     }
 
     public function getSummaryDetails(Request $request): JsonResponse

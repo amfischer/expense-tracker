@@ -1,16 +1,18 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 import Container from '@/Components/Container.vue';
+import TotalsSummaryCard from './Partials/TotalsSummaryCard.vue';
 import Report from './Partials/Report.vue';
+import BarChart from './Partials/BarChart.vue';
+import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
-import BarChart from './Partials/BarChart.vue';
 
 defineOptions({ layout: AuthenticatedLayout });
 
 const props = defineProps({
     reports: Object,
+    totals: Object,
     paymentMethods: Array,
 });
 
@@ -56,41 +58,17 @@ const toggleReport = (index) => {
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
     </template>
 
-    <Container class="py-12">
+    <Container class="mt-12 mb-5">
         <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
-        <dl class="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:gap-5 lg:grid-cols-4">
-            <div
-                v-for="(report, index) in reports"
-                :key="index"
-                :class="{ 'border-2 border-red-400': selectedReportIndex === index }"
-                class="overflow-hidden rounded-lg bg-white shadow cursor-pointer px-4 py-5 sm:px-6 sm:py-3"
-                @click="toggleReport(index)">
-                <div class="flex items-center justify-between">
-                    <dt class="truncate text-sm font-medium text-gray-500">{{ report.label }}</dt>
-                    <div
-                        class="bg-blue-200 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
-                        {{ report.count }}
-                    </div>
-                </div>
-                <dd class="mt-1 tracking-tight text-gray-900">
-                    <div class="flex items-center justify-between">
-                        <span class="text-md">Expenses</span>
-                        <span class="font-semibold">{{ report.total_expenses }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-md">Incomes</span>
-                        <span class="font-semibold">{{ report.total_income }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-md"></span>
-                        <span
-                            class="font-semibold text-red-500"
-                            :class="report.is_loss ? 'text-red-600' : 'text-emerald-600'">
-                            {{ report.total_difference }}
-                        </span>
-                    </div>
-                </dd>
-            </div>
+    </Container>
+
+    <Container class="mb-12" v-for="(year, index) in totals" :key="index">
+        <dl class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+            <TotalsSummaryCard :report="year.year" />
+            <div></div>
+            <div></div>
+            <div></div>
+            <TotalsSummaryCard v-for="(month, i) in year.months" :key="i" :report="month" />
         </dl>
     </Container>
 

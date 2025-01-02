@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Events\UserCreated;
-use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -72,36 +71,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
-    }
-
-    public function getExpenseSummary(Carbon $from, Carbon $to): array
-    {
-        $dateRange = [$from->format('Y-m-d'), $to->format('Y-m-d')];
-
-        $expenses = $this->expenses()->with('category')->whereBetween('effective_date', $dateRange)->get();
-
-        $expenses_total = $expenses->reduce(function (Money $carry, Expense $item) {
-            return $carry->add(Money::USD($item->amount));
-        }, Money::USD(0));
-
-        $incomes = $this->incomes()->whereBetween('effective_date', $dateRange)->get();
-
-        $incomes_total = $incomes->reduce(function (Money $carry, Income $item) {
-            return $carry->add(Money::USD($item->amount));
-        }, Money::USD(0));
-
-        $total_difference = $incomes_total->subtract($expenses_total);
-        $isLoss = $incomes_total->lessThan($expenses_total);
-
-        return [
-            'total_expenses'   => app(IntlMoneyFormatter::class)->format($expenses_total),
-            'total_income'     => app(IntlMoneyFormatter::class)->format($incomes_total),
-            'total_difference' => app(IntlMoneyFormatter::class)->format($total_difference),
-            'is_loss'          => $isLoss,
-            'count'            => $expenses->count(),
-            'date_from'        => $dateRange[0],
-            'date_to'          => $dateRange[1],
-        ];
     }
 
     public function getExpenseSummaryDetails(string $from, string $to): array
