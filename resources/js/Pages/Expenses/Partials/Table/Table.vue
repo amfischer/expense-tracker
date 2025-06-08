@@ -8,15 +8,19 @@ import {
     ChevronUpIcon,
     InformationCircleIcon,
 } from '@heroicons/vue/20/solid';
+
 import SearchBox from '@/Components/Tables/SearchBox.vue';
 import TableHeader from '@/Components/Tables/TableHeader.vue';
 import FilterDialog from '@/Components/Tables/FilterDialog.vue';
 import FilterOption from '@/Components/Tables/FilterOption.vue';
+import MiscFilters from '@/Components/Tables/MiscFilters.vue';
 import DatePicker from '@/Components/Tables/DatePicker.vue';
 import Pagination from '@/Components/Pagination.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+
 import ShowReceiptModal from '../ShowReceiptModal.vue';
 import AddExpenseModal from '../AddExpenseModal.vue';
+
 import { useScoutHttpGet } from '@/Composables/scoutHttpGet';
 import { useDateFormatter } from '@/Composables/dateFormatter';
 import { Link } from '@inertiajs/vue3';
@@ -246,6 +250,7 @@ const toggleReceiptModal = (expense) => {
     <FilterDialog :open="showFilters" :scout="scout" @close="showFilters = false">
         <FilterOption title="Categories" field="category_ids" :options="categories" :scout="scout" />
         <FilterOption title="Payment Methods" field="payment_methods" :options="paymentMethods" :scout="scout" />
+        <MiscFilters :scout="scout" />
         <DatePicker :scout="scout" />
     </FilterDialog>
     <ShowReceiptModal v-model="showReceipt" :expense="selectedExpense" :receipt="selectedReceipt" />

@@ -30,13 +30,14 @@ class ExpenseController extends Controller
             'sort_dir'                  => ['nullable', Rule::in(['asc', 'desc'])],
             'date'                      => 'nullable|array|size:2',
             'date.*'                    => 'date_format:Y-m-d',
-            'filters'                   => 'nullable|array:category_ids,payment_methods',
+            'filters'                   => 'nullable|array:category_ids,payment_methods,business_expenses',
             'filters.category_ids.*'    => [
                 'numeric',
                 Rule::exists('categories', 'id')->where(function (Builder $query) use ($request) {
                     return $query->where('user_id', $request->user()->id);
                 })],
             'filters.payment_methods.*' => Rule::in(PaymentMethod::values()),
+            'filters.business_expenses' => 'boolean',
         ]);
 
         if ($validator->fails()) {
@@ -61,6 +62,10 @@ class ExpenseController extends Controller
 
         if ($data['filters']['payment_methods'] ?? false) {
             $query->whereIn('payment_method', $data['filters']['payment_methods']);
+        }
+
+        if ($data['filters']['business_expenses'] ?? false) {
+            $query->where('is_business_expense', 1);
         }
 
         if ($data['sort_by'] ?? false) {
