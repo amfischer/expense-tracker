@@ -16,19 +16,17 @@ services:
             - mysql-data:/var/lib/mysql
             - ./docker/mysql/init:/docker-entrypoint-initdb.d
         restart: unless-stopped
-    
+
     nginx:
         container_name: "${COMPOSE_PROJECT_NAME}-nginx"
-        build:
-            context: docker/nginx
-            tags: # required for Docker buildx/bake to tag properly
-                - "${COMPOSE_PROJECT_NAME}-nginx"
+        image: nginx:1.27.0-alpine3.19
         ports:
             - "80:80"
             - "443:443"
         working_dir: /app
         volumes:
             - .:/app
+            - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:
             - php-fpm
         restart: unless-stopped
