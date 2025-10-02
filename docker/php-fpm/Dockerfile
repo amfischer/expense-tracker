@@ -22,16 +22,17 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install zip
 
 # install redis
-RUN pecl install redis-6.0.2 && docker-php-ext-enable redis
+RUN pecl install redis-6.2.0 && docker-php-ext-enable redis
 
 # install xdebug
-RUN pecl install xdebug-3.3.2 && docker-php-ext-enable xdebug
+RUN pecl install xdebug-3.4.3 && docker-php-ext-enable xdebug
 
 # install composer from the composer image
-COPY --from=composer:2.7.7 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.8.9 /usr/bin/composer /usr/bin/composer
 
 # copy ini settings
 COPY php.ini /usr/local/etc/php/php.ini
+COPY docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Create system user to run Composer and Artisan Commands
 RUN  addgroup -g $uid $user \
