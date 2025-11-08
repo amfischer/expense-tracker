@@ -51,8 +51,8 @@ services:
 
     node:
         container_name: "${COMPOSE_PROJECT_NAME}-node"
-        image: node:20.19.3-alpine3.21
-        user: node
+        build:
+            context: docker/node
         working_dir: /app
         init: true
         volumes:
