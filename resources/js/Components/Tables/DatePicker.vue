@@ -1,7 +1,5 @@
 <script setup>
 import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, startOfWeek, endOfWeek } from 'date-fns';
-import '@vuepic/vue-datepicker/dist/main.css';
-import VueDatePicker from '@vuepic/vue-datepicker';
 import { useWindowSize } from '@vueuse/core';
 import { ref } from 'vue';
 
@@ -40,10 +38,10 @@ const { width } = useWindowSize();
         <VueDatePicker
             v-model="scout.form.date"
             model-type="yyyy-MM-dd"
-            :enable-time-picker="false"
+            :time-config="{ enableTimePicker: false }"
             range
             :preset-dates="presetDates"
-            :teleport-center="width > 600"
+            :centered="width > 600"
             placeholder="Select Date Range"
             @update:model-value="scout.search" />
     </div>
