@@ -1,4 +1,4 @@
-FROM php:8.3.11-fpm-alpine3.20
+FROM php:8.3.27-alpine3.22
 
 ARG user
 ARG uid
@@ -28,7 +28,7 @@ RUN pecl install redis-6.2.0 && docker-php-ext-enable redis
 RUN pecl install xdebug-3.4.3 && docker-php-ext-enable xdebug
 
 # install composer from the composer image
-COPY --from=composer:2.8.9 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.8.12 /usr/bin/composer /usr/bin/composer
 
 # copy ini settings
 COPY php.ini /usr/local/etc/php/php.ini
