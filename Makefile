@@ -23,6 +23,11 @@ composer: ## Run composer install (optional c=SPECIFIC_PACKAGE)
 pint:
 	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "./vendor/bin/pint --dirty"
 
+.PHONY: artisan
+a ?= about
+artisan:
+	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "php artisan ${a}"
+
 tinker:
 	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "php artisan tinker"
 
