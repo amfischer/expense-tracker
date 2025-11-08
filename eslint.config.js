@@ -1,10 +1,11 @@
+import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
 import pluginVue from 'eslint-plugin-vue';
 import stylistic from '@stylistic/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier';
 import globals from 'globals';
 
-export default [
+export default defineConfig([
     // Apply recommended rules
     js.configs.recommended,
 
@@ -14,8 +15,10 @@ export default [
     // Prettier config to disable conflicting rules
     prettierConfig,
 
-    // Global configuration
+    // Project configuration
     {
+        files: ['resources/js/**/*.{js,vue}'],
+
         plugins: {
             '@stylistic': stylistic,
         },
@@ -45,15 +48,7 @@ export default [
                 max: 1,
             }],
         },
-    },
 
-    // Files to lint
-    {
-        files: ['resources/js/**/*.{js,vue}'],
-    },
-
-    // Ignore patterns (from .gitignore and build artifacts)
-    {
         ignores: [
             'node_modules/',
             'vendor/',
@@ -65,4 +60,4 @@ export default [
             '*.log',
         ],
     },
-];
+]);
