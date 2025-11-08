@@ -1,4 +1,4 @@
-FROM php:8.3.27-alpine3.22
+FROM php:8.3.27-fpm-alpine3.22
 
 ARG user
 ARG uid
