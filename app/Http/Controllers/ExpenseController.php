@@ -94,6 +94,7 @@ class ExpenseController extends Controller
     {
         Gate::authorize('view', $expense);
 
+        // TODO after L12 upgrade try $request->session()->previousRoute()
         if (str_contains(url()->previous(), 'expenses') && ! str_contains(url()->previous(), '/edit')) {
             $request->session()->put('url.intended.expenses', url()->previous());
         }
