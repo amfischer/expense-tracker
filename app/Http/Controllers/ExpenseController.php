@@ -90,9 +90,13 @@ class ExpenseController extends Controller
         return back()->with('message', 'Expense successfully created.')->with('title', 'Created!');
     }
 
-    public function edit(Expense $expense): Response
+    public function edit(Request $request, Expense $expense): Response
     {
         Gate::authorize('view', $expense);
+
+        if (str_contains(url()->previous(), 'expenses') && ! str_contains(url()->previous(), '/edit')) {
+            $request->session()->put('url.intended.expenses', url()->previous());
+        }
 
         $categories = $expense->user->categories()->orderBy('name')->get();
         $currencies = Currency::HTMLSelectOptions();
@@ -100,7 +104,13 @@ class ExpenseController extends Controller
 
         $receipt = $expense->receipts()->first();
 
-        return Inertia::render('Expenses/Edit', compact('expense', 'categories', 'currencies', 'paymentMethods', 'receipt'));
+        return Inertia::render('Expenses/Edit', [
+            'expense'        => $expense,
+            'categories'     => $categories,
+            'currencies'     => $currencies,
+            'paymentMethods' => $paymentMethods,
+            'receipt'        => $receipt,
+        ]);
     }
 
     public function update(ExpenseRequest $request, Expense $expense): RedirectResponse
@@ -124,7 +134,9 @@ class ExpenseController extends Controller
             }
         }
 
-        return back()->with('message', 'Expense successfully updated.')->with('title', 'Updated!');
+        $redirectUrl = $request->session()->pull('url.intended.expenses', route('expenses.index'));
+
+        return redirect($redirectUrl)->with('message', 'Expense successfully updated.')->with('title', 'Updated!');
     }
 
     public function delete(Request $request, Expense $expense): RedirectResponse
