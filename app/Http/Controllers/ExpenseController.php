@@ -96,7 +96,7 @@ class ExpenseController extends Controller
 
         // TODO after L12 upgrade try $request->session()->previousRoute()
         if (str_contains(url()->previous(), 'expenses') && ! str_contains(url()->previous(), '/edit')) {
-            $request->session()->put('url.intended.expenses', url()->previous());
+            $request->session()->put('etrack.url.previous', url()->previous());
         }
 
         $categories = $expense->user->categories()->orderBy('name')->get();
@@ -135,7 +135,7 @@ class ExpenseController extends Controller
             }
         }
 
-        $redirectUrl = $request->session()->pull('url.intended.expenses', route('expenses.index'));
+        $redirectUrl = $request->session()->pull('etrack.url.previous', route('expenses.index'));
 
         return redirect($redirectUrl)->with('message', 'Expense successfully updated.')->with('title', 'Updated!');
     }
