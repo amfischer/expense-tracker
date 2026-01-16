@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\AppServiceProvider;
 use App\Models\Category;
 use App\Providers\RouteServiceProvider;
 
@@ -18,7 +19,7 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    $response->assertRedirect(AppServiceProvider::HOME);
 });
 
 test('newely registered users have the default category created', function () {
