@@ -9,7 +9,7 @@ build:
 	docker-compose build
 
 # php-fpm container
-c ?= install
+c ?= list
 composer:
 	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "composer ${c}"
 
