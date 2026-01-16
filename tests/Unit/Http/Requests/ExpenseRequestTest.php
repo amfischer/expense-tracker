@@ -12,7 +12,7 @@ it('will validate the selected category belongs to the authenticated user', func
 
     $payload = Expense::factory()->make(['user_id' => $user->id])->toArray();
 
-    $request = new ExpenseRequest();
+    $request = new ExpenseRequest;
 
     /**
      * using valid category

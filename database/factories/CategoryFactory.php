@@ -35,9 +35,9 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'      => User::factory(),
-            'name'         => $this->faker->name,
-            'color'        => $this->faker->hexColor(),
+            'user_id' => User::factory(),
+            'name'    => $this->faker->name,
+            'color'   => $this->faker->hexColor(),
         ];
     }
 }
