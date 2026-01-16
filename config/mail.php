@@ -2,8 +2,8 @@
 
 return [
 
-    'mailers' => [
-        'mailgun'    => [
+    'mailers'  => [
+        'mailgun' => [
             'transport' => 'mailgun',
             // 'client' => [
             //     'timeout' => 5,

@@ -1,8 +1,7 @@
 <?php
 
-use App\Providers\AppServiceProvider;
 use App\Models\Category;
-use App\Providers\RouteServiceProvider;
+use App\Providers\AppServiceProvider;
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
