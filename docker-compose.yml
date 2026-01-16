@@ -2,17 +2,15 @@ services:
 
     php-fpm:
         container_name: "${COMPOSE_PROJECT_NAME}-php-fpm"
+        image: "${COMPOSE_PROJECT_NAME}/php-fpm"
         build:
             args:
-                user: aaron
-                uid: 1000
+                user: "${HOST_USER}"
+                uid: "${HOST_UID}"
             context: docker/php-fpm
-            tags: # required for Docker buildx/bake to tag properly
-                - "${COMPOSE_PROJECT_NAME}-php-fpm"
         working_dir: /app
         volumes:
             - .:/app
-            - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
             - ./docker/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
         depends_on:
             - mysql
@@ -49,10 +47,16 @@ services:
         volumes:
             - mysql-data:/var/lib/mysql
             - ./docker/mysql/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1" ]
+            start_period: 3s
+            timeout: 2s
+            retries: 50
         restart: unless-stopped
 
     node:
         container_name: "${COMPOSE_PROJECT_NAME}-node"
+        image: "${COMPOSE_PROJECT_NAME}/node"
         build:
             context: docker/node
         working_dir: /app
@@ -63,6 +67,14 @@ services:
     redis:
         container_name: "${COMPOSE_PROJECT_NAME}-redis"
         image: redis:7.2.5-alpine3.20
+        ports:
+            - '6379:6379'
+        volumes:
+            - 'cache-data:/data'
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            retries: 3
+            timeout: 5s
         restart: unless-stopped
 
     mailpit:
@@ -72,8 +84,9 @@ services:
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         restart: unless-stopped
 
-volumes:
-    mysql-data:
-
 networks:
     default:
+
+volumes:
+    mysql-data:
+    cache-data:
