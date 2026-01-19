@@ -16,7 +16,7 @@ class RefreshTestData extends Command
 
     protected $description = 'Refresh the data on the test account(s)';
 
-    public function handle()
+    public function handle(): void
     {
         $jeremy = User::where('email', 'benjis@momoney.com')->first();
 

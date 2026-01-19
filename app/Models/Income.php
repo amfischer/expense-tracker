@@ -20,16 +20,19 @@ class Income extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'payment_date'     => 'datetime:Y-m-d',
-        'effective_date'   => 'datetime:Y-m-d',
-        'is_earned_income' => 'boolean',
-    ];
-
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'payment_date'     => 'datetime:Y-m-d',
+            'effective_date'   => 'datetime:Y-m-d',
+            'is_earned_income' => 'boolean',
+        ];
+    }
 
     public function toSearchableArray()
     {

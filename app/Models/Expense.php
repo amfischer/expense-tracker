@@ -20,18 +20,21 @@ class Expense extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'transaction_date'    => 'datetime:Y-m-d',
-        'effective_date'      => 'datetime:Y-m-d',
-        'is_business_expense' => 'boolean',
-    ];
-
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
         'has_receipt',
         'notes_raw',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'transaction_date'    => 'datetime:Y-m-d',
+            'effective_date'      => 'datetime:Y-m-d',
+            'is_business_expense' => 'boolean',
+        ];
+    }
 
     public function toSearchableArray()
     {

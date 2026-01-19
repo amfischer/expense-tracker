@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\DecimalMoneyFormatter;
@@ -14,6 +18,15 @@ use Money\Parser\DecimalMoneyParser;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * The path to your application's "home" route.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
+     */
+    public const HOME = '/dashboard';
+
     public $singletons = [
         ISOCurrencies::class => ISOCurrencies::class,
     ];
@@ -53,7 +66,17 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('access-application', function (User $user) {
-            return in_array($user->email, explode(',', config('auth.application_access')));
+            return in_array($user->email, explode(',', config('custom.application_access')));
         });
+
+        $this->bootRoute();
+    }
+
+    public function bootRoute(): void
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
     }
 }

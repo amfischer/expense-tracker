@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Category;
-use App\Providers\RouteServiceProvider;
+use App\Providers\AppServiceProvider;
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
@@ -18,10 +18,10 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    $response->assertRedirect(AppServiceProvider::HOME);
 });
 
-test('newely registered users have the default category created', function () {
+test('newly registered users have the default category created', function () {
     $this->post('/register', [
         'name'                  => 'Test User',
         'email'                 => 'test@example.com',
