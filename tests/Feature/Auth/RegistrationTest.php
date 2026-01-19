@@ -21,7 +21,7 @@ test('new users can register', function () {
     $response->assertRedirect(AppServiceProvider::HOME);
 });
 
-test('newely registered users have the default category created', function () {
+test('newly registered users have the default category created', function () {
     $this->post('/register', [
         'name'                  => 'Test User',
         'email'                 => 'test@example.com',

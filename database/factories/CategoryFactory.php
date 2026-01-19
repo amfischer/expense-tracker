@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
- */
 class CategoryFactory extends Factory
 {
-    public static $categories = [
+    protected $model = Category::class;
+
+    public static array $categories = [
         'Utilities',
         'Rent',
         'Investments',
@@ -27,11 +27,6 @@ class CategoryFactory extends Factory
         'Travel',
     ];
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [

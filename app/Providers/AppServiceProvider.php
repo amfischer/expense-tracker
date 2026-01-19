@@ -66,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('access-application', function (User $user) {
-            return in_array($user->email, explode(',', config('auth.application_access')));
+            return in_array($user->email, explode(',', config('custom.application_access')));
         });
 
         $this->bootRoute();
