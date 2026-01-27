@@ -68,9 +68,15 @@ class IncomeController extends Controller
         return back()->with('message', 'Income successfully created.')->with('title', 'Created!');
     }
 
-    public function edit(Income $income): Response
+    public function edit(Request $request, Income $income): Response
     {
         Gate::authorize('view', $income);
+
+        // TODO after L12 upgrade try $request->session()->previousRoute()
+        // or just use url()->previous() ???
+        if (str_contains(url()->previous(), 'incomes') && ! str_contains(url()->previous(), '/edit')) {
+            $request->session()->put('etrack.url.previous', url()->previous());
+        }
 
         return Inertia::render('Incomes/Edit', compact('income'));
     }
@@ -90,7 +96,9 @@ class IncomeController extends Controller
 
         $income->update($data);
 
-        return back()->with('message', 'Income successfully updated.')->with('title', 'Updated!');
+        $redirectUrl = $request->session()->pull('etrack.url.previous', route('incomes.index'));
+
+        return redirect($redirectUrl)->with('message', 'Income successfully updated.')->with('title', 'Updated!');
     }
 
     public function delete(Request $request, Income $income): Response|RedirectResponse
