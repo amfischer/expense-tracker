@@ -9,8 +9,6 @@ use Illuminate\Support\Carbon;
 
 class IncomeFactory extends Factory
 {
-    protected $model = Income::class;
-
     public function definition(): array
     {
         return [
