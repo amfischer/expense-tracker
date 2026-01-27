@@ -1,14 +1,18 @@
 {
     "agents": [
-        "claude_code",
-        "opencode",
-        "phpstorm"
+        "claude_code"
     ],
-    "editors": [
-        "claude_code",
-        "opencode",
-        "phpstorm",
-        "vscode"
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
+        "spatie/laravel-ray"
     ],
-    "guidelines": []
+    "sail": false,
+    "skills": [
+        "pest-testing",
+        "inertia-vue-development",
+        "tailwindcss-development",
+        "debugging-output-and-previewing-html-using-ray"
+    ]
 }
