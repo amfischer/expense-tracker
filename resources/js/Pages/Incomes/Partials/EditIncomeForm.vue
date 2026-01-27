@@ -27,7 +27,6 @@ const alert = useAlertStore();
 
 const update = () => {
     form.patch(route('incomes.update', props.income.id), {
-        preserveScroll: true,
         onSuccess: (resp) => {
             alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
         },
