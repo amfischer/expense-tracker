@@ -18,17 +18,29 @@ a ?= about
 artisan:
 	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "php artisan ${a}"
 
-dbfresh:
-	docker-compose exec -it php-fpm sh -c "php artisan migrate:fresh --seed && php artisan app:refresh-test-data"
-
 tinker:
-	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "php artisan tinker"
-
-pint:
-	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh -c "./vendor/bin/pint --dirty"
+	docker-compose exec -it -u $$(id -u):$$(id -g) php-fpm sh -c "php artisan tinker"
 
 shell:
-	docker-compose exec -u $$(id -u):$$(id -g) php-fpm sh
+	docker-compose exec -it -u $$(id -u):$$(id -g) php-fpm sh
+
+dbfresh:
+	docker-compose exec php-fpm sh -c "php artisan migrate:fresh --seed && php artisan app:refresh-test-data"
+
+pint:
+	docker-compose exec php-fpm sh -c "./vendor/bin/pint --dirty"
+
+## tests
+f ?=
+test-feature:
+	docker-compose exec -it php-fpm sh -c "php artisan test tests/Feature/${f}"
+
+u ?=
+test-unit:
+	docker-compose exec -it php-fpm sh -c "php artisan test tests/Unit/${u}"
+
+test-all:
+	docker-compose exec -it php-fpm sh -c "php artisan test"
 
 # nodejs container
 n ?= help
