@@ -15,6 +15,7 @@ class DashboardController extends Controller
     public function index(Request $request, ExpenseService $expenseService): Response
     {
         $totals = [
+            $expenseService->getMonthlyTotals($request->user(), '2026'),
             $expenseService->getMonthlyTotals($request->user(), '2025'),
             $expenseService->getMonthlyTotals($request->user(), '2024'),
         ];
