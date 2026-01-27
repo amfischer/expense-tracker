@@ -4,11 +4,14 @@ namespace Database\Factories;
 
 use App\Enums\Currency;
 use App\Models\Category;
+use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ExpenseFactory extends Factory
 {
+    protected $model = Expense::class;
+
     private array $payees = [
         'PedidosYa',
         'Walmart',
