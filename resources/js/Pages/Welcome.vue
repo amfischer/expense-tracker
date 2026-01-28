@@ -27,14 +27,14 @@ defineProps({
             <template v-if="$page.props.auth.user">
                 <Link
                     :href="route('dashboard')"
-                    class="font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                    class="font-semibold text-gray-600 hover:text-gray-900 focus:outline-solid focus:outline-2 focus:rounded-xs focus:outline-red-500">
                     Dashboard
                 </Link>
 
                 <Link
                     :href="route('logout')"
                     method="post"
-                    class="ms-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                    class="ms-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline-solid focus:outline-2 focus:rounded-xs focus:outline-red-500">
                     Logout
                 </Link>
             </template>
@@ -42,14 +42,14 @@ defineProps({
             <template v-else>
                 <Link
                     :href="route('login')"
-                    class="font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                    class="font-semibold text-gray-600 hover:text-gray-900 focus:outline-solid focus:outline-2 focus:rounded-xs focus:outline-red-500">
                     Login
                 </Link>
 
                 <Link
                     v-if="canRegister"
                     :href="route('register')"
-                    class="ms-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                    class="ms-4 font-semibold text-gray-600 hover:text-gray-900 focus:outline-solid focus:outline-2 focus:rounded-xs focus:outline-red-500">
                     Register
                 </Link>
             </template>

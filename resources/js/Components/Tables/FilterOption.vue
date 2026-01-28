@@ -22,7 +22,7 @@ const filter = computed(() => props.scout.form.filters[props.field] || []);
                 <span class="font-medium text-gray-900">{{ title }}</span>
                 <span
                     v-if="filter.length > 0"
-                    class="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
+                    class="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
                     {{ filter.length }}
                 </span>
             </div>
@@ -37,7 +37,7 @@ const filter = computed(() => props.scout.form.filters[props.field] || []);
                         :id="`filter-mobile-${field}-${option.id}`"
                         :checked="scout.form.filters[field]?.includes(`${option.id}`)"
                         type="checkbox"
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+                        class="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
                     <label
                         @click.prevent
                         :for="`filter-mobile-${field}-${option.id}`"

@@ -14,7 +14,7 @@ const selectedReportIndex = ref(null);
     <Container class="py-12" v-if="selectedReportIndex !== null">
         <ul role="list" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             <li class="col-span-1" v-for="category in reports[selectedReportIndex].categories">
-                <Disclosure as="div" class="bg-white rounded-lg shadow pt-3 pb-1" v-slot="{ open }">
+                <Disclosure as="div" class="bg-white rounded-lg shadow-sm pt-3 pb-1" v-slot="{ open }">
                     <DisclosureButton
                         class="w-full flex items-center gap-2 font-semibold px-3 pb-1 mb-2 border-b"
                         :class="open && 'open'">

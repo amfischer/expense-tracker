@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="overflow-hidden rounded-lg bg-white shadow px-4 py-5 sm:px-6 sm:py-3">
+    <div class="overflow-hidden rounded-lg bg-white shadow-sm px-4 py-5 sm:px-6 sm:py-3">
         <div class="flex items-center justify-between">
             <dt class="truncate text-sm font-medium text-gray-500">{{ report.label }}</dt>
             <div
@@ -24,7 +24,7 @@ defineProps({
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-xs leading-tight">
-                    <button class="rounded border px-2 border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600">
+                    <button class="rounded-sm border px-2 border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600">
                         View
                     </button>
                 </span>

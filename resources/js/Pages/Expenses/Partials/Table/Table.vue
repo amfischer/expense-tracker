@@ -123,7 +123,7 @@ const toggleReceiptModal = (expense) => {
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
                         <td class="py-3 text-center w-10 sm:w-14">
-                            <DisclosureButton class="border border-gray-400 rounded" :class="open && 'open'">
+                            <DisclosureButton class="border border-gray-400 rounded-sm" :class="open && 'open'">
                                 <ChevronUpIcon class="h-5 w-5 text-gray-600" v-if="open" />
                                 <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>
@@ -169,7 +169,7 @@ const toggleReceiptModal = (expense) => {
                         <td
                             class="hidden sm:table-cell sm:align-baseline lg:align-middle py-3 text-sm font-medium md:w-14">
                             <button
-                                class="rounded px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                class="rounded-sm px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
                                 @click="createCopy(expense)">
                                 Copy
                             </button>
@@ -205,7 +205,7 @@ const toggleReceiptModal = (expense) => {
                                             <dt class="text-xs text-gray-800">Reciept</dt>
                                             <dd class="text-xs leading-4">
                                                 <button
-                                                    class="border rounded border-indigo-600 bg-indigo-600 hover:bg-indigo-900 text-white px-2"
+                                                    class="border rounded-sm border-indigo-600 bg-indigo-600 hover:bg-indigo-900 text-white px-2"
                                                     @click="toggleReceiptModal(expense)">
                                                     Show
                                                 </button>
@@ -231,7 +231,7 @@ const toggleReceiptModal = (expense) => {
                                     Edit
                                 </Link>
                                 <button
-                                    class="rounded px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                    class="rounded-sm px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
                                     @click="createCopy(expense)">
                                     Copy
                                 </button>

@@ -83,7 +83,7 @@ const showCreateModal = ref(false);
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
                         <td class="py-3 text-center w-10 sm:w-14">
-                            <DisclosureButton class="border border-gray-400 rounded" :class="open && 'open'">
+                            <DisclosureButton class="border border-gray-400 rounded-sm" :class="open && 'open'">
                                 <ChevronUpIcon class="h-5 w-5 text-gray-600" v-if="open" />
                                 <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>

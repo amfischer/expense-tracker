@@ -25,7 +25,7 @@ const filter = computed(() => {
                 <span class="font-medium text-gray-900">Misc</span>
                 <span
                     v-if="filter.length > 0"
-                    class="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
+                    class="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
                     {{ filter.length }}
                 </span>
             </div>
@@ -39,7 +39,7 @@ const filter = computed(() => {
                     id="filter-mobile-business-expense"
                     :checked="scout.form.filters.business_expenses"
                     type="checkbox"
-                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
+                    class="h-4 w-4 rounded-sm border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer" />
                 <label
                     @click.prevent
                     for="filter-mobile-business-expense"
