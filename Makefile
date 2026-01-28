@@ -28,7 +28,7 @@ dbfresh:
 	docker-compose exec php-fpm sh -c "php artisan migrate:fresh --seed && php artisan app:refresh-test-data"
 
 pint:
-	docker-compose exec php-fpm sh -c "./vendor/bin/pint --dirty"
+	docker-compose exec php-fpm sh -c "./vendor/bin/pint"
 
 ## tests
 f ?=
