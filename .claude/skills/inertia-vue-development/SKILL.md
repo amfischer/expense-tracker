@@ -309,8 +309,8 @@ defineProps({
     <div>
         <h1>Users</h1>
         <div v-if="!users" class="animate-pulse">
-            <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded-sm w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded-sm w-1/2"></div>
         </div>
         <ul v-else>
             <li v-for="user in users" :key="user.id">

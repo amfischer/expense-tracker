@@ -103,7 +103,7 @@ const update = () => {
 
                 <div class="mt-10 space-y-10 md:w-1/2 md:pr-5">
                     <SwitchGroup as="div" class="flex items-center justify-between">
-                        <span class="flex flex-grow flex-col">
+                        <span class="flex grow flex-col">
                             <SwitchLabel as="span" class="text-sm font-medium text-gray-700" passive>
                                 Earned Income
                             </SwitchLabel>
@@ -115,13 +115,13 @@ const update = () => {
                             v-model="form.is_earned_income"
                             :class="[
                                 form.is_earned_income ? 'bg-indigo-600' : 'bg-gray-200',
-                                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
+                                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
                             ]">
                             <span
                                 aria-hidden="true"
                                 :class="[
                                     form.is_earned_income ? 'translate-x-5' : 'translate-x-0',
-                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out',
                                 ]" />
                         </Switch>
                     </SwitchGroup>
