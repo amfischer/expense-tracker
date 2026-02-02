@@ -118,7 +118,7 @@ const toggleReceiptModal = (expense) => {
             </tr>
         </tbody>
 
-        <tbody v-else class="divide-y divide-gray-200">
+        <tbody v-else class="divide-y divide-y-reverse divide-gray-200">
             <template v-for="expense in expenses.data" :key="expense.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">

@@ -63,8 +63,8 @@ const showCreateModal = ref(false);
                     <span class="sr-only">Toggle Information</span>
                 </th>
                 <TableHeader title="Source" field="source" :scout="scout" />
-                <TableHeader title="Amount" field="amount" width="lg:w-36" :scout="scout" />
-                <TableHeader title="Date" field="effective_date" width="lg:w-36" :scout="scout" />
+                <TableHeader title="Amount" field="amount" width="md:w-36" :scout="scout" />
+                <TableHeader title="Date" field="effective_date" width="md:w-36" :scout="scout" />
                 <th scope="col" class="relative p-4">
                     <span class="sr-only">Edit</span>
                 </th>
@@ -78,7 +78,7 @@ const showCreateModal = ref(false);
             </tr>
         </tbody>
 
-        <tbody v-else class="divide-y divide-gray-200">
+        <tbody v-else class="divide-y divide-y-reverse divide-gray-200">
             <template v-for="income in incomes.data" :key="income.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
@@ -102,11 +102,11 @@ const showCreateModal = ref(false);
                             <span class="font-bold text-md lg:text-sm lg:font-normal">
                                 {{ income.amount_pretty }}
                             </span>
-                            <div class="lg:hidden">
+                            <div class="md:hidden">
                                 {{ income.effective_date_pretty }}
                             </div>
                         </td>
-                        <td class="hidden lg:table-cell py-3 text-sm text-gray-500">
+                        <td class="hidden md:table-cell py-3 text-sm text-gray-500">
                             {{ income.effective_date_pretty }}
                         </td>
                         <td
