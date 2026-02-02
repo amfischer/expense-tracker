@@ -49,7 +49,7 @@ const showCreateModal = ref(false);
         <SearchBox v-model="scout.form.query" @keyup="scout.search" @reset="scout.clearQuery" />
         <button
             type="button"
-            class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
+            class="text-sm font-medium text-gray-400 hover:text-gray-500"
             @click="showFilters = true">
             <span class="sr-only">Filters</span>
             <FunnelIcon class="h-5 w-5" aria-hidden="true" />
@@ -63,8 +63,8 @@ const showCreateModal = ref(false);
                     <span class="sr-only">Toggle Information</span>
                 </th>
                 <TableHeader title="Source" field="source" :scout="scout" />
-                <TableHeader title="Amount" field="amount" width="lg:w-36" :scout="scout" />
-                <TableHeader title="Date" field="effective_date" width="lg:w-36" :scout="scout" />
+                <TableHeader title="Amount" field="amount" width="md:w-36" :scout="scout" />
+                <TableHeader title="Date" field="effective_date" width="md:w-36" :scout="scout" />
                 <th scope="col" class="relative p-4">
                     <span class="sr-only">Edit</span>
                 </th>
@@ -78,12 +78,12 @@ const showCreateModal = ref(false);
             </tr>
         </tbody>
 
-        <tbody v-else class="divide-y divide-gray-200">
+        <tbody v-else class="divide-y divide-y-reverse divide-gray-200">
             <template v-for="income in incomes.data" :key="income.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
                         <td class="py-3 text-center w-10 sm:w-14">
-                            <DisclosureButton class="border border-gray-400 rounded" :class="open && 'open'">
+                            <DisclosureButton class="border border-gray-400 rounded-sm" :class="open && 'open'">
                                 <ChevronUpIcon class="h-5 w-5 text-gray-600" v-if="open" />
                                 <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>
@@ -102,11 +102,11 @@ const showCreateModal = ref(false);
                             <span class="font-bold text-md lg:text-sm lg:font-normal">
                                 {{ income.amount_pretty }}
                             </span>
-                            <div class="lg:hidden">
+                            <div class="md:hidden">
                                 {{ income.effective_date_pretty }}
                             </div>
                         </td>
-                        <td class="hidden lg:table-cell py-3 text-sm text-gray-500">
+                        <td class="hidden md:table-cell py-3 text-sm text-gray-500">
                             {{ income.effective_date_pretty }}
                         </td>
                         <td

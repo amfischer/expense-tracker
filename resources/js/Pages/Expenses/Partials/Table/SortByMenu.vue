@@ -18,7 +18,7 @@ const sortOptions = [
         <MenuButton class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
             Sort
             <ChevronDownIcon
-                class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                class="-mr-1 ml-1 h-5 w-5 shrink-0 text-gray-400 group-hover:text-gray-500"
                 aria-hidden="true" />
         </MenuButton>
         <transition
@@ -29,7 +29,7 @@ const sortOptions = [
             leave-from-class="transform opacity-100 scale-100"
             leave-to-class="transform opacity-0 scale-95">
             <MenuItems
-                class="absolute right-0 z-10 mt-2 w-32 origin-top-left rounded-md bg-white shadow-2xl focus:outline-none">
+                class="absolute right-0 z-10 mt-2 w-32 origin-top-left rounded-md bg-white shadow-2xl focus:outline-hidden">
                 <div class="py-1">
                     <MenuItem v-for="option in sortOptions" :key="option" v-slot="{ active }">
                         <span

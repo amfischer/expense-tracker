@@ -25,7 +25,7 @@ defineEmits(['close']);
                 leave="transition-opacity ease-linear duration-300"
                 leave-from="opacity-100"
                 leave-to="opacity-0">
-                <div class="fixed inset-0 bg-black bg-opacity-25" />
+                <div class="fixed inset-0 bg-black/25" />
             </TransitionChild>
 
             <div class="fixed inset-0 z-40 flex">
@@ -43,14 +43,14 @@ defineEmits(['close']);
                             <h2 class="text-lg font-medium text-gray-900">Filters</h2>
                             <button
                                 type="button"
-                                class="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                class="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                                 @click="$emit('close')">
                                 <span class="sr-only">Close menu</span>
                                 <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                             </button>
                             <button
                                 type="button"
-                                class="absolute bottom-1 rounded bg-indigo-600 px-2 text-xs text-white shadow-sm hover:bg-indigo-500"
+                                class="absolute bottom-1 rounded-sm bg-indigo-600 px-2 text-xs text-white shadow-xs hover:bg-indigo-500"
                                 @click="scout.clearFilters">
                                 Clear
                             </button>
