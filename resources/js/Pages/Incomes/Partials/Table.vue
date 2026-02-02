@@ -49,7 +49,7 @@ const showCreateModal = ref(false);
         <SearchBox v-model="scout.form.query" @keyup="scout.search" @reset="scout.clearQuery" />
         <button
             type="button"
-            class="inline-block text-sm font-medium text-gray-400 hover:text-gray-500"
+            class="text-sm font-medium text-gray-400 hover:text-gray-500"
             @click="showFilters = true">
             <span class="sr-only">Filters</span>
             <FunnelIcon class="h-5 w-5" aria-hidden="true" />
