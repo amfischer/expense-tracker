@@ -2,79 +2,71 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Container from '@/Components/Container.vue';
 import TotalsSummaryCard from './Partials/TotalsSummaryCard.vue';
-import Report from './Partials/Report.vue';
-import BarChart from './Partials/BarChart.vue';
+import SummaryDialog from './Partials/SummaryDialog.vue';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
 
 defineOptions({ layout: AuthenticatedLayout });
 
-const props = defineProps({
-    reports: Object,
+defineProps({
     totals: Object,
-    paymentMethods: Array,
 });
 
-const selectedReportIndex = ref(null);
-const selectedReportLabel = ref('');
-const selectedReportCategories = ref([]);
+// Summary Dialog state
+const summaryDialogOpen = ref(false);
+const summaryDialogData = ref(null);
+const summaryDialogLoading = ref(false);
+const summaryDialogLabel = ref('');
 
-const toggleReport = (index) => {
-    // toggle off if already selected
-    if (selectedReportIndex.value === index) {
-        selectedReportIndex.value = null;
-        selectedReportLabel.value = '';
-        selectedReportCategories.value = [];
-        return;
-    }
-
-    // toggle on and fetch data
-    const config = {
-        params: {
-            date_from: props.reports[index].date_from,
-            date_to: props.reports[index].date_to,
-        },
-    };
+const openSummaryDialog = (report) => {
+    summaryDialogOpen.value = true;
+    summaryDialogLoading.value = true;
+    summaryDialogLabel.value = report.label;
+    summaryDialogData.value = null;
 
     axios
-        .get(route('dashboard.summary.details'), config)
+        .get(route('dashboard.summary.details'), {
+            params: { date_from: report.date_from, date_to: report.date_to },
+        })
         .then((resp) => {
-            selectedReportIndex.value = index;
-            selectedReportLabel.value = props.reports[index].label;
-            selectedReportCategories.value = resp.data.categories;
-            console.log('success', resp);
+            summaryDialogData.value = resp.data;
+            summaryDialogLoading.value = false;
         })
         .catch((err) => {
             console.error(err);
+            summaryDialogLoading.value = false;
         });
+};
+
+const closeSummaryDialog = () => {
+    summaryDialogOpen.value = false;
 };
 </script>
 
 <template>
     <Head title="Dashboard" />
 
-    <template slot="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
-    </template>
-
     <Container class="mt-12 mb-5">
-        <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
+        <h3 class="text-base leading-6 font-semibold text-gray-900">Expense Totals</h3>
     </Container>
 
     <Container class="mb-12" v-for="(year, index) in totals" :key="index">
         <dl class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-            <TotalsSummaryCard :report="year.year" />
+            <TotalsSummaryCard :report="year.summary" @view="openSummaryDialog" />
             <div></div>
             <div></div>
             <div></div>
-            <TotalsSummaryCard v-for="(month, i) in year.months" :key="i" :report="month" />
+            <TotalsSummaryCard v-for="(month, i) in year.months" :key="i" :report="month" @view="openSummaryDialog" />
         </dl>
     </Container>
 
-    <!-- <BarChart :label="selectedReportLabel" :categories="selectedReportCategories" /> -->
-
-    <Report v-if="selectedReportIndex !== null" v-model="selectedReportCategories" :payment-methods="paymentMethods" />
-
     <Container class="py-48"></Container>
+
+    <SummaryDialog
+        :open="summaryDialogOpen"
+        :label="summaryDialogLabel"
+        :data="summaryDialogData"
+        :loading="summaryDialogLoading"
+        @close="closeSummaryDialog" />
 </template>

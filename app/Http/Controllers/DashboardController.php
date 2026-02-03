@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PaymentMethod;
-use App\Models\User;
 use App\Services\ExpenseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,9 +14,9 @@ class DashboardController extends Controller
     public function index(Request $request, ExpenseService $expenseService): Response
     {
         $totals = [
-            $expenseService->getMonthlyTotals($request->user(), '2026'),
-            $expenseService->getMonthlyTotals($request->user(), '2025'),
-            $expenseService->getMonthlyTotals($request->user(), '2024'),
+            $expenseService->getAnnualSummary($request->user(), '2026'),
+            $expenseService->getAnnualSummary($request->user(), '2025'),
+            $expenseService->getAnnualSummary($request->user(), '2024'),
         ];
 
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
@@ -25,17 +24,18 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard/Index', compact('totals', 'paymentMethods'));
     }
 
-    public function getSummaryDetails(Request $request): JsonResponse
+    public function getSummaryDetails(Request $request, ExpenseService $expenseService): JsonResponse
     {
         $validated = $request->validate([
             'date_from' => 'required|date_format:Y-m-d',
             'date_to'   => 'required|date_format:Y-m-d',
         ]);
 
-        /** @var User $user */
-        $user = $request->user();
-
-        $details = $user->getExpenseSummaryDetails($validated['date_from'], $validated['date_to']);
+        $details = $expenseService->getDetailedSummary(
+            $request->user(),
+            $validated['date_from'],
+            $validated['date_to']
+        );
 
         return response()->json($details);
     }

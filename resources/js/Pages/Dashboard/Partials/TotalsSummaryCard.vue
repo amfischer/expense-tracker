@@ -2,6 +2,8 @@
 defineProps({
     report: Object,
 });
+
+defineEmits(['view']);
 </script>
 
 <template>
@@ -24,11 +26,13 @@ defineProps({
             </div>
             <div class="flex items-center justify-between">
                 <span class="text-xs leading-tight">
-                    <button class="rounded-sm border px-2 border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600">
+                    <button
+                        class="rounded-sm border px-2 border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                        @click="$emit('view', report)">
                         View
                     </button>
                 </span>
-                <span class="font-semibold text-red-500" :class="report.is_loss ? 'text-red-600' : 'text-emerald-600'">
+                <span class="font-semibold" :class="report.is_loss ? 'text-red-600' : 'text-emerald-600'">
                     {{ report.total_difference }}
                 </span>
             </div>
