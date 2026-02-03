@@ -55,16 +55,16 @@ const toggleReport = (index) => {
     <Head title="Dashboard" />
 
     <template slot="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+        <h2 class="text-xl leading-tight font-semibold text-gray-800 dark:text-gray-200">Dashboard</h2>
     </template>
 
     <Container class="mt-12 mb-5">
-        <h3 class="text-base font-semibold leading-6 text-gray-900">Expense Totals</h3>
+        <h3 class="text-base leading-6 font-semibold text-gray-900">Expense Totals</h3>
     </Container>
 
     <Container class="mb-12" v-for="(year, index) in totals" :key="index">
         <dl class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-            <TotalsSummaryCard :report="year.year" />
+            <TotalsSummaryCard :report="year.summary" />
             <div></div>
             <div></div>
             <div></div>

@@ -11,14 +11,14 @@ use Money\Money;
 
 class ExpenseService
 {
-    public function getMonthlyTotals(User $user, string $year): array
+    public function getAnnualSummary(User $user, string $year): array
     {
         // set to January 15th to avoid edge cases when using carbon addMonths()
         $date = Carbon::parse(sprintf('%s-01-15', $year));
 
         return [
-            'year'   => $this->buildYearlyTotal($user, $date, $year),
-            'months' => $this->buildMonthlyTotals($user, $date),
+            'summary' => $this->buildYearlyTotal($user, $date, $year),
+            'months'  => $this->buildMonthlyTotals($user, $date),
         ];
     }
 
