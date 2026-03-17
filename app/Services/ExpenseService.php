@@ -34,6 +34,7 @@ class ExpenseService
             fn (Money $carry, Income $item) => $carry->add(Money::USD($item->amount)),
             Money::USD(0)
         );
+
         $difference = $incomesTotal->subtract($expensesTotal);
         $isLoss = $incomesTotal->lessThan($expensesTotal);
 
@@ -225,14 +226,18 @@ class ExpenseService
         $dateRange = [$from->format('Y-m-d'), $to->format('Y-m-d')];
         $formatter = app(IntlMoneyFormatter::class);
 
+        // Fetch expenses and incomes
         $expenses = $user->expenses()->with('category')->whereBetween('effective_date', $dateRange)->get();
+        $incomes = $user->incomes()->whereBetween('effective_date', $dateRange)->get();
+
+        // Calculate totals
+
         /** @var Money $expensesTotal */
         $expensesTotal = $expenses->reduce(
             fn (Money $carry, Expense $item) => $carry->add(Money::USD($item->amount)),
             Money::USD(0)
         );
 
-        $incomes = $user->incomes()->whereBetween('effective_date', $dateRange)->get();
         /** @var Money $incomesTotal */
         $incomesTotal = $incomes->reduce(
             fn (Money $carry, Income $item) => $carry->add(Money::USD($item->amount)),

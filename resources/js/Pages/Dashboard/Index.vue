@@ -38,10 +38,6 @@ const openSummaryDialog = (report) => {
             summaryDialogLoading.value = false;
         });
 };
-
-const closeSummaryDialog = () => {
-    summaryDialogOpen.value = false;
-};
 </script>
 
 <template>
@@ -68,5 +64,5 @@ const closeSummaryDialog = () => {
         :label="summaryDialogLabel"
         :data="summaryDialogData"
         :loading="summaryDialogLoading"
-        @close="closeSummaryDialog" />
+        @close="summaryDialogOpen = false" />
 </template>
