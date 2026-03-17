@@ -31,10 +31,11 @@ const openSummaryDialog = (report) => {
         })
         .then((resp) => {
             summaryDialogData.value = resp.data;
-            summaryDialogLoading.value = false;
         })
         .catch((err) => {
             console.error(err);
+        })
+        .finally(() => {
             summaryDialogLoading.value = false;
         });
 };
