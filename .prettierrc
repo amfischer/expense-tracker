@@ -3,5 +3,7 @@
     "bracketSameLine": true,
     "singleAttributePerLine": false,
     "printWidth": 120,
-    "tabWidth": 4
+    "tabWidth": 4,
+    "plugins": ["prettier-plugin-tailwindcss"],
+    "tailwindStylesheet": "./resources/css/app.css"
 }
