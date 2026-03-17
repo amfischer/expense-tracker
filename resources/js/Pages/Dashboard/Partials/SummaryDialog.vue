@@ -58,7 +58,7 @@ const savingsRateClass = computed(() => {
                     leave-to="translate-x-full">
                     <DialogPanel class="relative ml-auto flex h-full w-full max-w-md flex-col bg-white shadow-xl">
                         <!-- Header -->
-                        <div class="flex items-center justify-between px-4 py-4">
+                        <div class="flex items-center justify-between border-b-1 border-b-gray-200 px-4 py-4">
                             <button
                                 type="button"
                                 class="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
@@ -75,46 +75,44 @@ const savingsRateClass = computed(() => {
                         </div>
 
                         <!-- Loading State -->
-                        <div v-if="loading" class="flex-1 overflow-y-auto px-4 pb-6">
-                            <div class="animate-pulse space-y-4">
+                        <div v-if="loading" class="flex-1 overflow-y-auto px-4 pt-4 pb-6">
+                            <div class="animate-pulse space-y-8">
                                 <div class="flex gap-2">
-                                    <div class="h-8 w-24 rounded-full bg-gray-200"></div>
-                                    <div class="h-8 w-24 rounded-full bg-gray-200"></div>
-                                    <div class="h-8 w-28 rounded-full bg-gray-200"></div>
+                                    <div class="h-8 w-1/3 rounded-full bg-gray-200"></div>
+                                    <div class="h-8 w-1/3 rounded-full bg-gray-200"></div>
+                                    <div class="h-8 w-1/3 rounded-full bg-gray-200"></div>
                                 </div>
-                                <div class="h-6 w-32 rounded bg-gray-200"></div>
                                 <div class="space-y-3">
                                     <div class="h-16 rounded bg-gray-200"></div>
                                     <div class="h-16 rounded bg-gray-200"></div>
                                     <div class="h-16 rounded bg-gray-200"></div>
+                                    <div class="h-16 rounded bg-gray-200"></div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="h-16 rounded bg-gray-200"></div>
+                                    <div class="h-16 rounded bg-gray-200"></div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="h-24 rounded-xl bg-gray-200"></div>
+                                    <div class="h-24 rounded-xl bg-gray-200"></div>
+                                    <div class="h-24 rounded-xl bg-gray-200"></div>
+                                    <div class="h-24 rounded-xl bg-gray-200"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Content -->
-                        <div v-else-if="data" class="flex-1 overflow-y-auto px-4 pb-6">
+                        <div v-else-if="data" class="flex-1 overflow-y-auto px-4 pt-4 pb-6">
                             <!-- Summary Badges -->
                             <div class="flex flex-wrap items-center gap-2">
                                 <span
                                     class="inline-flex items-center gap-1 rounded-full bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600">
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                    </svg>
+                                    <img src="/icons/arrow-down-red.svg" class="h-4 w-4" alt="" />
                                     {{ data.totals.expenses }}
                                 </span>
                                 <span
                                     class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-600">
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                                    </svg>
+                                    <img src="/icons/arrow-up-emerald.svg" class="h-4 w-4" alt="" />
                                     {{ data.totals.income }}
                                 </span>
                                 <span
@@ -128,17 +126,7 @@ const savingsRateClass = computed(() => {
                             <div class="mt-2">
                                 <span
                                     class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-sm text-gray-600">
-                                    <svg
-                                        class="h-4 w-4 text-gray-400"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
+                                    <img src="/icons/calendar-gray.svg" class="h-4 w-4 text-gray-400" alt="" />
                                     {{ data.totals.transaction_count }} transactions
                                 </span>
                             </div>
@@ -153,13 +141,15 @@ const savingsRateClass = computed(() => {
                                     <div v-for="category in data.expense_categories" :key="category.name">
                                         <div class="flex items-center justify-between">
                                             <span class="text-sm font-medium text-gray-900">{{ category.name }}</span>
-                                            <span class="text-sm font-semibold text-gray-900">{{ category.total }}</span>
+                                            <span class="text-sm font-semibold text-gray-900">
+                                                {{ category.total }}
+                                            </span>
                                         </div>
-                                        <div class="relative mt-1.5 h-7 w-full overflow-hidden rounded-md bg-gray-100">
+                                        <div class="relative mt-1.5 h-7 w-full overflow-hidden rounded-2xl bg-gray-100">
                                             <div
-                                                class="absolute inset-y-0 left-0 flex items-center rounded-md px-2"
+                                                class="absolute inset-y-0 left-0 flex items-center rounded-2xl px-2"
                                                 :style="{
-                                                    width: Math.max(category.percentage, 8) + '%',
+                                                    width: Math.max(category.percentage, 10) + '%',
                                                     backgroundColor: category.color,
                                                 }">
                                                 <span class="text-xs font-semibold text-white">
@@ -177,11 +167,11 @@ const savingsRateClass = computed(() => {
                                     <span>💰</span>
                                     Income Sources
                                 </h3>
-                                <div class="mt-4 divide-y divide-gray-100">
+                                <div class="mt-4">
                                     <div
                                         v-for="source in data.income_sources"
                                         :key="source.source"
-                                        class="flex items-center justify-between py-3">
+                                        class="mb-2 flex items-center justify-between rounded-lg bg-emerald-100 p-3">
                                         <span class="text-sm text-gray-900">{{ source.source }}</span>
                                         <span class="text-sm font-semibold text-emerald-600">{{ source.total }}</span>
                                     </div>
@@ -241,13 +231,7 @@ const savingsRateClass = computed(() => {
                                     :href="route('expenses.index')"
                                     class="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
                                     View All Transactions
-                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    <img src="/icons/chevron-right-white.svg" class="h-4 w-4" alt="" />
                                 </a>
                             </div>
                         </div>
