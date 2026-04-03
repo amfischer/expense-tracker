@@ -6,7 +6,7 @@ use App\Enums\Currency;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
-use App\Rules\AlphaSpace;
+use App\Rules\SafeText;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
@@ -25,7 +25,7 @@ class ExpenseController extends Controller
     public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'query'                     => ['nullable', new AlphaSpace],
+            'query'                     => ['nullable', new SafeText],
             'sort_by'                   => ['nullable', Rule::in(['effective_date', 'amount', 'payee'])],
             'sort_dir'                  => ['nullable', Rule::in(['asc', 'desc'])],
             'date'                      => 'nullable|array|size:2',

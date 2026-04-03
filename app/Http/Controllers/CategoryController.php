@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Rules\AlphaSpace;
+use App\Rules\SafeText;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class CategoryController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name'  => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
+            'name'  => ['required', new SafeText, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
             'color' => ['required', 'hex_color'],
         ]);
 
@@ -49,7 +49,7 @@ class CategoryController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name'  => ['required', new AlphaSpace, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))->ignore($category->id)],
+            'name'  => ['required', new SafeText, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))->ignore($category->id)],
             'color' => ['required', 'hex_color'],
         ]);
 
