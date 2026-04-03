@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Income;
-use App\Rules\AlphaSpace;
+use App\Rules\SafeText;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +20,7 @@ class IncomeController extends Controller
     public function index(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'query'    => ['nullable', new AlphaSpace],
+            'query'    => ['nullable', new SafeText],
             'sort_by'  => ['nullable', Rule::in(['effective_date', 'amount', 'source'])],
             'sort_dir' => ['nullable', Rule::in(['asc', 'desc'])],
             'date'     => 'nullable|array|size:2',
@@ -55,7 +55,7 @@ class IncomeController extends Controller
     public function store(Request $request): Response|RedirectResponse
     {
         $data = $request->validate([
-            'source'           => ['required', new AlphaSpace],
+            'source'           => ['required', new SafeText],
             'amount'           => 'required|decimal:0,2',
             'payment_date'     => 'required|date_format:Y-m-d',
             'effective_date'   => 'required|date_format:Y-m-d',
@@ -86,7 +86,7 @@ class IncomeController extends Controller
         Gate::authorize('update', $income);
 
         $data = $request->validate([
-            'source'           => ['required', new AlphaSpace],
+            'source'           => ['required', new SafeText],
             'amount'           => 'required|decimal:0,2',
             'payment_date'     => 'required|date_format:Y-m-d',
             'effective_date'   => 'required|date_format:Y-m-d',

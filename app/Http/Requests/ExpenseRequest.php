@@ -4,7 +4,8 @@ namespace App\Http\Requests;
 
 use App\Enums\Currency;
 use App\Enums\PaymentMethod;
-use App\Rules\AlphaSpace;
+use App\Rules\SafeText;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +24,12 @@ class ExpenseRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'payee'               => ['required', new AlphaSpace],
+            'payee'               => ['required', new SafeText],
             'amount'              => 'required|decimal:0,2',
             'is_business_expense' => 'required|boolean',
             'currency'            => ['required', Rule::in(Currency::names())],

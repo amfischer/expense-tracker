@@ -16,6 +16,7 @@ enum PaymentMethod: string
     case DISCOVER_CARD = 'discover-card';
     case CHARLES_SCHWAB_CHECKING = 'charles-schwab-checking';
     case BCP_TRANSFER = 'bcp-transfer';
+    case READY_CARD = 'ready-card';
 
     // extra helper to allow for greater customization of displayed values, without disclosing the name/value data directly
     public function label(): string
@@ -26,6 +27,7 @@ enum PaymentMethod: string
             self::DISCOVER_CARD           => 'Discover Card',
             self::CHARLES_SCHWAB_CHECKING => 'Charles Schwab Checking',
             self::BCP_TRANSFER            => 'BCP Transfer',
+            self::READY_CARD              => 'ReadyCARD ®',
         };
     }
 
