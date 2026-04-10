@@ -81,11 +81,6 @@ class Expense extends Model
         );
     }
 
-    public function getReceiptStoragePath(): string
-    {
-        return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
-    }
-
     protected function effectiveDatePretty(): Attribute
     {
         return Attribute::make(
@@ -100,5 +95,10 @@ class Expense extends Model
         return Attribute::make(
             get: fn (mixed $value, array $attr) => Str::markdown($attr['notes'] ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
         );
+    }
+
+    public function getReceiptStoragePath(): string
+    {
+        return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
     }
 }
