@@ -70,9 +70,9 @@ const toggleReceiptModal = (expense) => {
 </script>
 
 <template>
-    <div class="sm:flex sm:items-start mb-10">
+    <div class="mb-10 sm:flex sm:items-start">
         <div class="sm:flex-auto">
-            <h1 class="text-xl font-semibold leading-6 text-gray-900">Expenses</h1>
+            <h1 class="text-xl leading-6 font-semibold text-gray-900">Expenses</h1>
             <p class="mt-2 text-sm text-gray-700">A searchable and filterable table of all recorded expenses.</p>
         </div>
         <div class="mt-3 sm:mt-0 sm:flex-none">
@@ -81,12 +81,9 @@ const toggleReceiptModal = (expense) => {
     </div>
 
     <!-- Search & Filters -->
-    <div class="flex items-center justify-between gap-3 mb-10">
+    <div class="mb-10 flex items-center justify-between gap-3">
         <SearchBox v-model="scout.form.query" @keyup="scout.search" @reset="scout.clearQuery" />
-        <button
-            type="button"
-            class="text-sm font-medium text-gray-400 hover:text-gray-500"
-            @click="showFilters = true">
+        <button type="button" class="text-sm font-medium text-gray-400 hover:text-gray-500" @click="showFilters = true">
             <span class="sr-only">Filters</span>
             <FunnelIcon class="h-5 w-5" aria-hidden="true" />
         </button>
@@ -95,16 +92,16 @@ const toggleReceiptModal = (expense) => {
     <table class="min-w-full divide-y divide-gray-300 bg-white">
         <thead class="hidden lg:table-header-group">
             <tr>
-                <th scope="col" class="relative p-4 w-14">
+                <th scope="col" class="relative w-14 p-4">
                     <span class="sr-only">Toggle Information</span>
                 </th>
                 <TableHeader title="Payee" field="payee" :scout="scout" />
                 <TableHeader title="Amount" field="amount" width="lg:w-36" :scout="scout" />
                 <TableHeader title="Date" field="effective_date" width="lg:w-36" :scout="scout" />
-                <th scope="col" class="relative p-4 w-14">
+                <th scope="col" class="relative w-14 p-4">
                     <span class="sr-only">Edit</span>
                 </th>
-                <th scope="col" class="relative p-4 w-14">
+                <th scope="col" class="relative w-14 p-4">
                     <span class="sr-only">Copy</span>
                 </th>
             </tr>
@@ -113,7 +110,7 @@ const toggleReceiptModal = (expense) => {
         <tbody v-if="expenses.data.length === 0" class="divide-y divide-gray-200">
             <tr>
                 <td></td>
-                <td colspan="4" class="py-3 text-md text-gray-500">No expense data found.</td>
+                <td colspan="4" class="text-md py-3 text-gray-500">No expense data found.</td>
                 <td></td>
             </tr>
         </tbody>
@@ -122,13 +119,13 @@ const toggleReceiptModal = (expense) => {
             <template v-for="expense in expenses.data" :key="expense.id">
                 <Disclosure v-slot="{ open }">
                     <tr class="table-tr-hover">
-                        <td class="py-3 text-center w-10 sm:w-14">
-                            <DisclosureButton class="border border-gray-400 rounded-sm" :class="open && 'open'">
+                        <td class="w-10 py-3 text-center sm:w-14">
+                            <DisclosureButton class="rounded-sm border border-gray-400" :class="open && 'open'">
                                 <ChevronUpIcon class="h-5 w-5 text-gray-600" v-if="open" />
                                 <ChevronDownIcon class="h-5 w-5 text-gray-600" v-else />
                             </DisclosureButton>
                         </td>
-                        <td class="py-3 text-md text-gray-500 align-baseline lg:align-middle">
+                        <td class="text-md py-3 align-baseline text-gray-500 lg:align-middle">
                             <div class="flex flex-row items-baseline gap-2">
                                 {{ expense.payee }}
                                 <div class="flex items-center gap-2">
@@ -141,25 +138,25 @@ const toggleReceiptModal = (expense) => {
                             </div>
                             <div class="flex items-center gap-1 text-sm">
                                 <span
-                                    class="rounded-full block w-2 h-2"
+                                    class="block h-2 w-2 rounded-full"
                                     :style="{ backgroundColor: expense.category.color }">
                                 </span>
                                 {{ expense.category.name }}
                             </div>
                         </td>
-                        <td class="py-3 w-[100px] text-sm text-gray-500 align-baseline lg:align-middle">
-                            <span class="font-bold text-md lg:text-sm lg:font-normal">
+                        <td class="w-[100px] py-3 align-baseline text-sm text-gray-500 lg:align-middle">
+                            <span class="text-md font-bold lg:text-sm lg:font-normal">
                                 {{ expense.amount_pretty }}
                             </span>
                             <div class="lg:hidden">
                                 {{ expense.effective_date_pretty }}
                             </div>
                         </td>
-                        <td class="hidden lg:table-cell py-3 text-sm text-gray-500">
+                        <td class="hidden py-3 text-sm text-gray-500 lg:table-cell">
                             {{ expense.effective_date_pretty }}
                         </td>
                         <td
-                            class="hidden sm:table-cell sm:align-baseline lg:align-middle py-3 text-sm font-medium md:w-14">
+                            class="hidden py-3 text-sm font-medium sm:table-cell sm:align-baseline md:w-14 lg:align-middle">
                             <Link
                                 :href="route('expenses.edit', expense.id)"
                                 class="text-indigo-600 hover:text-indigo-900">
@@ -167,9 +164,9 @@ const toggleReceiptModal = (expense) => {
                             </Link>
                         </td>
                         <td
-                            class="hidden sm:table-cell sm:align-baseline lg:align-middle py-3 text-sm font-medium md:w-14">
+                            class="hidden py-3 text-sm font-medium sm:table-cell sm:align-baseline md:w-14 lg:align-middle">
                             <button
-                                class="rounded-sm px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                class="rounded-sm border border-gray-300 px-2 text-xs leading-tight text-gray-500 hover:bg-gray-600 hover:text-white"
                                 @click="createCopy(expense)">
                                 Copy
                             </button>
@@ -205,7 +202,7 @@ const toggleReceiptModal = (expense) => {
                                             <dt class="text-xs text-gray-800">Reciept</dt>
                                             <dd class="text-xs leading-4">
                                                 <button
-                                                    class="border rounded-sm border-indigo-600 bg-indigo-600 hover:bg-indigo-900 text-white px-2"
+                                                    class="rounded-sm border border-indigo-600 bg-indigo-600 px-2 text-white hover:bg-indigo-900"
                                                     @click="toggleReceiptModal(expense)">
                                                     Show
                                                 </button>
@@ -215,23 +212,23 @@ const toggleReceiptModal = (expense) => {
                                     <div
                                         class="pb-3 sm:grid sm:grid-cols-table-dl sm:gap-4"
                                         v-show="expense.notes !== ''">
-                                        <dt class="text-xs text-gray-800 pb-1">Notes</dt>
+                                        <dt class="pb-1 text-xs text-gray-800">Notes</dt>
                                         <dd
-                                            class="text-sm text-gray-800 leading-4 markdown-field"
+                                            class="markdown-field text-sm leading-4 text-gray-800"
                                             v-html="expense.notes"></dd>
                                     </div>
                                 </DisclosurePanel>
                             </transition>
                         </td>
                         <td colspan="4" class="align-baseline">
-                            <DisclosurePanel class="sm:hidden leading-4">
+                            <DisclosurePanel class="leading-4 sm:hidden">
                                 <Link
                                     :href="route('expenses.edit', expense.id)"
-                                    class="block mb-6 text-sm leading-4 underline text-indigo-600 hover:text-indigo-900">
+                                    class="mb-6 block text-sm leading-4 text-indigo-600 underline hover:text-indigo-900">
                                     Edit
                                 </Link>
                                 <button
-                                    class="rounded-sm px-2 leading-tight text-xs border border-gray-300 text-gray-500 hover:text-white hover:bg-gray-600"
+                                    class="rounded-sm border border-gray-300 px-2 text-xs leading-tight text-gray-500 hover:bg-gray-600 hover:text-white"
                                     @click="createCopy(expense)">
                                     Copy
                                 </button>

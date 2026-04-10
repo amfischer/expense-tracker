@@ -58,7 +58,7 @@ const savingsRateClass = computed(() => {
                     leave-to="translate-x-full">
                     <DialogPanel class="relative ml-auto flex h-full w-full max-w-md flex-col bg-white shadow-xl">
                         <!-- Header -->
-                        <div class="flex items-center justify-between border-b-1 border-b-gray-200 px-4 py-4">
+                        <div class="flex items-center justify-between border-b border-b-gray-200 px-4 py-4">
                             <button
                                 type="button"
                                 class="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"

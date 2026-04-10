@@ -21,8 +21,8 @@ provide('currencies', props.currencies);
 <template>
     <Head title="Expenses" />
 
-    <div class="w-full sm:max-w-2xl lg:max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <div class="rounded-lg shadow-sm bg-white px-2 mx-2 py-10 sm:mx-0 sm:p-10">
+    <div class="mx-auto w-full py-12 sm:max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
+        <div class="mx-2 rounded-lg bg-white px-2 py-10 shadow-sm sm:mx-0 sm:p-10">
             <ExpensesTable :expenses="expenses" />
         </div>
     </div>
