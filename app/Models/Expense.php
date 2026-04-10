@@ -23,7 +23,6 @@ class Expense extends Model
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
-        'has_receipt',
         'notes_raw',
     ];
 
@@ -107,13 +106,6 @@ class Expense extends Model
     {
         return Attribute::make(
             get: fn (mixed $value, array $attr) => $attr['notes'] ?? ''
-        );
-    }
-
-    protected function hasReceipt(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->receipts()->count() > 0
         );
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\delete;
+use function Pest\Laravel\get;
 use function Pest\Laravel\patch;
 use function Pest\Laravel\post;
 
@@ -105,4 +106,63 @@ test('updating the expense transaction date will move the corresponding receipt 
     Storage::disk('receipts')->assertExists($newStoragePath . '/' . $receipt->filename);
 
     expect($oldStoragePath)->not->toEqual($newStoragePath);
+});
+
+test('users can upload multiple receipts to the same expense', function () {
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->image('receipt1.jpg')->size(200),
+    ])->assertRedirect();
+
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->create('receipt2.pdf', 500, 'application/pdf'),
+    ])->assertRedirect();
+
+    assertDatabaseCount('receipts', 2);
+
+    $receipts = $this->expense->receipts()->with('expense')->get();
+    expect($receipts)->toHaveCount(2);
+
+    foreach ($receipts as $receipt) {
+        Storage::disk('receipts')->assertExists($receipt->filenameWithPath());
+    }
+});
+
+test('deleting one receipt does not affect other receipts', function () {
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->image('receipt1.jpg')->size(200),
+    ]);
+
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->create('receipt2.pdf', 500, 'application/pdf'),
+    ]);
+
+    assertDatabaseCount('receipts', 2);
+
+    $receipts = $this->expense->receipts()->with('expense')->get();
+    $receiptToDelete = $receipts->first();
+    $receiptToKeep = $receipts->last();
+
+    delete(route('expenses.receipts.delete', [$this->expense->id, $receiptToDelete->id]), ['password' => 'password'])
+        ->assertRedirect();
+
+    assertDatabaseCount('receipts', 1);
+    Storage::disk('receipts')->assertMissing($receiptToDelete->filenameWithPath());
+    Storage::disk('receipts')->assertExists($receiptToKeep->filenameWithPath());
+});
+
+test('edit page returns all receipts', function () {
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->image('receipt1.jpg')->size(200),
+    ]);
+
+    post(route('expenses.receipts.store', $this->expense->id), [
+        'receipt_upload' => UploadedFile::fake()->create('receipt2.pdf', 500, 'application/pdf'),
+    ]);
+
+    get(route('expenses.edit', $this->expense->id))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Expenses/Edit')
+            ->has('expense.receipts', 2)
+        );
 });
