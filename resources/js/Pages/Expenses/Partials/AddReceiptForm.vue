@@ -38,7 +38,7 @@ const upload = () => {
 
 <template>
     <form @submit.prevent="upload" class="max-md:space-y-6 md:flex md:flex-wrap">
-        <div class="space-y-6 md:w-1/2 md:pr-5 md:flex md:flex-col md:justify-between">
+        <div class="space-y-6 md:flex md:w-1/2 md:flex-col md:justify-between">
             <div>
                 <InputLabel for="receipt_upload" value="File Upload" />
                 <FileInput class="mt-1 block w-full" v-model="form.receipt_upload" />
@@ -46,7 +46,7 @@ const upload = () => {
             </div>
         </div>
 
-        <div class="flex items-center gap-4 w-full mt-10">
+        <div class="mt-10 flex w-full items-center gap-4">
             <PrimaryButton :disabled="form.processing">Upload</PrimaryButton>
         </div>
     </form>
