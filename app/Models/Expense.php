@@ -23,7 +23,7 @@ class Expense extends Model
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
-        'notes_raw',
+        'notes_html',
     ];
 
     protected function casts(): array
@@ -95,17 +95,10 @@ class Expense extends Model
         );
     }
 
-    protected function notes(): Attribute
+    protected function notesHtml(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => Str::markdown($value ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
-        );
-    }
-
-    protected function notesRaw(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attr) => $attr['notes'] ?? ''
+            get: fn (mixed $value, array $attr) => Str::markdown($attr['notes'] ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
         );
     }
 }

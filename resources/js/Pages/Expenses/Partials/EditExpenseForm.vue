@@ -28,7 +28,7 @@ const form = useForm({
     transaction_date: props.expense.transaction_date,
     effective_date: props.expense.effective_date,
     category_id: props.expense.category_id,
-    notes: props.expense.notes_raw,
+    notes: props.expense.notes,
 });
 
 const alert = useAlertStore();
@@ -141,7 +141,7 @@ const update = () => {
                             v-model="form.is_business_expense"
                             :class="[
                                 form.is_business_expense ? 'bg-indigo-600' : 'bg-gray-200',
-                                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2',
+                                'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:outline-hidden',
                             ]">
                             <span
                                 aria-hidden="true"
@@ -161,7 +161,7 @@ const update = () => {
                 </div>
             </div>
         </div>
-        <div class="flex items-center w-full mt-10">
+        <div class="mt-10 flex w-full items-center">
             <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
         </div>
     </form>

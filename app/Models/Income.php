@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use Money\Currency;
@@ -23,6 +22,7 @@ class Income extends Model
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
+        'notes_html',
     ];
 
     protected function casts(): array
@@ -80,16 +80,10 @@ class Income extends Model
         );
     }
 
-    protected function notes(): Attribute
+    protected function notesHtml(): Attribute
     {
         return Attribute::make(
-            get: function (?string $value) {
-                if (Route::getCurrentRoute()->getName() === 'incomes.edit') {
-                    return $value;
-                }
-
-                return Str::markdown($value ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false]);
-            }
+            get: fn (mixed $value, array $attr) => Str::markdown($attr['notes'] ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
         );
     }
 }
