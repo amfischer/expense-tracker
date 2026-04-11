@@ -23,8 +23,7 @@ class Expense extends Model
     protected $appends = [
         'amount_pretty',
         'effective_date_pretty',
-        'has_receipt',
-        'notes_raw',
+        'notes_html',
     ];
 
     protected function casts(): array
@@ -82,11 +81,6 @@ class Expense extends Model
         );
     }
 
-    public function getReceiptStoragePath(): string
-    {
-        return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
-    }
-
     protected function effectiveDatePretty(): Attribute
     {
         return Attribute::make(
@@ -96,24 +90,15 @@ class Expense extends Model
         );
     }
 
-    protected function notes(): Attribute
+    protected function notesHtml(): Attribute
     {
         return Attribute::make(
-            get: fn (?string $value) => Str::markdown($value ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
+            get: fn (mixed $value, array $attr) => Str::markdown($attr['notes'] ?? '', ['html_input' => 'strip', 'allow_unsafe_links' => false])
         );
     }
 
-    protected function notesRaw(): Attribute
+    public function getReceiptStoragePath(): string
     {
-        return Attribute::make(
-            get: fn (mixed $value, array $attr) => $attr['notes'] ?? ''
-        );
-    }
-
-    protected function hasReceipt(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->receipts()->count() > 0
-        );
+        return 'user_' . $this->user->id . '/' . date('Y/m', strtotime($this->transaction_date));
     }
 }

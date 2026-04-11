@@ -103,14 +103,13 @@ class ExpenseController extends Controller
         $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
-        $receipt = $expense->receipts()->first();
+        $expense->load('receipts');
 
         return Inertia::render('Expenses/Edit', [
             'expense'        => $expense,
             'categories'     => $categories,
             'currencies'     => $currencies,
             'paymentMethods' => $paymentMethods,
-            'receipt'        => $receipt,
         ]);
     }
 

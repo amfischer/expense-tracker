@@ -53,7 +53,7 @@ const createCopy = (expense) => {
         amount: expense.amount / 100,
         payment_method: expense.payment_method,
         is_business_expense: expense.is_business_expense,
-        notes: expense.notes_raw,
+        notes: expense.notes,
     };
 
     showCreateModal.value = true;
@@ -62,9 +62,9 @@ const createCopy = (expense) => {
 const showReceipt = ref(false);
 const selectedExpense = ref(null);
 const selectedReceipt = ref(null);
-const toggleReceiptModal = (expense) => {
+const toggleReceiptModal = (expense, receipt) => {
     selectedExpense.value = expense;
-    selectedReceipt.value = expense.receipts[0];
+    selectedReceipt.value = receipt;
     showReceipt.value = true;
 };
 </script>
@@ -129,8 +129,8 @@ const toggleReceiptModal = (expense) => {
                             <div class="flex flex-row items-baseline gap-2">
                                 {{ expense.payee }}
                                 <div class="flex items-center gap-2">
-                                    <InformationCircleIcon v-if="expense.notes !== ''" class="h-3 w-3 text-blue-400" />
-                                    <TagIcon v-if="expense.has_receipt" class="h-3 w-3 text-gray-400" />
+                                    <InformationCircleIcon v-if="expense.notes" class="h-3 w-3 text-blue-400" />
+                                    <TagIcon v-if="expense.receipts.length > 0" class="h-3 w-3 text-gray-400" />
                                     <CurrencyDollarIcon
                                         v-if="expense.is_business_expense"
                                         class="h-3 w-3 text-green-700" />
@@ -197,25 +197,28 @@ const toggleReceiptModal = (expense) => {
                                             </dd>
                                         </div>
                                     </div>
-                                    <div class="pb-3" v-if="expense.has_receipt">
-                                        <div class="grid grid-cols-table-dl gap-4 pb-1">
-                                            <dt class="text-xs text-gray-800">Reciept</dt>
+                                    <div class="pb-3" v-if="expense.receipts.length > 0">
+                                        <div
+                                            v-for="(receipt, index) in expense.receipts"
+                                            :key="receipt.id"
+                                            class="grid grid-cols-table-dl gap-4 pb-1">
+                                            <dt class="text-xs text-gray-800">
+                                                Receipt{{ expense.receipts.length > 1 ? ` ${index + 1}` : '' }}
+                                            </dt>
                                             <dd class="text-xs leading-4">
                                                 <button
                                                     class="rounded-sm border border-indigo-600 bg-indigo-600 px-2 text-white hover:bg-indigo-900"
-                                                    @click="toggleReceiptModal(expense)">
+                                                    @click="toggleReceiptModal(expense, receipt)">
                                                     Show
                                                 </button>
                                             </dd>
                                         </div>
                                     </div>
-                                    <div
-                                        class="pb-3 sm:grid sm:grid-cols-table-dl sm:gap-4"
-                                        v-show="expense.notes !== ''">
+                                    <div class="pb-3 sm:grid sm:grid-cols-table-dl sm:gap-4" v-show="expense.notes">
                                         <dt class="pb-1 text-xs text-gray-800">Notes</dt>
                                         <dd
                                             class="markdown-field text-sm leading-4 text-gray-800"
-                                            v-html="expense.notes"></dd>
+                                            v-html="expense.notes_html"></dd>
                                     </div>
                                 </DisclosurePanel>
                             </transition>
