@@ -12,8 +12,8 @@ use function Pest\Laravel\post;
 
 beforeEach(function () {
     Storage::fake('receipts');
-    $this->user = login();
-    $this->expense = Expense::factory()->create(['user_id' => $this->user->id]);
+    $user = login();
+    $this->expense = Expense::factory()->for($user)->create();
 });
 
 test('users can upload a receipt', function (UploadedFile $file) {
