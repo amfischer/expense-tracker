@@ -8,12 +8,17 @@ import { useForm } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/Stores/category.js';
 import { useAlertStore } from '@/Stores/alert';
 
+defineProps({
+    parentCategories: Array,
+});
+
 const categoryStore = useCategoryStore();
 const alert = useAlertStore();
 
 const form = useForm({
     name: '',
     color: '#000000',
+    parent_id: null,
 });
 
 const closeModal = () => {
@@ -47,16 +52,24 @@ const create = () => {
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            <div class="mb-5">
+            <div>
                 <InputLabel for="color" value="Color" />
-                <TextInput
-                    id="color"
-                    type="color"
-                    class="mt-1 block w-14 h-14"
-                    v-model="form.color"
-                    required
-                    autofocus />
+                <TextInput id="color" type="color" class="mt-1 block h-14 w-14" v-model="form.color" required />
                 <InputError class="mt-2" :message="form.errors.color" />
+            </div>
+
+            <div>
+                <InputLabel for="parent_id" value="Parent Category (optional)" />
+                <select
+                    id="parent_id"
+                    v-model="form.parent_id"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                    <option :value="null">None</option>
+                    <option v-for="parent in parentCategories" :key="parent.id" :value="parent.id">
+                        {{ parent.name }}
+                    </option>
+                </select>
+                <InputError class="mt-2" :message="form.errors.parent_id" />
             </div>
 
             <PrimaryButton type="submit" class="w-full justify-center rounded-md text-sm font-semibold">

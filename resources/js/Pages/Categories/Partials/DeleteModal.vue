@@ -37,16 +37,18 @@ const deleteCategory = () => {
         <template #description>
             Are you sure you want to delete this category?
 
-            <div class="text-center font-bold text-2xl my-4">
-                <span class="font-bold text-2xl">
+            <div class="my-4 text-center text-2xl font-bold">
+                <span class="text-2xl font-bold">
                     {{ categoryStore.selectedCategory.name }}
                 </span>
                 <InputError :message="errorMessage" class="mt-2" />
             </div>
 
-            <span class="text-sm italic"> Note: to delete a category it must have no attached expenses.</span>
+            <span class="text-sm italic">
+                Note: to delete a category it must have no attached expenses or subcategories.
+            </span>
         </template>
 
-        <DangerButton @click="deleteCategory" class="table w-32 mt-6 float-end">Delete</DangerButton>
+        <DangerButton @click="deleteCategory" class="float-end mt-6 table w-32">Delete</DangerButton>
     </Modal>
 </template>

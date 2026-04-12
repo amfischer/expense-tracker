@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use App\Rules\SafeText;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,7 +15,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request): Response
     {
-        $categories = Category::withCount('expenses')->where(['user_id' => $request->user()->id])->get();
+        $categories = Category::grouped($request->user());
 
         return Inertia::render('Categories/Index', compact('categories'));
     }
@@ -25,16 +23,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $user = Auth::user();
-
-        $validated = $request->validate([
-            'name'  => ['required', new SafeText, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))],
-            'color' => ['required', 'hex_color'],
-        ]);
-
-        $request->user()->categories()->create($validated);
+        $request->user()->categories()->create($request->validated());
 
         return back()->with('message', 'Category successfully created.')->with('title', 'Created!');
     }
@@ -42,22 +33,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        Gate::authorize('update', $category);
-
-        $user = Auth::user();
-
-        $validated = $request->validate([
-            'name'  => ['required', new SafeText, Rule::unique('categories')->where(fn (Builder $query) => $query->where('user_id', $user->id))->ignore($category->id)],
-            'color' => ['required', 'hex_color'],
-        ]);
-
-        if ($category->name === Category::DEFAULT_NAME && $validated['name'] !== Category::DEFAULT_NAME) {
-            return back()->withErrors(['name' => 'The default category cannot be renamed.']);
-        }
-
-        $category->update($validated);
+        $category->update($request->validated());
 
         return back()->with('message', 'Category successfully updated.')->with('title', 'Updated!');
     }
@@ -73,12 +51,14 @@ class CategoryController extends Controller
             return back()->withErrors(['message' => 'Default category cannot be deleted.']);
         }
 
-        $category->loadCount('expenses');
+        $category->loadCount(['expenses', 'children']);
+
+        if ($category->children_count !== 0) {
+            return back()->withErrors(['message' => 'Category has ' . $category->children_count . ' subcategories. Remove them before deleting.']);
+        }
 
         if ($category->expenses_count !== 0) {
-            $count = $category->expenses_count;
-
-            return back()->withErrors(['message' => 'category is linked to ' . $count . ' expenses. Remove these relationships before deleting.']);
+            return back()->withErrors(['message' => 'Category is linked to ' . $category->expenses_count . ' expenses. Remove these relationships before deleting.']);
         }
 
         $category->delete();

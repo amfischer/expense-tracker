@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
+import { computed } from 'vue';
 
 const props = defineProps({
     options: Array,
@@ -12,28 +12,29 @@ const model = defineModel({
     required: true,
 });
 
-const getSelectedName = (id) => {
-    const selected = props.options.find((option) => option.id === id);
-    return selected.name;
-};
+const selectedName = computed(() => {
+    for (const option of props.options) {
+        if (option.id === model.value) {
+            return option.name;
+        }
 
-// const select = ref(null);
+        const child = option.children?.find((c) => c.id === model.value);
 
-// onMounted(() => {
-//     if (select.value.hasAttribute('autofocus')) {
-//         select.value.focus();
-//     }
-// });
+        if (child) {
+            return child.name;
+        }
+    }
 
-// defineExpose({ focus: () => select.value.focus() });
+    return '';
+});
 </script>
 
 <template>
     <Listbox as="div" v-model="model">
         <div class="relative mt-1">
             <ListboxButton
-                class="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                <span class="block truncate">{{ getSelectedName(model) }}</span>
+                class="relative w-full cursor-default rounded-md bg-white py-2 pr-10 pl-3 text-left text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 focus:outline-hidden sm:text-sm sm:leading-6">
+                <span class="block truncate">{{ selectedName }}</span>
                 <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </span>
@@ -45,31 +46,50 @@ const getSelectedName = (id) => {
                 leave-to-class="opacity-0">
                 <ListboxOptions
                     class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden sm:text-sm">
-                    <ListboxOption
-                        as="template"
-                        v-for="option in options"
-                        :key="option.id"
-                        :value="option.id"
-                        v-slot="{ active, selected }">
-                        <li
-                            :class="[
-                                active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                                'relative cursor-default select-none py-2 pl-3 pr-9',
-                            ]">
-                            <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
-                                {{ option.name }}
-                            </span>
-
-                            <span
-                                v-if="selected"
+                    <template v-for="option in options" :key="option.id">
+                        <ListboxOption :value="option.id" v-slot="{ active, selected }">
+                            <li
                                 :class="[
-                                    active ? 'text-white' : 'text-indigo-600',
-                                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                                    'relative cursor-default py-2 pr-9 pl-3 select-none',
                                 ]">
-                                <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                            </span>
-                        </li>
-                    </ListboxOption>
+                                <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
+                                    {{ option.name }}
+                                </span>
+                                <span
+                                    v-if="selected"
+                                    :class="[
+                                        active ? 'text-white' : 'text-indigo-600',
+                                        'absolute inset-y-0 right-0 flex items-center pr-4',
+                                    ]">
+                                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                </span>
+                            </li>
+                        </ListboxOption>
+                        <ListboxOption
+                            v-for="child in option.children"
+                            :key="child.id"
+                            :value="child.id"
+                            v-slot="{ active, selected }">
+                            <li
+                                :class="[
+                                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                                    'relative cursor-default py-2 pr-9 pl-7 select-none',
+                                ]">
+                                <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
+                                    {{ child.name }}
+                                </span>
+                                <span
+                                    v-if="selected"
+                                    :class="[
+                                        active ? 'text-white' : 'text-indigo-600',
+                                        'absolute inset-y-0 right-0 flex items-center pr-4',
+                                    ]">
+                                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                                </span>
+                            </li>
+                        </ListboxOption>
+                    </template>
                 </ListboxOptions>
             </transition>
         </div>

@@ -6,8 +6,12 @@ import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { useCategoryStore } from '@/Stores/category.js';
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useAlertStore } from '@/Stores/alert';
+
+const props = defineProps({
+    parentCategories: Array,
+});
 
 const categoryStore = useCategoryStore();
 const alert = useAlertStore();
@@ -15,19 +19,28 @@ const alert = useAlertStore();
 const form = useForm({
     name: '',
     color: '#000000',
+    parent_id: null,
+});
+
+const availableParents = computed(() => {
+    if (!categoryStore.selectedCategory) return props.parentCategories;
+    return props.parentCategories.filter((p) => p.id !== categoryStore.selectedCategory.id);
 });
 
 watch(
     () => categoryStore.selectedCategory,
     (newValue) => {
-        (form.name = newValue.name), (form.color = newValue.color);
+        if (newValue) {
+            form.name = newValue.name;
+            form.color = newValue.color;
+            form.parent_id = newValue.parent_id ?? null;
+        }
     },
 );
 
 const closeModal = () => {
     categoryStore.closeModals();
     form.clearErrors();
-    // form.reset();
 };
 
 const updateCategory = () => {
@@ -46,8 +59,6 @@ const updateCategory = () => {
 
 <template>
     <Modal :show="categoryStore.showEditModal" max-width="sm" @close="closeModal">
-        <!-- <template #header> Edit Category </template> -->
-
         <form @submit.prevent="updateCategory" class="space-y-4">
             <div>
                 <InputLabel for="name" value="Name" />
@@ -55,16 +66,24 @@ const updateCategory = () => {
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            <div class="mb-5">
+            <div>
                 <InputLabel for="color" value="Color" />
-                <TextInput
-                    id="color"
-                    type="color"
-                    class="mt-1 block w-14 h-14"
-                    v-model="form.color"
-                    required
-                    autofocus />
+                <TextInput id="color" type="color" class="mt-1 block h-14 w-14" v-model="form.color" required />
                 <InputError class="mt-2" :message="form.errors.color" />
+            </div>
+
+            <div>
+                <InputLabel for="parent_id" value="Parent Category (optional)" />
+                <select
+                    id="parent_id"
+                    v-model="form.parent_id"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500">
+                    <option :value="null">None</option>
+                    <option v-for="parent in availableParents" :key="parent.id" :value="parent.id">
+                        {{ parent.name }}
+                    </option>
+                </select>
+                <InputError class="mt-2" :message="form.errors.parent_id" />
             </div>
 
             <PrimaryButton type="submit" class="w-full justify-center rounded-md text-sm font-semibold">
