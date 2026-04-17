@@ -36,19 +36,22 @@ describe('index', function () {
     });
 
     it('nests children under their parent category', function () {
-        $parent = Category::factory()->for($this->user)->create();
-        $child = Category::factory()->child($parent)->create();
-        $standalone = Category::factory()->for($this->user)->create();
+        $parent = Category::factory()->for($this->user)->create(['name' => 'Parent']);
+        $child = Category::factory()->child($parent)->create(['name' => 'Child']);
+        Category::factory()->for($this->user)->create(['name' => 'Standalone']);
 
-        get(route('categories.index'))
-            ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->component('Categories/Index')
-                ->has('categories', 3) // default + parent + standalone (no child at top level)
-                ->where('categories.1.id', $parent->id)
-                ->has('categories.1.children', 1)
-                ->where('categories.1.children.0.id', $child->id)
-            );
+        $response = get(route('categories.index'))->assertOk();
+
+        $categories = collect($response->original->getData()['page']['props']['categories']);
+
+        // Child should not appear at the top level
+        expect($categories)->toHaveCount(3) // default + parent + standalone
+            ->and($categories->pluck('name'))->not->toContain('Child');
+
+        // Child should be nested under parent
+        $parentCategory = $categories->firstWhere('name', 'Parent');
+        expect($parentCategory['children'])->toHaveCount(1)
+            ->and($parentCategory['children'][0]['name'])->toBe('Child');
     });
 });
 
