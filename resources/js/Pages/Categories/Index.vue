@@ -14,18 +14,18 @@ const props = defineProps({
 
 const parentCategories = computed(() => props.categories.map(({ id, name, color }) => ({ id, name, color })));
 
-const selectedCategory = ref(null);
+const selected = ref(null);
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showDelete = ref(false);
 
 const openEditModal = (category) => {
-    selectedCategory.value = category;
+    selected.value = category;
     showEdit.value = true;
 };
 
 const openDeleteModal = (category) => {
-    selectedCategory.value = category;
+    selected.value = category;
     showDelete.value = true;
 };
 </script>
@@ -59,9 +59,9 @@ const openDeleteModal = (category) => {
         <CreateModal :show="showCreate" :parent-categories="parentCategories" @close="showCreate = false" />
         <EditModal
             :show="showEdit"
-            :category="selectedCategory"
+            :category="selected"
             :parent-categories="parentCategories"
             @close="showEdit = false" />
-        <DeleteModal :show="showDelete" :category="selectedCategory" @close="showDelete = false" />
+        <DeleteModal :show="showDelete" :category="selected" @close="showDelete = false" />
     </AuthenticatedLayout>
 </template>
