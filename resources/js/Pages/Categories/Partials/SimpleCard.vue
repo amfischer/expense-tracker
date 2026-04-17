@@ -1,30 +1,32 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid';
-import { useCategoryStore } from '@/Stores/category.js';
-
 defineProps({
     category: Object,
+    isChild: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const categoryStore = useCategoryStore();
+const emit = defineEmits(['edit', 'delete']);
 </script>
 
 <template>
-    <li class="col-span-1 flex rounded-md shadow-xs">
+    <li class="col-span-1 flex rounded-md shadow-xs" :class="{ 'ml-6': isChild }">
         <div
             class="flex w-16 shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
             :style="{ 'background-color': category.color }"></div>
         <div
-            class="flex flex-1 items-center justify-between rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+            class="flex flex-1 items-center justify-between rounded-r-md border-t border-r border-b border-gray-200 bg-white">
             <div class="flex-1 px-4 py-2 text-sm">
                 <p class="font-medium text-gray-900 hover:text-gray-600">{{ category.name }}</p>
                 <p class="text-gray-500">{{ category.expenses_count + ' expenses' }}</p>
             </div>
-            <Menu as="div" class="relative inline-block text-left shrink-0 pr-2">
+            <Menu as="div" class="relative inline-block shrink-0 pr-2 text-left">
                 <div>
                     <MenuButton
-                        class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent bg-white text-gray-400 hover:text-gray-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">
+                        class="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden">
                         <span class="sr-only">Open options</span>
                         <EllipsisVerticalIcon class="h-5 w-5" aria-hidden="true" />
                     </MenuButton>
@@ -45,9 +47,9 @@ const categoryStore = useCategoryStore();
                                     type="button"
                                     :class="[
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                        'w-full text-left px-4 py-2 text-sm',
+                                        'w-full px-4 py-2 text-left text-sm',
                                     ]"
-                                    @click="categoryStore.openEditModal(category)">
+                                    @click="emit('edit', category)">
                                     Edit
                                 </button>
                             </MenuItem>
@@ -56,9 +58,9 @@ const categoryStore = useCategoryStore();
                                     type="button"
                                     :class="[
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                        'w-full text-left px-4 py-2 text-sm',
+                                        'w-full px-4 py-2 text-left text-sm',
                                     ]"
-                                    @click="categoryStore.openDeleteModal(category)">
+                                    @click="emit('delete', category)">
                                     Delete
                                 </button>
                             </MenuItem>

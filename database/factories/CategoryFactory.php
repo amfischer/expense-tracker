@@ -35,4 +35,12 @@ class CategoryFactory extends Factory
             'color'   => $this->faker->hexColor(),
         ];
     }
+
+    public function child(Category $parent): static
+    {
+        return $this->state(fn () => [
+            'user_id'   => $parent->user_id,
+            'parent_id' => $parent->id,
+        ]);
+    }
 }

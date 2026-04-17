@@ -4,21 +4,25 @@ import DangerButton from '@/Components/DangerButton.vue';
 import InputError from '@/Components/InputError.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { useCategoryStore } from '@/Stores/category.js';
 import { useAlertStore } from '@/Stores/alert';
 
-const categoryStore = useCategoryStore();
+const props = defineProps({
+    show: Boolean,
+    category: Object,
+});
+
+const emit = defineEmits(['close']);
 const alert = useAlertStore();
 
 const errorMessage = ref('');
 
 const closeModal = () => {
-    categoryStore.closeModals();
+    emit('close');
     errorMessage.value = '';
 };
 
 const deleteCategory = () => {
-    router.delete(route('categories.delete', categoryStore.selectedCategory.id), {
+    router.delete(route('categories.delete', props.category.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
             alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
@@ -33,20 +37,22 @@ const deleteCategory = () => {
 </script>
 
 <template>
-    <Modal :show="categoryStore.showDeleteModal" max-width="sm" @close="closeModal">
+    <Modal :show="show" max-width="sm" @close="closeModal">
         <template #description>
             Are you sure you want to delete this category?
 
-            <div class="text-center font-bold text-2xl my-4">
-                <span class="font-bold text-2xl">
-                    {{ categoryStore.selectedCategory.name }}
+            <div class="my-4 text-center text-2xl font-bold">
+                <span class="text-2xl font-bold">
+                    {{ category?.name }}
                 </span>
                 <InputError :message="errorMessage" class="mt-2" />
             </div>
 
-            <span class="text-sm italic"> Note: to delete a category it must have no attached expenses.</span>
+            <span class="text-sm italic">
+                Note: to delete a category it must have no attached expenses or subcategories.
+            </span>
         </template>
 
-        <DangerButton @click="deleteCategory" class="table w-32 mt-6 float-end">Delete</DangerButton>
+        <DangerButton @click="deleteCategory" class="float-end mt-6 table w-32">Delete</DangerButton>
     </Modal>
 </template>

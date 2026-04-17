@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Currency;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\ExpenseRequest;
+use App\Models\Category;
 use App\Models\Expense;
 use App\Rules\SafeText;
 use Carbon\Carbon;
@@ -74,7 +75,7 @@ class ExpenseController extends Controller
 
         $expenses = $query->paginate(15)->appends(Arr::whereNotNull($data));
 
-        $categories = $request->user()->categories()->orderBy('name')->get();
+        $categories = Category::grouped($request->user());
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
         $currencies = Currency::HTMLSelectOptions();
 
@@ -99,7 +100,7 @@ class ExpenseController extends Controller
             $request->session()->put('etrack.url.previous', url()->previous());
         }
 
-        $categories = $expense->user->categories()->orderBy('name')->get();
+        $categories = Category::grouped($expense->user);
         $currencies = Currency::HTMLSelectOptions();
         $paymentMethods = PaymentMethod::HTMLSelectOptions();
 
