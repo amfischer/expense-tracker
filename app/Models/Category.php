@@ -45,7 +45,8 @@ class Category extends Model
 
     public static function grouped(User $user): Collection
     {
-        return static::withCount('expenses')
+        return static::query()
+            ->withCount('expenses')
             ->whereNull('parent_id')
             ->where('user_id', $user->id)
             ->with(['children' => fn ($q) => $q->withCount('expenses')->orderBy('name')])

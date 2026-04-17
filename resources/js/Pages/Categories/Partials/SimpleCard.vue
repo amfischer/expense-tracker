@@ -1,8 +1,6 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { EllipsisVerticalIcon } from '@heroicons/vue/20/solid';
-import { useCategoryStore } from '@/Stores/category.js';
-
 defineProps({
     category: Object,
     isChild: {
@@ -11,7 +9,7 @@ defineProps({
     },
 });
 
-const categoryStore = useCategoryStore();
+const emit = defineEmits(['edit', 'delete']);
 </script>
 
 <template>
@@ -51,7 +49,7 @@ const categoryStore = useCategoryStore();
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                         'w-full px-4 py-2 text-left text-sm',
                                     ]"
-                                    @click="categoryStore.openEditModal(category)">
+                                    @click="emit('edit', category)">
                                     Edit
                                 </button>
                             </MenuItem>
@@ -62,7 +60,7 @@ const categoryStore = useCategoryStore();
                                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                         'w-full px-4 py-2 text-left text-sm',
                                     ]"
-                                    @click="categoryStore.openDeleteModal(category)">
+                                    @click="emit('delete', category)">
                                     Delete
                                 </button>
                             </MenuItem>

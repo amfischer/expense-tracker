@@ -5,46 +5,53 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { useCategoryStore } from '@/Stores/category.js';
 import { computed, watch } from 'vue';
 import { useAlertStore } from '@/Stores/alert';
 
 const props = defineProps({
+    show: Boolean,
+    category: Object,
     parentCategories: Array,
 });
 
-const categoryStore = useCategoryStore();
+const emit = defineEmits(['close']);
 const alert = useAlertStore();
 
 const form = useForm({
     name: '',
-    color: '#000000',
+    color: '',
     parent_id: null,
 });
 
-const availableParents = computed(() => {
-    if (!categoryStore.selectedCategory) return props.parentCategories;
-    return props.parentCategories.filter((p) => p.id !== categoryStore.selectedCategory.id);
-});
+// Exclude the current category from the parent options to prevent self-referencing
+const availableParents = computed(() => props.parentCategories.filter((p) => p.id !== props.category?.id));
 
 watch(
-    () => categoryStore.selectedCategory,
+    () => props.category,
     (newValue) => {
         if (newValue) {
             form.name = newValue.name;
             form.color = newValue.color;
-            form.parent_id = newValue.parent_id ?? null;
+            form.parent_id = newValue.parent_id;
         }
     },
 );
 
+const applyParentColor = () => {
+    const parent = props.parentCategories.find((p) => p.id === form.parent_id);
+
+    if (parent) {
+        form.color = parent.color;
+    }
+};
+
 const closeModal = () => {
-    categoryStore.closeModals();
+    emit('close');
     form.clearErrors();
 };
 
-const updateCategory = () => {
-    form.put(route('categories.update', categoryStore.selectedCategory.id), {
+const submit = () => {
+    form.put(route('categories.update', props.category.id), {
         preserveScroll: true,
         onSuccess: (resp) => {
             alert.setSuccessMessage(resp.props.flash.message, resp.props.flash.title);
@@ -58,8 +65,8 @@ const updateCategory = () => {
 </script>
 
 <template>
-    <Modal :show="categoryStore.showEditModal" max-width="sm" @close="closeModal">
-        <form @submit.prevent="updateCategory" class="space-y-4">
+    <Modal :show="show" max-width="sm" @close="closeModal">
+        <form @submit.prevent="submit" class="space-y-4">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus />
@@ -83,6 +90,13 @@ const updateCategory = () => {
                         {{ parent.name }}
                     </option>
                 </select>
+                <button
+                    type="button"
+                    v-show="form.parent_id"
+                    class="mt-2 rounded-md border bg-white px-4 py-2 text-gray-800 hover:bg-gray-400"
+                    @click="applyParentColor">
+                    Use parent color
+                </button>
                 <InputError class="mt-2" :message="form.errors.parent_id" />
             </div>
 

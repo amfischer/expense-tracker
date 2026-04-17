@@ -5,14 +5,14 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { useCategoryStore } from '@/Stores/category.js';
 import { useAlertStore } from '@/Stores/alert';
 
-defineProps({
+const props = defineProps({
+    show: Boolean,
     parentCategories: Array,
 });
 
-const categoryStore = useCategoryStore();
+const emit = defineEmits(['close']);
 const alert = useAlertStore();
 
 const form = useForm({
@@ -21,13 +21,21 @@ const form = useForm({
     parent_id: null,
 });
 
+const applyParentColor = () => {
+    const parent = props.parentCategories.find((p) => p.id === form.parent_id);
+
+    if (parent) {
+        form.color = parent.color;
+    }
+};
+
 const closeModal = () => {
-    categoryStore.closeModals();
+    emit('close');
     form.clearErrors();
     form.reset();
 };
 
-const create = () => {
+const submit = () => {
     form.post(route('categories.store'), {
         preserveScroll: true,
         onSuccess: (resp) => {
@@ -42,10 +50,10 @@ const create = () => {
 </script>
 
 <template>
-    <Modal :show="categoryStore.showCreateModal" max-width="sm" @close="closeModal">
+    <Modal :show="show" max-width="sm" @close="closeModal">
         <template #header> Add Category </template>
 
-        <form @submit.prevent="create" class="space-y-4 py-4">
+        <form @submit.prevent="submit" class="space-y-4 py-4">
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus />
@@ -69,6 +77,13 @@ const create = () => {
                         {{ parent.name }}
                     </option>
                 </select>
+                <button
+                    type="button"
+                    v-show="form.parent_id"
+                    class="mt-2 rounded-md border bg-white px-4 py-2 text-gray-800 hover:bg-gray-400"
+                    @click="applyParentColor">
+                    Use parent color
+                </button>
                 <InputError class="mt-2" :message="form.errors.parent_id" />
             </div>
 
