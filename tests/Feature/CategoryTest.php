@@ -2,250 +2,249 @@
 
 use App\Models\Category;
 use App\Models\Expense;
-use Illuminate\Support\Facades\Auth;
 
-beforeEach(function () {
-    login();
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\assertModelMissing;
+use function Pest\Laravel\delete;
+use function Pest\Laravel\get;
+use function Pest\Laravel\post;
+use function Pest\Laravel\put;
 
-    $this->user = Auth::user();
+beforeEach(fn () => $this->user = login());
+
+describe('index', function () {
+    it("shows the user's categories", function () {
+        $category = Category::factory()->for($this->user)->create();
+
+        get(route('categories.index'))
+            ->assertOk()
+            ->assertSee($category->name);
+    });
+
+    it("does not show another user's categories", function () {
+        $otherCategory = Category::factory()->create();
+
+        get(route('categories.index'))
+            ->assertOk()
+            ->assertDontSee($otherCategory->name);
+
+        assertDatabaseMissing('categories', [
+            'user_id' => $this->user->id,
+            'id'      => $otherCategory->id,
+        ]);
+    });
+
+    it('nests children under their parent category', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        $child = Category::factory()->child($parent)->create();
+        $standalone = Category::factory()->for($this->user)->create();
+
+        get(route('categories.index'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Categories/Index')
+                ->has('categories', 3) // default + parent + standalone (no child at top level)
+                ->where('categories.1.id', $parent->id)
+                ->has('categories.1.children', 1)
+                ->where('categories.1.children.0.id', $child->id)
+            );
+    });
 });
 
-it('can show categories', function () {
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
+describe('store', function () {
+    it('creates a new category', function () {
+        $payload = [
+            'name'  => 'Groceries',
+            'color' => '#00ff00',
+        ];
 
-    $this->get(route('categories.index'))
-        ->assertOk()
-        ->assertSee($category->name);
+        post(route('categories.store'), $payload)
+            ->assertRedirect();
+
+        assertDatabaseHas('categories', [
+            ...$payload,
+            'user_id' => $this->user->id,
+        ]);
+    });
+
+    it('creates a subcategory under a parent', function () {
+        $parent = Category::factory()->for($this->user)->create();
+
+        $payload = [
+            'name'      => 'Child Category',
+            'color'     => '#ff0000',
+            'parent_id' => $parent->id,
+        ];
+
+        post(route('categories.store'), $payload)
+            ->assertRedirect();
+
+        assertDatabaseHas('categories', [
+            'name'      => 'Child Category',
+            'parent_id' => $parent->id,
+        ]);
+    });
+
+    it('rejects nesting more than one level deep', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        $child = Category::factory()->child($parent)->create();
+
+        post(route('categories.store'), [
+            'name'      => 'Grandchild Category',
+            'color'     => '#ff0000',
+            'parent_id' => $child->id,
+        ])->assertSessionHasErrors('parent_id');
+    });
+
+    it('rejects a parent category from another user', function () {
+        $otherParent = Category::factory()->create();
+
+        post(route('categories.store'), [
+            'name'      => 'Sneaky Category',
+            'color'     => '#ff0000',
+            'parent_id' => $otherParent->id,
+        ])->assertSessionHasErrors('parent_id');
+    });
 });
 
-it("will not show another user's categories", function () {
-    $categoryRestricted = Category::factory()->create();
+describe('update', function () {
+    it('updates an existing category', function () {
+        $category = Category::factory()->for($this->user)->create();
 
-    $this->get(route('categories.index'))
-        ->assertOk()
-        ->assertDontSee($categoryRestricted->name);
+        $payload = [
+            'name'  => 'new name',
+            'color' => '#ffee00',
+        ];
 
-    $this->assertDatabaseMissing('categories', [
-        'user_id' => $this->user->id,
-        'id'      => $categoryRestricted->id,
-    ]);
+        put(route('categories.update', $category), $payload)
+            ->assertRedirect();
+
+        $category->refresh();
+
+        expect($category->name)->toBe('new name')
+            ->and($category->color)->toBe('#ffee00');
+    });
+
+    it('rejects renaming the default category', function () {
+        $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
+
+        put(route('categories.update', $category), [
+            'name'  => 'updated name',
+            'color' => '#ffee22',
+        ])
+            ->assertRedirect()
+            ->assertSessionHasErrors(['name' => 'The default category cannot be renamed.']);
+    });
+
+    it('rejects setting a category as its own parent', function () {
+        $category = Category::factory()->for($this->user)->create();
+
+        put(route('categories.update', $category), [
+            'name'      => $category->name,
+            'color'     => $category->color,
+            'parent_id' => $category->id,
+        ])->assertSessionHasErrors('parent_id');
+    });
+
+    it('rejects nesting a parent that already has children', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        Category::factory()->child($parent)->create();
+        $otherParent = Category::factory()->for($this->user)->create();
+
+        put(route('categories.update', $parent), [
+            'name'      => $parent->name,
+            'color'     => $parent->color,
+            'parent_id' => $otherParent->id,
+        ])->assertSessionHasErrors('parent_id');
+    });
+
+    it('can add a parent to a category', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        $category = Category::factory()->for($this->user)->create();
+
+        put(route('categories.update', $category), [
+            'name'      => $category->name,
+            'color'     => $category->color,
+            'parent_id' => $parent->id,
+        ])->assertRedirect();
+
+        expect($category->refresh()->parent_id)->toBe($parent->id);
+    });
+
+    it('can remove a parent from a category', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        $child = Category::factory()->child($parent)->create();
+
+        put(route('categories.update', $child), [
+            'name'      => $child->name,
+            'color'     => $child->color,
+            'parent_id' => null,
+        ])->assertRedirect();
+
+        expect($child->refresh()->parent_id)->toBeNull();
+    });
 });
 
-test('users can create new categories', function () {
+describe('delete', function () {
+    it('deletes an existing category', function () {
+        $category = Category::factory()->for($this->user)->create();
 
-    $payload = Category::factory()->make(['user_id' => $this->user->id])->toArray();
+        delete(route('categories.delete', $category))
+            ->assertRedirect();
 
-    $this->post(route('categories.store'), $payload);
+        assertModelMissing($category);
+    });
 
-    $this->assertDatabaseHas('categories', $payload);
+    it('blocks deletion when linked to expenses', function () {
+        $category = Category::factory()->for($this->user)->create();
+        $expenses = Expense::factory(2)->for($this->user)->for($category)->create();
+
+        delete(route('categories.delete', $category))
+            ->assertRedirect()
+            ->assertSessionHasErrors(['message' => 'Category is linked to ' . count($expenses) . ' expenses. Remove these relationships before deleting.']);
+    });
+
+    it('blocks deletion of the default category', function () {
+        $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
+
+        delete(route('categories.delete', $category))
+            ->assertRedirect()
+            ->assertSessionHasErrors(['message' => 'Default category cannot be deleted.']);
+    });
+
+    it('blocks deletion of a parent with children', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        Category::factory()->child($parent)->create();
+
+        delete(route('categories.delete', $parent))
+            ->assertRedirect()
+            ->assertSessionHasErrors(['message' => 'Category has 1 subcategories. Remove them before deleting.']);
+    });
+
+    it('can delete a child category', function () {
+        $parent = Category::factory()->for($this->user)->create();
+        $child = Category::factory()->child($parent)->create();
+
+        delete(route('categories.delete', $child))
+            ->assertRedirect();
+
+        assertModelMissing($child);
+    });
 });
 
-test('users can update existing categories', function () {
+describe('authorization', function () {
+    it("returns 403 when updating another user's category", function () {
+        $otherCategory = Category::factory()->create();
 
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
+        put(route('categories.update', $otherCategory), [])
+            ->assertForbidden();
+    });
 
-    $payload = [
-        'name'  => 'new name',
-        'color' => '#ffee00',
-    ];
+    it("returns 403 when deleting another user's category", function () {
+        $otherCategory = Category::factory()->create();
 
-    $this->put(route('categories.update', $category), $payload);
-
-    $this->assertDatabaseHas('categories', $payload);
-
-    expect($category->refresh()->name)->toBe('new name');
-    expect($category->refresh()->color)->toBe('#ffee00');
-});
-
-test('users cannot rename the default category', function () {
-    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
-
-    $payload = [
-        'name'  => 'updated name',
-        'color' => '#ffee22',
-    ];
-
-    $this->put(route('categories.update', $category), $payload)
-        ->assertRedirect()
-        ->assertSessionHasErrors(['name' => 'The default category cannot be renamed.']);
-});
-
-test('users can delete existing categories', function () {
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $this->assertModelExists($category);
-
-    $this->delete(route('categories.delete', $category));
-
-    $this->assertModelMissing($category);
-    $this->assertDatabaseMissing('categories', ['id' => $category->id]);
-});
-
-it('will block category deletion if the category is linked to any expenses', function () {
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
-    $expenses = Expense::factory(2)->create(['user_id' => $this->user->id, 'category_id' => $category->id]);
-
-    $this->delete(route('categories.delete', $category))
-        ->assertRedirect()
-        ->assertSessionHasErrors(['message' => 'Category is linked to ' . count($expenses) . ' expenses. Remove these relationships before deleting.']);
-});
-
-test('default category cannot be deleted', function () {
-    $category = Category::where(['user_id' => $this->user->id, 'name' => Category::DEFAULT_NAME])->first();
-
-    $this->delete(route('categories.delete', $category))
-        ->assertRedirect()
-        ->assertSessionHasErrors(['message' => 'Default category cannot be deleted.']);
-});
-
-/**
- * PARENT/CHILD CATEGORY TESTS
- */
-test('users can create a subcategory under a parent', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $payload = [
-        'name'      => 'Child Category',
-        'color'     => '#ff0000',
-        'parent_id' => $parent->id,
-    ];
-
-    $this->post(route('categories.store'), $payload);
-
-    $this->assertDatabaseHas('categories', [
-        'name'      => 'Child Category',
-        'parent_id' => $parent->id,
-    ]);
-});
-
-test('users cannot create a subcategory under another subcategory', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    $child = Category::factory()->child($parent)->create();
-
-    $payload = [
-        'name'      => 'Grandchild Category',
-        'color'     => '#ff0000',
-        'parent_id' => $child->id,
-    ];
-
-    $this->post(route('categories.store'), $payload)
-        ->assertSessionHasErrors('parent_id');
-});
-
-test('users cannot assign a parent category from another user', function () {
-    $otherParent = Category::factory()->create();
-
-    $payload = [
-        'name'      => 'Sneaky Category',
-        'color'     => '#ff0000',
-        'parent_id' => $otherParent->id,
-    ];
-
-    $this->post(route('categories.store'), $payload)
-        ->assertSessionHasErrors('parent_id');
-});
-
-it('will block deletion of a parent category that has children', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    Category::factory()->child($parent)->create();
-
-    $this->delete(route('categories.delete', $parent))
-        ->assertRedirect()
-        ->assertSessionHasErrors(['message' => 'Category has 1 subcategories. Remove them before deleting.']);
-});
-
-test('users can delete a child category', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    $child = Category::factory()->child($parent)->create();
-
-    $this->delete(route('categories.delete', $child));
-
-    $this->assertModelMissing($child);
-});
-
-test('users cannot set a category as its own parent', function () {
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $payload = [
-        'name'      => $category->name,
-        'color'     => $category->color,
-        'parent_id' => $category->id,
-    ];
-
-    $this->put(route('categories.update', $category), $payload)
-        ->assertSessionHasErrors('parent_id');
-});
-
-test('a parent category with children cannot become a subcategory', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    Category::factory()->child($parent)->create();
-    $otherParent = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $payload = [
-        'name'      => $parent->name,
-        'color'     => $parent->color,
-        'parent_id' => $otherParent->id,
-    ];
-
-    $this->put(route('categories.update', $parent), $payload)
-        ->assertSessionHasErrors('parent_id');
-});
-
-test('users can update a category to add a parent', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    $category = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $payload = [
-        'name'      => $category->name,
-        'color'     => $category->color,
-        'parent_id' => $parent->id,
-    ];
-
-    $this->put(route('categories.update', $category), $payload);
-
-    expect($category->refresh()->parent_id)->toBe($parent->id);
-});
-
-test('users can remove a parent from a category', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    $child = Category::factory()->child($parent)->create();
-
-    $payload = [
-        'name'      => $child->name,
-        'color'     => $child->color,
-        'parent_id' => null,
-    ];
-
-    $this->put(route('categories.update', $child), $payload);
-
-    expect($child->refresh()->parent_id)->toBeNull();
-});
-
-test('the index page groups categories by parent', function () {
-    $parent = Category::factory()->create(['user_id' => $this->user->id]);
-    $child = Category::factory()->child($parent)->create();
-    $standalone = Category::factory()->create(['user_id' => $this->user->id]);
-
-    $this->get(route('categories.index'))
-        ->assertOk()
-        ->assertSee($parent->name)
-        ->assertSee($child->name)
-        ->assertSee($standalone->name);
-});
-
-/**
- * AUTHORIZATION TESTS
- */
-it('will return a 403 if user attempts to update categories from other accounts', function () {
-    $categoryRestricted = Category::factory()->create();
-
-    $this->put(route('categories.update', $categoryRestricted), [])
-        ->assertForbidden();
-});
-
-it('will return a 403 if user attempts to delete categories from other accounts', function () {
-    $categoryRestricted = Category::factory()->create();
-
-    $this->delete(route('categories.delete', $categoryRestricted))
-        ->assertForbidden();
+        delete(route('categories.delete', $otherCategory))
+            ->assertForbidden();
+    });
 });
