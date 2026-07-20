@@ -97,6 +97,10 @@ it('rolls child category expenses up under their parent', function () {
         ->color->toBe('#ff0000')
         ->count->toBe(2)
         ->total_raw->toBe(3000);
+
+    // The most frequent category stat rolls child counts up under the parent too.
+    expect($data['stats']['most_frequent_category'])->toBe('Food');
+    expect($data['stats']['most_frequent_category_count'])->toBe(2);
 });
 
 it('returns income sources grouped by source', function () {

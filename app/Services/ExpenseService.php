@@ -149,11 +149,11 @@ class ExpenseService
         $avgDailySpent = $days > 0 ? (int) $expensesTotal->getAmount() / $days : 0;
         $avgDailyEarned = $days > 0 ? (int) $incomesTotal->getAmount() / $days : 0;
 
-        // Most frequent category
+        // Most frequent category (rolled up under the parent category, matching the summary grouping)
         $categoryCounts = [];
         foreach ($expenses as $expense) {
-            $categoryName = $expense->category->name;
-            $categoryCounts[$categoryName] = ($categoryCounts[$categoryName] ?? 0) + 1;
+            $category = $expense->category->parent ?? $expense->category;
+            $categoryCounts[$category->name] = ($categoryCounts[$category->name] ?? 0) + 1;
         }
         arsort($categoryCounts);
         $mostFrequentCategory = array_key_first($categoryCounts);
