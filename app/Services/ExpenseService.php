@@ -18,7 +18,7 @@ class ExpenseService
         $formatter = app(IntlMoneyFormatter::class);
 
         // Fetch expenses and incomes
-        $expenses = $user->expenses()->with('category')->whereBetween('effective_date', $dateRange)->get();
+        $expenses = $user->expenses()->with('category.parent')->whereBetween('effective_date', $dateRange)->get();
         $incomes = $user->incomes()->whereBetween('effective_date', $dateRange)->get();
 
         // Calculate totals
@@ -70,19 +70,20 @@ class ExpenseService
         $totalAmount = (int) $total->getAmount();
 
         foreach ($expenses as $expense) {
-            $categoryId = $expense->category_id;
+            // group expense under parent category if it exists
+            $category = $expense->category->parent ?? $expense->category;
 
-            if (! isset($categories[$categoryId])) {
-                $categories[$categoryId] = [
-                    'name'      => $expense->category->name,
-                    'color'     => $expense->category->color,
+            if (! isset($categories[$category->id])) {
+                $categories[$category->id] = [
+                    'name'      => $category->name,
+                    'color'     => $category->color,
                     'total_raw' => 0,
                     'count'     => 0,
                 ];
             }
 
-            $categories[$categoryId]['total_raw'] += $expense->amount;
-            $categories[$categoryId]['count']++;
+            $categories[$category->id]['total_raw'] += $expense->amount;
+            $categories[$category->id]['count']++;
         }
 
         $this->formatTotalsAndPercentages($categories, $totalAmount, $formatter);
@@ -148,11 +149,11 @@ class ExpenseService
         $avgDailySpent = $days > 0 ? (int) $expensesTotal->getAmount() / $days : 0;
         $avgDailyEarned = $days > 0 ? (int) $incomesTotal->getAmount() / $days : 0;
 
-        // Most frequent category
+        // Most frequent category (rolled up under the parent category, matching the summary grouping)
         $categoryCounts = [];
         foreach ($expenses as $expense) {
-            $categoryName = $expense->category->name;
-            $categoryCounts[$categoryName] = ($categoryCounts[$categoryName] ?? 0) + 1;
+            $category = $expense->category->parent ?? $expense->category;
+            $categoryCounts[$category->name] = ($categoryCounts[$category->name] ?? 0) + 1;
         }
         arsort($categoryCounts);
         $mostFrequentCategory = array_key_first($categoryCounts);

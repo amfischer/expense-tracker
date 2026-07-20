@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Expense;
 use App\Models\Income;
 
@@ -61,6 +62,45 @@ it('returns expense categories grouped by category', function () {
     foreach ($data['expense_categories'] as $category) {
         expect($category)->toHaveKeys(['name', 'color', 'total', 'total_raw', 'percentage', 'count']);
     }
+});
+
+it('rolls child category expenses up under their parent', function () {
+    $user = login();
+
+    $parent = Category::factory()->for($user)->create(['name' => 'Food', 'color' => '#ff0000']);
+    $groceries = Category::factory()->child($parent)->create(['name' => 'Groceries']);
+    $dining = Category::factory()->child($parent)->create(['name' => 'Dining']);
+
+    Expense::factory()->for($user)->create([
+        'category_id'    => $groceries->id,
+        'amount'         => 10,
+        'effective_date' => '2026-01-15',
+    ]);
+
+    Expense::factory()->for($user)->create([
+        'category_id'    => $dining->id,
+        'amount'         => 20,
+        'effective_date' => '2026-01-16',
+    ]);
+
+    $response = getJson(route('dashboard.summary.details', [
+        'date_from' => '2026-01-01',
+        'date_to'   => '2026-01-31',
+    ]));
+
+    $data = $response->assertOk()->json();
+
+    // Both child expenses collapse into a single row labeled with the parent's name/color.
+    expect($data['expense_categories'])->toHaveCount(1);
+    expect($data['expense_categories'][0])
+        ->name->toBe('Food')
+        ->color->toBe('#ff0000')
+        ->count->toBe(2)
+        ->total_raw->toBe(3000);
+
+    // The most frequent category stat rolls child counts up under the parent too.
+    expect($data['stats']['most_frequent_category'])->toBe('Food');
+    expect($data['stats']['most_frequent_category_count'])->toBe(2);
 });
 
 it('returns income sources grouped by source', function () {
