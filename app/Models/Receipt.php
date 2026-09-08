@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Unguarded]
+#[Hidden('created_at', 'updated_at')]
+#[Appends('is_image', 'size_formatted')]
 class Receipt extends Model
 {
     use HasFactory;
@@ -15,18 +21,6 @@ class Receipt extends Model
         'image/png',
         'image/jpeg',
         'image/webp',
-    ];
-
-    protected $guarded = [];
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
-
-    protected $appends = [
-        'is_image',
-        'size_formatted',
     ];
 
     public function user(): BelongsTo

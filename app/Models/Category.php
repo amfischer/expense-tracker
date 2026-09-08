@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
+#[Unguarded]
+#[Hidden('created_at', 'updated_at')]
 class Category extends Model
 {
     use HasFactory;
@@ -15,13 +19,6 @@ class Category extends Model
     const DEFAULT_NAME = 'Uncategorized';
 
     const DEFAULT_COLOR = '#e5e7eb';
-
-    protected $guarded = [];
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
 
     public function user(): BelongsTo
     {

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,17 +16,11 @@ use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
 use Money\Parser\DecimalMoneyParser;
 
+#[Unguarded]
+#[Appends('amount_pretty', 'effective_date_pretty', 'notes_html')]
 class Expense extends Model
 {
     use HasFactory, Searchable;
-
-    protected $guarded = [];
-
-    protected $appends = [
-        'amount_pretty',
-        'effective_date_pretty',
-        'notes_html',
-    ];
 
     protected function casts(): array
     {

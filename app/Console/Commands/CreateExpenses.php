@@ -5,24 +5,14 @@ namespace App\Console\Commands;
 use App\Enums\PaymentMethod;
 use App\Models\Expense;
 use Carbon\Carbon;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
+#[Signature('expenses:create')]
+#[Description('Create expenses in bulk')]
 class CreateExpenses extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'expenses:create';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create expenses in bulk';
-
     /**
      * Execute the console command.
      */

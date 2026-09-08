@@ -13,8 +13,8 @@ use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -91,10 +91,9 @@ class ExpenseController extends Controller
         return back()->with('message', 'Expense successfully created.')->with('title', 'Created!');
     }
 
+    #[Authorize('view', 'expense')]
     public function edit(Request $request, Expense $expense): Response
     {
-        Gate::authorize('view', $expense);
-
         // TODO after L12 upgrade try $request->session()->previousRoute()
         if (str_contains(url()->previous(), 'expenses') && ! str_contains(url()->previous(), '/edit')) {
             $request->session()->put('etrack.url.previous', url()->previous());
@@ -114,10 +113,9 @@ class ExpenseController extends Controller
         ]);
     }
 
+    #[Authorize('update', 'expense')]
     public function update(ExpenseRequest $request, Expense $expense): RedirectResponse
     {
-        Gate::authorize('update', $expense);
-
         $validated = $request->validated();
 
         $transactionDateIsChanging = $expense->transaction_date->format('Y-m-d') !== $validated['transaction_date'];
@@ -140,10 +138,9 @@ class ExpenseController extends Controller
         return redirect($redirectUrl)->with('message', 'Expense successfully updated.')->with('title', 'Updated!');
     }
 
+    #[Authorize('delete', 'expense')]
     public function delete(Request $request, Expense $expense): RedirectResponse
     {
-        Gate::authorize('delete', $expense);
-
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);

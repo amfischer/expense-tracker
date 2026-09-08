@@ -7,15 +7,15 @@ use App\Models\Category;
 use App\Models\Expense;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 
+#[Signature('app:refresh-test-data')]
+#[Description('Refresh the data on the test account(s)')]
 class RefreshTestData extends Command
 {
-    protected $signature = 'app:refresh-test-data';
-
-    protected $description = 'Refresh the data on the test account(s)';
-
     public function handle(): void
     {
         $jeremy = User::where('email', 'benjis@momoney.com')->first();
