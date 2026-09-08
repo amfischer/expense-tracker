@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ExpenseFactory extends Factory
 {
-    protected $model = Expense::class;
-
     private array $payees = [
         'PedidosYa',
         'Walmart',
