@@ -2,15 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Income;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
 class IncomeFactory extends Factory
 {
-    protected $model = Income::class;
-
     public function definition(): array
     {
         return [

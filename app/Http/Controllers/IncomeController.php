@@ -8,8 +8,8 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -68,10 +68,9 @@ class IncomeController extends Controller
         return back()->with('message', 'Income successfully created.')->with('title', 'Created!');
     }
 
+    #[Authorize('view', 'income')]
     public function edit(Request $request, Income $income): Response
     {
-        Gate::authorize('view', $income);
-
         // TODO after L12 upgrade try $request->session()->previousRoute()
         // or just use url()->previous() ???
         if (str_contains(url()->previous(), 'incomes') && ! str_contains(url()->previous(), '/edit')) {
@@ -81,10 +80,9 @@ class IncomeController extends Controller
         return Inertia::render('Incomes/Edit', compact('income'));
     }
 
+    #[Authorize('update', 'income')]
     public function update(Request $request, Income $income): Response|RedirectResponse
     {
-        Gate::authorize('update', $income);
-
         $data = $request->validate([
             'source'           => ['required', new SafeText],
             'amount'           => 'required|decimal:0,2',
@@ -101,10 +99,9 @@ class IncomeController extends Controller
         return redirect($redirectUrl)->with('message', 'Income successfully updated.')->with('title', 'Updated!');
     }
 
+    #[Authorize('delete', 'income')]
     public function delete(Request $request, Income $income): Response|RedirectResponse
     {
-        Gate::authorize('delete', $income);
-
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);

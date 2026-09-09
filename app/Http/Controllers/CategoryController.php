@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -43,10 +43,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    #[Authorize('delete', 'category')]
     public function delete(Category $category): RedirectResponse
     {
-        Gate::authorize('delete', $category);
-
         if ($category->name === Category::DEFAULT_NAME) {
             return back()->withErrors(['message' => 'Default category cannot be deleted.']);
         }
