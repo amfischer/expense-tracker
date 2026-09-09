@@ -30,6 +30,9 @@ dbfresh:
 pint:
 	./vendor/bin/pint --dirty
 
+clear:
+	docker-compose exec php-fpm sh -c "php artisan cache:clear && php artisan config:clear && php artisan route:clear && php artisan view:clear"
+
 ## tests
 f ?=
 test-feature:
