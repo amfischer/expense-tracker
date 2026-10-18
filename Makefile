@@ -48,10 +48,10 @@ test-all:
 # nodejs container
 n ?= help
 npm:
-	docker-compose run --rm node sh -c "npm ${n}"
+	docker-compose exec node sh -c "npm ${n}"
 
 vite:
-	docker-compose run -p 5173:5173 --rm node sh -c "npm run dev"
+	docker-compose exec -it node sh -c "npm run dev"
 
 # redis container
 redis:
