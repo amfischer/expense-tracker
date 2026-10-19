@@ -12,7 +12,7 @@
         "ext-intl": "*",
         "ext-zip": "*",
         "archtechx/enums": "^1.0",
-        "inertiajs/inertia-laravel": "^2.0",
+        "inertiajs/inertia-laravel": "^3.0",
         "laravel/framework": "^13.30",
         "laravel/sanctum": "^4.3",
         "laravel/scout": "^11.7",
